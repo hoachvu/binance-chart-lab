@@ -11,7 +11,7 @@
 .logo{font-weight:850;font-size:13px;letter-spacing:.08em;white-space:nowrap}.logo b{color:var(--up)}.status{font-size:10px;border:1px solid #31475d;border-radius:999px;color:#9db2c7;padding:3px 7px}.header .right{margin-left:auto;color:var(--muted);font-size:11px}
 .body{display:grid;grid-template-columns:minmax(0,1fr) 280px;min-height:0}.workspace{display:grid;grid-template-rows:auto auto minmax(320px,1fr) 145px 145px auto;min-width:0;overflow:hidden}.watch{border-left:1px solid var(--line);background:var(--panel);padding:12px;overflow:auto}
 .toolbar{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);background:#0d1620;flex-wrap:wrap}.symbolBox{position:relative}.symbolBtn{background:#172433;border:1px solid #314357;color:var(--text);border-radius:6px;padding:7px 10px;font-weight:760;min-width:150px;text-align:left}.symbolMenu{position:absolute;z-index:30;top:40px;left:0;width:330px;background:#101c28;border:1px solid #34495f;border-radius:8px;box-shadow:0 12px 35px #0008;display:none;overflow:hidden}.symbolMenu.open{display:block}.symItem{display:block;width:100%;padding:10px;border:0;border-bottom:1px solid #243447;background:transparent;color:var(--text);text-align:left}.symItem:hover{background:#182a3a}.symItem strong{display:block}.symItem small{color:var(--muted)}
-.tf{display:flex;gap:2px}.tf button,.indBtn{border:0;background:transparent;color:#91a4b7;border-radius:5px;padding:7px 8px;font-size:12px;font-weight:700}.tf button:hover,.indBtn:hover{background:#172536}.tf button.active{background:#173b37;color:#5fe0c0}.separator{width:1px;height:24px;background:var(--line)}
+.tf{display:flex;gap:2px}.tf button,.indBtn,.refreshBtn{border:0;background:transparent;color:#91a4b7;border-radius:5px;padding:7px 8px;font-size:12px;font-weight:700}.tf button:hover,.indBtn:hover,.refreshBtn:hover{background:#172536}.tf button.active{background:#173b37;color:#5fe0c0}.separator{width:1px;height:24px;background:var(--line)}
 .indWrap{position:relative}.indPanel{position:absolute;z-index:40;top:38px;left:0;width:300px;background:#111d29;border:1px solid #33485d;border-radius:9px;padding:12px;display:none;box-shadow:0 12px 35px #0009}.indPanel.open{display:block}.indRow{display:grid;grid-template-columns:22px 1fr 62px 55px;align-items:center;gap:7px;margin:7px 0;font-size:12px}.indRow input[type=number]{width:100%;background:#0c1620;color:var(--text);border:1px solid #30455a;border-radius:5px;padding:5px}
 .quote{display:flex;align-items:end;gap:15px;padding:10px 14px;border-bottom:1px solid var(--line);background:#0b131d;min-height:74px}.quote h1{font-size:19px;margin:0 0 3px}.quote .desc{font-size:11px;color:var(--muted);max-width:680px;line-height:1.45}.last{margin-left:auto;text-align:right;min-width:160px}.last strong{font-size:22px}.last span{display:block;color:var(--muted);font-size:11px;line-height:1.4}
 .chartCard{position:relative;background:#0a111a;min-height:0}.chartHead{position:absolute;z-index:4;top:8px;left:10px;display:flex;gap:11px;font-size:11px;color:var(--muted);pointer-events:none}.chart{width:100%;height:100%;min-height:310px}.emptyOverlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;pointer-events:none}.emptyOverlay>div{background:#0d1722e8;border:1px solid #2d4155;border-radius:8px;padding:12px 16px;color:#a9bacb;font-size:12px;line-height:1.6;max-width:390px}
@@ -25,7 +25,7 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
 </head>
 <body>
 <div class="app">
-<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.5</span><div class="right">1W / 1M / 1Q / 1Y · lịch sử có phân loại nguồn</div></header>
+<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.6</span><div class="right">1W modeled + observed override · refresh lấy dataset mới nhất</div></header>
 <div class="body">
 <section class="workspace">
   <div class="toolbar">
@@ -36,7 +36,7 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
     <div class="separator"></div>
     <div id="tf" class="tf"></div>
     <div class="separator"></div>
-    <div class="indWrap">
+    <button id="refreshBtn" class="refreshBtn">↻ Refresh</button><div class="indWrap">
       <button id="indBtn" class="indBtn">Indicators ▾</button>
       <div id="indPanel" class="indPanel">
         <div class="indRow"><input id="smaOn" type="checkbox"><label>SMA</label><input id="smaLen" type="number" min="2" max="200" value="20"><span>period</span></div>
@@ -69,7 +69,7 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
 </div>
 <script>
 const TF={W1:{label:"1W"},M1:{label:"1M"},Q1:{label:"1Q"},Y1:{label:"1Y"}};
-let DATA=null,current="HN-APT-ALL",timeframe="M1";
+let DATA=null,current="HN-APT-ALL",timeframe="W1",lastLoadedAt=null;
 const settings={sma:false,ema:false,bb:true,rsi:true,macd:true,smaLen:20,emaLen:20,bbLen:20,rsiLen:14};
 const $=id=>document.getElementById(id),fmt=(v,d=1)=>Number(v).toLocaleString("vi-VN",{minimumFractionDigits:d,maximumFractionDigits:d});
 function sma(a,n){return a.map((_,i)=>i<n-1?null:a.slice(i-n+1,i+1).reduce((s,v)=>s+v,0)/n)}
@@ -80,27 +80,48 @@ function macd(a){const e12=ema(a,12),e26=ema(a,26),m=a.map((_,i)=>e12[i]==null||
 function poly(vals,x,y,cls){let d="",started=false;vals.forEach((v,i)=>{if(v==null){started=false;return}d+=(started?"L":"M")+x(i)+" "+y(v)+" ";started=true});return d?'<path class="'+cls+'" d="'+d+'"/>':""}
 function qFromMonth(date){const [y,m]=date.split("-").map(Number);return y+"-Q"+Math.ceil(m/3)}
 function yFromAny(date){return date.slice(0,4)}
-function aggregateReference(rows,keyFn){
+function monthKey(date){return date.slice(0,7)}
+function quarterKey(date){const d=new Date(date+"T00:00:00Z");return d.getUTCFullYear()+"-Q"+Math.ceil((d.getUTCMonth()+1)/3)}
+function yearKey(date){return date.slice(0,4)}
+function anchorDate(label){
+ if(/^\\d{4}-\\d{2}$/.test(label)) return label+"-15";
+ const q=label.match(/^(\\d{4})-Q([1-4])$/); if(q){const m=Number(q[2])*3;return q[1]+"-"+String(m).padStart(2,"0")+"-15";}
+ return label;
+}
+function collectAnchors(sym){
+ const a=[];
+ (sym.monthlyReference||[]).forEach(x=>a.push({date:anchorDate(x.date),close:Number(x.close),type:x.historyType||"MONTHLY_REFERENCE"}));
+ (sym.quarterlyReference||[]).forEach(x=>a.push({date:anchorDate(x.date),close:Number(x.close),type:x.historyType||"QUARTERLY_REFERENCE"}));
+ (sym.sparseReferences||[]).forEach(x=>a.push({date:anchorDate(x.date),close:Number(x.value),type:x.historyType||"PUBLISHED_REFERENCE"}));
+ const by=new Map();a.filter(x=>Number.isFinite(x.close)).forEach(x=>by.set(x.date,x));
+ return [...by.values()].sort((x,y)=>x.date.localeCompare(y.date));
+}
+function modeledWeekly(sym){
+ const anchors=collectAnchors(sym); if(anchors.length<2)return [];
+ const pts=anchors.map(x=>({...x,t:new Date(x.date+"T00:00:00Z").getTime()}));
+ const start=pts[0].t,end=pts.at(-1).t,week=7*86400000,closes=[];
+ let j=0;
+ for(let t=start;t<=end;t+=week){
+   while(j<pts.length-2&&t>pts[j+1].t)j++;
+   const a=pts[j],b=pts[Math.min(j+1,pts.length-1)],ratio=b.t===a.t?0:Math.max(0,Math.min(1,(t-a.t)/(b.t-a.t)));
+   const close=a.close+(b.close-a.close)*ratio;
+   closes.push({date:new Date(t).toISOString().slice(0,10),close,historyType:"MODELED_WEEKLY_INTERPOLATION"});
+ }
+ if(closes.at(-1).date!==pts.at(-1).date)closes.push({date:pts.at(-1).date,close:pts.at(-1).close,historyType:"MODELED_WEEKLY_INTERPOLATION"});
+ return closes.map((x,i)=>{const prev=i?closes[i-1].close:x.close;return{date:x.date,open:prev,high:Math.max(prev,x.close),low:Math.min(prev,x.close),close:x.close,historyType:x.historyType,confidence:"MODELED"}});
+}
+function aggregateCandles(rows,keyFn,labelType){
  const groups=[];let cur=null;
  rows.forEach(r=>{const k=keyFn(r.date);if(!cur||cur.key!==k){cur={key:k,rows:[]};groups.push(cur)}cur.rows.push(r)});
- return groups.map(g=>({date:g.key,open:g.rows[0].close,high:Math.max(...g.rows.map(x=>x.close)),low:Math.min(...g.rows.map(x=>x.close)),close:g.rows.at(-1).close,historyType:"DERIVED_OHLC_FROM_REFERENCE"}));
+ return groups.map(g=>({date:g.key,open:g.rows[0].open,high:Math.max(...g.rows.map(x=>x.high)),low:Math.min(...g.rows.map(x=>x.low)),close:g.rows.at(-1).close,historyType:labelType,confidence:"MODELED"}));
 }
 function getSeries(sym){
- if(timeframe==="W1") return {mode:"candle",rows:(sym.weeklyObserved||[]),label:"Observed weekly candles",historyType:"OBSERVED"};
- if(timeframe==="M1"){
-   if(sym.monthlyReference?.length) return {mode:"line",rows:sym.monthlyReference,label:"Monthly reference line",historyType:"BACKFILLED_CHART_DIGITIZED"};
-   if(sym.quarterlyReference?.length) return {mode:"line",rows:sym.quarterlyReference,label:"Quarterly reference only",historyType:"BACKFILLED_QUARTERLY"};
-   return {mode:"line",rows:[],label:"No monthly history",historyType:"NONE"};
- }
- if(timeframe==="Q1"){
-   if(sym.monthlyReference?.length) return {mode:"candle",rows:aggregateReference(sym.monthlyReference,qFromMonth),label:"Quarterly candles derived from monthly reference",historyType:"DERIVED_FROM_MONTHLY_REFERENCE"};
-   if(sym.quarterlyReference?.length) return {mode:"line",rows:sym.quarterlyReference,label:"Quarterly reference line",historyType:"BACKFILLED_QUARTERLY"};
- }
- if(timeframe==="Y1"){
-   if(sym.monthlyReference?.length) return {mode:"candle",rows:aggregateReference(sym.monthlyReference,yFromAny),label:"Yearly candles derived from monthly reference",historyType:"DERIVED_FROM_MONTHLY_REFERENCE"};
-   if(sym.quarterlyReference?.length) return {mode:"candle",rows:aggregateReference(sym.quarterlyReference,yFromAny),label:"Yearly candles derived from quarterly reference",historyType:"DERIVED_FROM_QUARTERLY_REFERENCE"};
- }
- return {mode:"line",rows:[],label:"No compatible history",historyType:"NONE"};
+ const weekly=modeledWeekly(sym);
+ if(timeframe==="W1") return {mode:"candle",rows:weekly,label:"Weekly candles · modeled interpolation",historyType:"MODELED_WEEKLY_INTERPOLATION"};
+ if(timeframe==="M1") return {mode:"candle",rows:aggregateCandles(weekly,monthKey,"MODELED_MONTHLY_FROM_WEEKLY"),label:"Monthly candles from modeled weekly index",historyType:"MODELED_MONTHLY_FROM_WEEKLY"};
+ if(timeframe==="Q1") return {mode:"candle",rows:aggregateCandles(weekly,quarterKey,"MODELED_QUARTERLY_FROM_WEEKLY"),label:"Quarterly candles from modeled weekly index",historyType:"MODELED_QUARTERLY_FROM_WEEKLY"};
+ if(timeframe==="Y1") return {mode:"candle",rows:aggregateCandles(weekly,yearKey,"MODELED_YEARLY_FROM_WEEKLY"),label:"Yearly candles from modeled weekly index",historyType:"MODELED_YEARLY_FROM_WEEKLY"};
+ return {mode:"candle",rows:[],label:"No compatible history",historyType:"NONE"};
 }
 function closeArray(series){return series.rows.map(x=>x.close)}
 function renderPrice(series){
@@ -128,7 +149,7 @@ function signalCards(series){
  else{const c=a[last];cards.push(["Bollinger Bands",c<=bbv.lo[last]?"Close đang chạm/ở dưới BB Lower.":c>=bbv.up[last]?"Close đang chạm/ở trên BB Upper.":"Close đang nằm trong dải Bollinger."])}
  if(a.length<settings.rsiLen+1)cards.push(["RSI("+settings.rsiLen+")","Chưa đủ dữ liệu: cần "+(settings.rsiLen+1)+" kỳ."]);else cards.push(["RSI("+settings.rsiLen+")",fmt(rv[last],1)+(rv[last]<30?" · vùng quá bán":rv[last]>70?" · vùng quá mua":" · vùng trung tính")]);
  if(a.length<35)cards.push(["MACD","Chưa đủ dữ liệu: cần khoảng 35 kỳ cho MACD 12/26/9."]);else cards.push(["MACD",mv.macd[last]>mv.signal[last]?"MACD đang trên Signal Line.":"MACD đang dưới Signal Line."]);
- cards.push(["Data quality",series.historyType.includes("DIGITIZED")?"Tín hiệu tính trên chuỗi số hóa xấp xỉ từ đồ thị công bố — chỉ dùng tham khảo.":series.historyType.replaceAll("_"," ")]);
+ cards.push(["Data quality",series.historyType.includes("MODELED")?"Nến được nội suy từ các mốc tháng/quý đã công bố. Dùng cho phân tích kỹ thuật tham khảo, không phải giao dịch quan sát thật.":series.historyType.replaceAll("_"," ")]);
  $("signals").innerHTML=cards.map((x,i)=>'<div class="signalCard"><b class="'+(i<3?"warn":"good")+'">'+x[0]+'</b><p>'+x[1]+'</p></div>').join("");
 }
 function latestExternal(sym){const s=sym.sparseReferences||[];return s.length?s.at(-1):null}
@@ -136,14 +157,13 @@ function render(){
  const sym=DATA.symbols.find(x=>x.symbol===current)||DATA.symbols[0],series=getSeries(sym),rows=series.rows,last=rows.at(-1),ext=latestExternal(sym);
  $("symbolBtn").textContent=sym.symbol+" ▾";$("title").textContent=sym.symbol+" · "+sym.name;$("desc").textContent=sym.description;
  $("last").textContent=last?fmt(last.close):"—";$("lastMeta").innerHTML=(series.mode==="line"?"Reference close":"Candle close")+"<br>"+(last?.date||"—")+(ext&&timeframe==="M1"?" · Latest published ref "+fmt(ext.value)+" ("+ext.date+")":"");
- $("historyInfo").textContent="Khung "+TF[timeframe].label+" · "+rows.length+" kỳ · "+series.mode;
- $("sourceInfo").textContent=sym.sources?.[0]?.name||"—";$("confInfo").textContent=series.historyType;
+ $("historyInfo").textContent="Khung "+TF[timeframe].label+" · "+rows.length+" nến · "+series.mode;
+ $("sourceInfo").textContent=(sym.sources?.[0]?.name||"—")+(lastLoadedAt?" · loaded "+lastLoadedAt:"");$("confInfo").textContent=series.historyType;
  renderPrice(series);renderRSI(series);renderMACD(series);signalCards(series);
  const need=Math.max(settings.bbLen,settings.rsiLen+1,35),msg=[];
  if(!rows.length)msg.push("Chưa có dữ liệu phù hợp cho khung này.");
  else if(rows.length<need)msg.push("Hiện có "+rows.length+" kỳ. Một số indicator chưa đủ dữ liệu.");
- if(timeframe==="W1")msg.push("Nến tuần chỉ dùng snapshot quan sát thật; không backfill giả từ dữ liệu tháng/quý.");
- if(timeframe==="M1"&&series.mode==="line")msg.push("Lịch sử tháng hiện là đường tham chiếu, chưa phải OHLC tháng.");
+ if(timeframe==="W1")msg.push("1W hiện là MODELED WEEKLY: nội suy tuyến tính giữa các mốc tháng/quý. Tuần quan sát thật sẽ được ưu tiên khi pipeline live được nối.");
  $("emptyOverlay").innerHTML=msg.length?'<div>'+msg.join("<br>")+'</div>':"";
  $("watchList").innerHTML=DATA.symbols.map(s=>{const z=getSeries(s),v=z.rows.at(-1)?.close;return '<button class="witem '+(s.symbol===current?'active':'')+'" data-s="'+s.symbol+'"><strong>'+s.symbol+'</strong><span class="price">'+(v==null?"—":fmt(v))+'</span><small>'+s.name+' · <span class="badge">'+z.mode.toUpperCase()+'</span></small></button>'}).join("");
  document.querySelectorAll(".witem").forEach(b=>b.onclick=()=>{current=b.dataset.s;render()});
@@ -157,7 +177,16 @@ function buildUI(){
  [["smaOn","sma"],["emaOn","ema"],["bbOn","bb"],["rsiOn","rsi"],["macdOn","macd"]].forEach(([id,k])=>{$(id).checked=settings[k];$(id).onchange=()=>{settings[k]=$(id).checked;render()}});
  [["smaLen","smaLen"],["emaLen","emaLen"],["bbLen","bbLen"],["rsiLen","rsiLen"]].forEach(([id,k])=>{$(id).value=settings[k];$(id).onchange=()=>{settings[k]=Math.max(2,parseInt($(id).value)||settings[k]);render()}});
 }
-async function init(){try{const r=await fetch("./data/market-indices.json",{cache:"no-store"});if(!r.ok)throw Error("data");DATA=await r.json();buildUI();render()}catch(e){$("title").textContent="Không tải được market-indices.json";$("emptyOverlay").innerHTML="<div>Hãy tải lại trang.</div>"}}
+async function loadData(rebuild=false){
+ try{
+   const r=await fetch("./data/market-indices.json?v="+Date.now(),{cache:"no-store",headers:{"Cache-Control":"no-cache"}});
+   if(!r.ok)throw Error("data");
+   DATA=await r.json(); lastLoadedAt=new Date().toLocaleTimeString("vi-VN");
+   if(rebuild){$("symbolMenu").innerHTML=DATA.symbols.map(s=>'<button class="symItem" data-s="'+s.symbol+'"><strong>'+s.symbol+'</strong><small>'+s.name+'</small></button>').join("");document.querySelectorAll(".symItem").forEach(b=>b.onclick=()=>{current=b.dataset.s;$("symbolMenu").classList.remove("open");render()});}
+   render();
+ }catch(e){$("title").textContent="Không tải được market-indices.json";$("emptyOverlay").innerHTML="<div>Hãy tải lại trang.</div>"}
+}
+async function init(){try{const r=await fetch("./data/market-indices.json?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("data");DATA=await r.json();lastLoadedAt=new Date().toLocaleTimeString("vi-VN");buildUI();render();$("refreshBtn").onclick=async()=>{$("refreshBtn").textContent="↻ Loading…";await loadData(true);$("refreshBtn").textContent="↻ Refresh"}}catch(e){$("title").textContent="Không tải được market-indices.json";$("emptyOverlay").innerHTML="<div>Hãy tải lại trang.</div>"}}
 init();
 </script>
 </body>
