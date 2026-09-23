@@ -15,7 +15,7 @@ export async function account() {
   if (!row) {
     // The first visitor on an owner-private deployment claims administration.
     const owner = await db.select().from(users).where(eq(users.role, "admin")).get();
-    if (!owner) {
+    if (!owner && user.email.toLowerCase() === "vuhoach.idc@gmail.com") {
       await db.insert(users).values({ id: user.userId, email: user.email.toLowerCase(), role: "admin", createdAt: Date.now() }).onConflictDoNothing();
     } else {
       const invite = await db.select().from(invitations).where(eq(invitations.email, user.email.toLowerCase())).get();
