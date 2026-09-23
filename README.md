@@ -12,8 +12,8 @@
 - Dữ liệu nến cập nhật qua WebSocket Binance và tự đồng bộ lại bằng REST khi mất kết nối.
 - Watchlist kiểu TradingView: nhiều danh sách, thêm/xóa/sắp xếp cặp Spot và Futures, giá cùng biến động 24 giờ theo thời gian thực.
 - Giao diện responsive cho điện thoại; watchlist và phần thiết lập mở dạng bảng trượt phía dưới để dành diện tích cho biểu đồ.
-- Chỉ báo MA, Bollinger Bands, RSI và Volume; có thể bật/tắt và chỉnh tham số.
-- Trình soạn chỉ báo tùy chỉnh với một tập con Pine Script an toàn; có thể thử và lưu mã.
+- Chỉ báo MA, Bollinger Bands, RSI và Volume; có thể bật/tắt, chỉnh tham số và chọn màu riêng cho từng đường, ngưỡng, vùng nền hoặc cột tăng/giảm.
+- Trình soạn chỉ báo tùy chỉnh với một tập con Pine Script an toàn; có thể thử và lưu mã, tối đa 8 đường `plot(...)` với tên và màu riêng.
 - Người chưa đăng nhập vẫn dùng được; cấu hình, watchlist và chỉ báo tự tạo được lưu trong `localStorage` của trình duyệt.
 
 ## Chạy trên máy cá nhân
@@ -39,7 +39,7 @@ pnpm build
 
 ## Pine Script được hỗ trợ
 
-Trình phân tích hiện hỗ trợ một `plot(...)` trên `open`, `high`, `low`, `close`, `volume` hoặc `ta.sma`, `ta.ema`, `ta.rsi`, `ta.stdev`, với độ dài nguyên từ 2 đến 200. Có thể dùng `length = input.int(20)`, `indicator(..., overlay=false)` và chú thích `//@version=5/6`.
+Trình phân tích hiện hỗ trợ tối đa 8 lệnh `plot(...)` trên `open`, `high`, `low`, `close`, `volume` hoặc `ta.sma`, `ta.ema`, `ta.rsi`, `ta.stdev`, với độ dài nguyên từ 2 đến 200. Mỗi đường có thể dùng `title`, `color` và `linewidth`; bảng màu trong giao diện cũng cập nhật mã tương ứng. Có thể dùng `length = input.int(20)`, `indicator(..., overlay=false)` và chú thích `//@version=5/6`.
 
 Đây là tập con Pine Script, không phải toàn bộ môi trường Pine của TradingView. Mã không được chạy bằng `eval` và không thể chạy JavaScript tùy ý.
 
