@@ -84,16 +84,22 @@ function monthKey(date){return date.slice(0,7)}
 function quarterKey(date){const d=new Date(date+"T00:00:00Z");return d.getUTCFullYear()+"-Q"+Math.ceil((d.getUTCMonth()+1)/3)}
 function yearKey(date){return date.slice(0,4)}
 function anchorDate(label){
- if(/^\\d{4}-\\d{2}$/.test(label)) return label+"-15";
- const q=label.match(/^(\\d{4})-Q([1-4])$/); if(q){const m=Number(q[2])*3;return q[1]+"-"+String(m).padStart(2,"0")+"-15";}
- return label;
+ if(typeof label!=="string")return null;
+ if(label.length===7&&label[4]==="-"&&!label.includes("Q"))return label+"-15";
+ const qi=label.indexOf("-Q");
+ if(qi===4){
+   const y=label.slice(0,4),q=Number(label.slice(6));
+   if(q>=1&&q<=4){const m=q*3;return y+"-"+String(m).padStart(2,"0")+"-15";}
+ }
+ if(label.length===10)return label;
+ return null;
 }
 function collectAnchors(sym){
  const a=[];
  (sym.monthlyReference||[]).forEach(x=>a.push({date:anchorDate(x.date),close:Number(x.close),type:x.historyType||"MONTHLY_REFERENCE"}));
  (sym.quarterlyReference||[]).forEach(x=>a.push({date:anchorDate(x.date),close:Number(x.close),type:x.historyType||"QUARTERLY_REFERENCE"}));
  (sym.sparseReferences||[]).forEach(x=>a.push({date:anchorDate(x.date),close:Number(x.value),type:x.historyType||"PUBLISHED_REFERENCE"}));
- const by=new Map();a.filter(x=>Number.isFinite(x.close)).forEach(x=>by.set(x.date,x));
+ const by=new Map();a.filter(x=>x.date&&Number.isFinite(x.close)).forEach(x=>by.set(x.date,x));
  return [...by.values()].sort((x,y)=>x.date.localeCompare(y.date));
 }
 function modeledWeekly(sym){
@@ -107,6 +113,7 @@ function modeledWeekly(sym){
    const close=a.close+(b.close-a.close)*ratio;
    closes.push({date:new Date(t).toISOString().slice(0,10),close,historyType:"MODELED_WEEKLY_INTERPOLATION"});
  }
+ if(!closes.length)return [];
  if(closes.at(-1).date!==pts.at(-1).date)closes.push({date:pts.at(-1).date,close:pts.at(-1).close,historyType:"MODELED_WEEKLY_INTERPOLATION"});
  const rows=closes.map((x,i)=>{const prev=i?closes[i-1].close:x.close;return{date:x.date,open:prev,high:Math.max(prev,x.close),low:Math.min(prev,x.close),close:x.close,historyType:x.historyType,confidence:"MODELED"}});
  return mergeObservedWeekly(sym,rows);
@@ -195,9 +202,9 @@ async function loadData(rebuild=false){
    DATA=await r.json(); lastLoadedAt=new Date().toLocaleTimeString("vi-VN");
    if(rebuild){$("symbolMenu").innerHTML=DATA.symbols.map(s=>'<button class="symItem" data-s="'+s.symbol+'"><strong>'+s.symbol+'</strong><small>'+s.name+'</small></button>').join("");document.querySelectorAll(".symItem").forEach(b=>b.onclick=()=>{current=b.dataset.s;$("symbolMenu").classList.remove("open");render()});}
    render();
- }catch(e){$("title").textContent="Không tải được market-indices.json";$("emptyOverlay").innerHTML="<div>Hãy tải lại trang.</div>"}
+ }catch(e){$("title").textContent="Lỗi xử lý dữ liệu thị trường";$("emptyOverlay").innerHTML="<div>Không thể dựng biểu đồ từ dataset hiện tại. Hãy bấm Refresh.</div>"}
 }
-async function init(){try{const r=await fetch("./data/market-indices.json?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("data");DATA=await r.json();lastLoadedAt=new Date().toLocaleTimeString("vi-VN");buildUI();render();$("refreshBtn").onclick=async()=>{$("refreshBtn").textContent="↻ Loading…";await loadData(true);$("refreshBtn").textContent="↻ Refresh"}}catch(e){$("title").textContent="Không tải được market-indices.json";$("emptyOverlay").innerHTML="<div>Hãy tải lại trang.</div>"}}
+async function init(){try{const r=await fetch("./data/market-indices.json?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("data");DATA=await r.json();lastLoadedAt=new Date().toLocaleTimeString("vi-VN");buildUI();render();$("refreshBtn").onclick=async()=>{$("refreshBtn").textContent="↻ Loading…";await loadData(true);$("refreshBtn").textContent="↻ Refresh"}}catch(e){$("title").textContent="Lỗi xử lý dữ liệu thị trường";$("emptyOverlay").innerHTML="<div>Không thể dựng biểu đồ từ dataset hiện tại. Hãy bấm Refresh.</div>"}}
 init();
 </script>
 </body>
