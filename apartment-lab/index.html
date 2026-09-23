@@ -20,46 +20,170 @@
 .signal{margin-top:18px}.signalCard{border:1px solid #2a3d50;background:#13202d;border-radius:8px;padding:9px;margin:7px 0}.signalCard b{font-size:11px}.signalCard p{font-size:10px;line-height:1.45;color:#97aabd;margin:4px 0 0}.warn{color:#f1c37d}.good{color:#73e0c4}
 svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1}.axisText{fill:#6f8296;font-size:10px}.wickUp{stroke:var(--up);stroke-width:1.3}.wickDown{stroke:var(--down);stroke-width:1.3}.candleUp{fill:var(--up)}.candleDown{fill:var(--down)}.refLine{fill:none;stroke:var(--up);stroke-width:2}.refPoint{fill:var(--up)}.sma{fill:none;stroke:var(--blue);stroke-width:1.4}.ema{fill:none;stroke:var(--amber);stroke-width:1.4}.bb{fill:none;stroke:var(--purple);stroke-width:1.1;stroke-dasharray:4 3}.rsiLine{fill:none;stroke:var(--purple);stroke-width:1.5}.macdLine{fill:none;stroke:var(--blue);stroke-width:1.4}.signalLine{fill:none;stroke:var(--amber);stroke-width:1.3}.zero{stroke:#516276;stroke-width:1;stroke-dasharray:3 3}
 @media(max-width:850px){
-  .body{grid-template-columns:1fr}.watch{display:none}.header .right{display:none}
-  .workspace{grid-template-rows:auto auto minmax(520px,1fr) auto}
-  .toolbar{display:grid;grid-template-columns:1fr;gap:7px;padding:8px;min-height:0}
+  .body{grid-template-columns:1fr;min-height:0;overflow:hidden}
+  .watch{display:none}
+  .header .right{display:none}
+
+  .workspace{
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+    overflow:hidden;
+  }
+
+  .toolbar{
+    display:flex;
+    flex:0 0 auto;
+    flex-direction:column;
+    align-items:stretch;
+    gap:7px;
+    padding:8px;
+    min-height:0;
+    position:relative;
+    z-index:20;
+  }
+
   .symbolBox,.toolbarBlock,.toolbarActions{width:100%}
   .symbolBtn{width:100%;min-width:0;padding:9px 11px}
-  .symbolMenu{position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top) + 112px);width:auto;max-height:55dvh;overflow:auto}
-  .toolbarBlock{display:grid;grid-template-columns:58px minmax(0,1fr);gap:6px}
-  .toolbarLabel{margin:0;align-self:center;font-size:9px}
-  .marketTabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;overflow:visible}
-  .marketTab{padding:8px 5px;text-align:center;font-size:10px;min-width:0}
-  .tf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
-  .tf button{padding:8px 4px;border:1px solid #233548;background:#101b27}
-  .toolbarActions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
-  .refreshBtn,.viewBtn,.indBtn{width:100%;padding:8px 4px;border:1px solid #233548;background:#101b27;white-space:nowrap;font-size:10px}
+
+  .symbolMenu{
+    position:fixed;
+    left:8px;
+    right:8px;
+    top:calc(env(safe-area-inset-top) + 112px);
+    width:auto;
+    max-height:55dvh;
+    overflow:auto;
+  }
+
+  .toolbarBlock{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:5px;
+  }
+
+  .toolbarLabel{
+    display:block;
+    margin:0;
+    font-size:9px;
+    line-height:1;
+  }
+
+  .marketTabs{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:5px;
+    overflow:visible;
+    width:100%;
+  }
+
+  .marketTab{
+    min-width:0;
+    width:100%;
+    padding:8px 3px;
+    text-align:center;
+    font-size:10px;
+  }
+
+  .tf{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:5px;
+    width:100%;
+  }
+
+  .tf button{
+    width:100%;
+    min-width:0;
+    padding:8px 4px;
+    border:1px solid #233548;
+    background:#101b27;
+  }
+
+  .toolbarActions{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:5px;
+  }
+
+  .refreshBtn,.viewBtn,.indBtn{
+    width:100%;
+    min-width:0;
+    padding:8px 3px;
+    border:1px solid #233548;
+    background:#101b27;
+    white-space:nowrap;
+    font-size:10px;
+  }
+
   .separator{display:none}
-  .indWrap{position:static}
-  .indPanel{position:fixed;left:0;right:0;bottom:0;top:auto;width:100%;max-width:none;max-height:76dvh;border-radius:18px 18px 0 0;padding:14px 12px calc(14px + env(safe-area-inset-bottom));box-shadow:0 -18px 60px #000c;z-index:999}
-  .quote{padding:7px 10px;min-height:54px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
-  .quote h1{font-size:14px;line-height:1.2;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .quote .desc{display:none}
-  .last{min-width:86px;margin:0;text-align:right}
-  .last strong{font-size:18px}.last span{font-size:9px;line-height:1.25}
-  .chartHead{left:8px;right:70px;top:6px;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+
+  /* Mobile: remove the desktop quote strip entirely so controls never overlap the chart. */
+  .quote{display:none}
+
+  .chartCard{
+    flex:1 1 auto;
+    min-height:0;
+    overflow:hidden;
+  }
+
+  .chart{
+    width:100%;
+    height:100%;
+    min-height:0;
+  }
+
+  .chartHead{
+    left:8px;
+    right:72px;
+    top:6px;
+    display:block;
+    font-size:9px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
   .chartHint{display:none}
-  .footer{overflow:auto;white-space:nowrap;padding:6px 8px;gap:10px}
+
+  .footer{
+    display:none;
+  }
+
+  .indWrap{position:static}
+  .indPanel{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    top:auto;
+    width:100%;
+    max-width:none;
+    max-height:76dvh;
+    overflow:auto;
+    border-radius:18px 18px 0 0;
+    padding:14px 12px calc(14px + env(safe-area-inset-bottom));
+    box-shadow:0 -18px 60px #000c;
+    z-index:999;
+  }
 }
-@media(max-width:520px){.titleName{display:none}
-  .app{grid-template-rows:44px 1fr}
-  .header{padding:0 9px}.logo{font-size:12px}.status{display:none}
-  .workspace{grid-template-rows:auto auto minmax(500px,1fr) auto}
-  .chart{min-height:500px}
-  .toolbar{gap:6px}
-  .marketTab{font-size:9.5px;padding:8px 3px}
+
+@media(max-width:520px){
+  .titleName{display:none}
+  .app{grid-template-rows:44px minmax(0,1fr)}
+  .header{padding:0 9px}
+  .logo{font-size:12px}
+  .status{display:none}
+  .toolbar{gap:6px;padding:7px}
+  .marketTab{font-size:9.5px;padding:8px 2px}
   .lineOption{grid-template-columns:1fr 78px 34px}
 }
 </style>
 </head>
 <body>
 <div class="app">
-<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.9.4</span><div class="right">Pan · zoom · crosshair · modeled + observed weekly</div></header>
+<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.9.5</span><div class="right">Pan · zoom · crosshair · modeled + observed weekly</div></header>
 <div class="body">
 <section class="workspace">
   <div class="toolbar">
