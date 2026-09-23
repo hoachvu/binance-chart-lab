@@ -1,18 +1,10 @@
 {
   "meta": {
-    "version": "0.4.0",
-    "baseDate": "2026-09-23",
-    "baseValue": 100,
+    "version": "0.5.0",
+    "updatedAt": "2026-09-23",
     "currencyReference": "triệu đồng/m²",
-    "methodology": "Quality-adjusted market index. Weekly observations are the atomic series; longer candles aggregate weekly index observations. No synthetic historical path is generated.",
-    "historyPolicy": {
-      "observed": "Measured/stored snapshots only.",
-      "backfilled": "Allowed only when a dated historical source provides enough observations.",
-      "modelled": "Never mixed into observed candles; must be labelled separately."
-    },
+    "policy": "Không nội suy dữ liệu tháng thành nến tuần. Chuỗi số hóa từ đồ thị luôn được gắn BACKFILLED_CHART_DIGITIZED và technical signal từ chuỗi này là tham khảo.",
     "indicatorMinimums": {
-      "SMA20": 20,
-      "EMA20": 20,
       "BB20": 20,
       "RSI14": 15,
       "MACD": 35
@@ -23,26 +15,277 @@
       "symbol": "HN-APT-ALL",
       "name": "Chung cư Hà Nội - toàn thị trường",
       "segment": "ALL",
-      "description": "Khung chỉ số tổng hợp chung cư Hà Nội. Chưa trộn cơ học sơ cấp và thứ cấp cho đến khi hoàn tất trọng số.",
-      "status": "COLLECTING",
-      "referencePrice": {
-        "value": 123,
-        "period": "Q2/2026",
-        "label": "Giá bán bình quân chung cư Hà Nội",
-        "source": "Bộ Xây dựng",
-        "url": "https://moc.gov.vn/vn/Pages/chitiettin.aspx?ChuyenmucID=1184&IDNews=96449&tieude=thi-truong-bat-dong-san-quy-ii2026-nguon-cung-khoi-sac-tap-trung-thao-go-the-che-va-thuc-day-nha-o-xa-hoi.aspx"
-      },
-      "weekly": [
+      "description": "Giá rao chung cư Hà Nội, dùng chuỗi Batdongsan.com.vn cho backfill kỹ thuật. Không đồng nhất với giá giao dịch.",
+      "monthlyReference": [
+        {
+          "date": "2022-01",
+          "close": 34,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2022-02",
+          "close": 34.2,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2022-03",
+          "close": 34.8,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2022-04",
+          "close": 35.5,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2022-05",
+          "close": 36,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2022-06",
+          "close": 36.2,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2022-07",
+          "close": 37.2,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2022-08",
+          "close": 37.6,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2022-09",
+          "close": 38.3,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2022-10",
+          "close": 38.5,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2022-11",
+          "close": 39,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2022-12",
+          "close": 38.5,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2023-01",
+          "close": 38,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2023-02",
+          "close": 37.7,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2023-03",
+          "close": 38.3,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2023-04",
+          "close": 38,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2023-05",
+          "close": 38.3,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2023-06",
+          "close": 38.3,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2023-07",
+          "close": 38.8,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2023-08",
+          "close": 40,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2023-09",
+          "close": 42,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2023-10",
+          "close": 42.2,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2023-11",
+          "close": 43.2,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2023-12",
+          "close": 44.5,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2024-01",
+          "close": 46,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2024-02",
+          "close": 47,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2024-03",
+          "close": 49,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2024-04",
+          "close": 50,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2024-05",
+          "close": 50,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2024-06",
+          "close": 52,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2024-07",
+          "close": 55,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2024-08",
+          "close": 56,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2024-09",
+          "close": 58.5,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2024-10",
+          "close": 60,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2024-11",
+          "close": 61.5,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2024-12",
+          "close": 62.5,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        },
+        {
+          "date": "2025-01",
+          "close": 63,
+          "historyType": "BACKFILLED_CHART_DIGITIZED",
+          "precision": "approx_0.5_to_1.0m"
+        }
+      ],
+      "sparseReferences": [
+        {
+          "date": "2025-Q1",
+          "value": 63,
+          "historyType": "PUBLISHED_REFERENCE",
+          "source": "Batdongsan.com.vn"
+        },
+        {
+          "date": "2025-Q2",
+          "value": 70,
+          "historyType": "PUBLISHED_REFERENCE",
+          "source": "Batdongsan.com.vn"
+        },
+        {
+          "date": "2026-Q2",
+          "value": 85,
+          "historyType": "PUBLISHED_REFERENCE",
+          "source": "Batdongsan.com.vn"
+        }
+      ],
+      "weeklyObserved": [
         {
           "date": "2026-09-23",
           "open": 100,
           "high": 100,
           "low": 100,
           "close": 100,
-          "sampleCount": null,
-          "projectsCount": null,
           "confidence": "LOW",
           "historyType": "OBSERVED_BASELINE"
+        }
+      ],
+      "sources": [
+        {
+          "name": "Batdongsan.com.vn research",
+          "url": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf",
+          "note": "Đường giá theo tháng 01/2022-01/2025; các điểm tháng trên web được số hóa xấp xỉ từ đồ thị."
+        },
+        {
+          "name": "Batdongsan.com.vn Q2/2025",
+          "url": "https://wiki.batdongsan.com.vn/tin-tuc/gia-chunng-cu-Ha-Noi-tang-cao-nha-dau-tu-Ha-Noi-tim-duong-vao-TP.HCM-cd-hn-841537",
+          "note": "Giá bán trung bình chung cư Hà Nội khoảng 70 triệu đồng/m² tại Q2/2025."
+        },
+        {
+          "name": "Batdongsan.com.vn Q2/2026",
+          "url": "https://wiki.batdongsan.com.vn/tin-tuc/thi-truong-chung-cu-giam-gia-rao-ban-tang-nhu-cau-thue-855446",
+          "note": "Giá rao bán trung bình Q2/2026 khoảng 85 triệu đồng/m², giảm 2% QoQ."
         }
       ]
     },
@@ -50,20 +293,65 @@
       "symbol": "HN-APT-SEC",
       "name": "Chung cư Hà Nội - thứ cấp",
       "segment": "SECONDARY",
-      "description": "Chỉ số dành cho căn hộ chuyển nhượng/thứ cấp. Giá rao và dữ liệu nguồn phải được làm sạch, khử trùng lặp và điều chỉnh cơ cấu trước khi vào index.",
-      "status": "COLLECTING",
-      "referencePrice": null,
-      "weekly": [
+      "description": "Giá chào bán/chuyển nhượng thứ cấp; backfill hiện có ở tần suất quý, chủ yếu từ One Mount/OneHousing.",
+      "quarterlyReference": [
+        {
+          "date": "2024-Q1",
+          "close": 52,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2024-Q2",
+          "close": 55,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2024-Q3",
+          "close": 62,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2024-Q4",
+          "close": 68,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2025-Q1",
+          "close": 70,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2025-Q2",
+          "close": 75,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2025-Q3",
+          "close": 83.8,
+          "historyType": "DERIVED_FROM_Q4_QOQ"
+        },
+        {
+          "date": "2025-Q4",
+          "close": 90,
+          "historyType": "PUBLISHED_REFERENCE"
+        }
+      ],
+      "weeklyObserved": [
         {
           "date": "2026-09-23",
           "open": 100,
           "high": 100,
           "low": 100,
           "close": 100,
-          "sampleCount": null,
-          "projectsCount": 11,
           "confidence": "LOW",
           "historyType": "OBSERVED_BASELINE"
+        }
+      ],
+      "sources": [
+        {
+          "name": "One Mount Group / OneHousing",
+          "url": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf",
+          "note": "Biểu đồ giá sơ cấp/thứ cấp theo quý 2024-2025; Q4/2025 thứ cấp khoảng 90 triệu/m², +7,4% QoQ."
         }
       ]
     },
@@ -71,39 +359,87 @@
       "symbol": "HN-APT-PRI",
       "name": "Chung cư Hà Nội - sơ cấp",
       "segment": "PRIMARY",
-      "description": "Chỉ số dành cho nguồn cung mở bán sơ cấp. Báo cáo thị trường theo quý được dùng làm nguồn kiểm chứng, không nội suy thành nến tuần.",
-      "status": "COLLECTING",
-      "referencePrice": null,
-      "weekly": [
+      "description": "Giá bán sơ cấp; backfill theo quý từ báo cáo One Mount/OneHousing, gồm Hà Nội và Văn Giang theo phạm vi báo cáo.",
+      "quarterlyReference": [
+        {
+          "date": "2023-Q1",
+          "close": 47,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2023-Q2",
+          "close": 44.5,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2023-Q3",
+          "close": 45,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2023-Q4",
+          "close": 48,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2024-Q1",
+          "close": 51,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2024-Q2",
+          "close": 64,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2024-Q3",
+          "close": 69,
+          "historyType": "BACKFILLED_CHART_DIGITIZED"
+        },
+        {
+          "date": "2024-Q4",
+          "close": 76.7,
+          "historyType": "PUBLISHED_REFERENCE"
+        },
+        {
+          "date": "2025-Q1",
+          "close": 76,
+          "historyType": "PUBLISHED_REFERENCE"
+        },
+        {
+          "date": "2025-Q2",
+          "close": 80,
+          "historyType": "PUBLISHED_REFERENCE"
+        },
+        {
+          "date": "2025-Q3",
+          "close": 85.6,
+          "historyType": "PUBLISHED_REFERENCE"
+        },
+        {
+          "date": "2025-Q4",
+          "close": 86,
+          "historyType": "PUBLISHED_REFERENCE"
+        }
+      ],
+      "weeklyObserved": [
         {
           "date": "2026-09-23",
           "open": 100,
           "high": 100,
           "low": 100,
           "close": 100,
-          "sampleCount": null,
-          "projectsCount": null,
           "confidence": "LOW",
           "historyType": "OBSERVED_BASELINE"
         }
+      ],
+      "sources": [
+        {
+          "name": "One Mount Group / OneHousing",
+          "url": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf",
+          "note": "Chuỗi sơ cấp theo quý 2023-2025; các điểm không được ghi số trực tiếp được số hóa xấp xỉ từ đồ thị."
+        }
       ]
-    }
-  ],
-  "sources": [
-    {
-      "name": "Bộ Xây dựng",
-      "purpose": "Benchmark thị trường",
-      "url": "https://moc.gov.vn/vn/Pages/chitiettin.aspx?ChuyenmucID=1184&IDNews=96449&tieude=thi-truong-bat-dong-san-quy-ii2026-nguon-cung-khoi-sac-tap-trung-thao-go-the-che-va-thuc-day-nha-o-xa-hoi.aspx"
-    },
-    {
-      "name": "Batdongsan.com.vn",
-      "purpose": "Nguồn tham khảo giá rao công khai / lịch sử giá công bố",
-      "url": "https://batdongsan.com.vn/ban-can-ho-chung-cu-tp-ha-noi"
-    },
-    {
-      "name": "OneHousing",
-      "purpose": "Nguồn tham khảo thị trường sơ cấp/thứ cấp và dữ liệu dự án",
-      "url": "https://onehousing.vn/bctt/bao-cao-thi-truong-bat-dong-san-quy-2-2026"
     }
   ]
 }
