@@ -85,7 +85,7 @@
       "high": 156.5,
       "change1y": -8.4,
       "change1m": null,
-      "listingCount": 66,
+      "listingCount": 71,
       "confidence": "Medium",
       "sourceType": "asking_range",
       "sourceName": "Batdongsan.com.vn",
@@ -105,7 +105,7 @@
       "high": 101.1,
       "change1y": -6.1,
       "change1m": null,
-      "listingCount": null,
+      "listingCount": 97,
       "confidence": "Medium",
       "sourceType": "asking_range",
       "sourceName": "Batdongsan.com.vn",
@@ -125,7 +125,7 @@
       "high": 101.8,
       "change1y": -10,
       "change1m": null,
-      "listingCount": null,
+      "listingCount": 43,
       "confidence": "Medium",
       "sourceType": "asking_range",
       "sourceName": "Batdongsan.com.vn",
@@ -234,6 +234,97 @@
       "sourcePeriod": "T9/2026",
       "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-metropolis-lieu-giai-14603",
       "note": "Khoảng giá rao và biến động 1 năm do nền tảng công bố."
+    },
+    {
+      "id": "ocean",
+      "name": "Vinhomes Ocean Park Gia Lâm",
+      "area": "Gia Lâm, Hà Nội",
+      "aliases": [
+        "ocean park",
+        "vinhomes ocean park",
+        "ocean park gia lam"
+      ],
+      "low": 51.6,
+      "high": 80.9,
+      "change1y": null,
+      "change1m": null,
+      "listingCount": 668,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-ocean-park-gia-lam",
+      "note": "Khoảng giá rao và số lượng tin công khai; không phải giá giao dịch."
+    },
+    {
+      "id": "gardenia",
+      "name": "Vinhomes Gardenia",
+      "area": "Cầu Diễn, Hà Nội",
+      "aliases": [
+        "vinhomes gardenia",
+        "gardenia"
+      ],
+      "low": 86,
+      "high": 115.6,
+      "change1y": 6.2,
+      "change1m": null,
+      "listingCount": 44,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-gardenia",
+      "note": "Khoảng giá rao, số lượng tin và biến động 1 năm do nền tảng công bố."
+    },
+    {
+      "id": "zei",
+      "name": "The Zei Mỹ Đình",
+      "area": "Mỹ Đình, Hà Nội",
+      "aliases": [
+        "the zei",
+        "zei my dinh",
+        "the zei my dinh"
+      ],
+      "low": 89.2,
+      "high": 129.4,
+      "change1y": -6.5,
+      "change1m": null,
+      "listingCount": 84,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-the-zei-my-dinh",
+      "note": "Khoảng giá rao, số lượng tin và biến động 1 năm do nền tảng công bố."
+    },
+    {
+      "id": "hanoihomeland",
+      "name": "Hà Nội Homeland",
+      "area": "Long Biên, Hà Nội",
+      "aliases": [
+        "ha noi homeland",
+        "hanoi homeland",
+        "homeland"
+      ],
+      "low": 66.3,
+      "high": 82.2,
+      "change1y": null,
+      "change1m": null,
+      "listingCount": 23,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-ha-noi-homeland",
+      "note": "Khoảng giá rao và số lượng tin công khai; không phải giá giao dịch."
     }
-  ]
+  ],
+  "universe": {
+    "trackedProjects": 15,
+    "trackedListingsWithPublishedCounts": 1703,
+    "hanoiMarketListings": 14760,
+    "verifiedMarketListings": 533,
+    "capturedAt": "2026-09-23",
+    "note": "Tracked-project list is for project-level drilldown. HN-APT-ALL uses the broader Hanoi market listing universe/activity count where available."
+  }
 }
