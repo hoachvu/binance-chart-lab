@@ -1,0 +1,239 @@
+{
+  "generatedAt": "2026-09-23",
+  "marketBenchmark": {
+    "name": "Hà Nội - căn hộ chung cư",
+    "value": 123,
+    "unit": "triệu đồng/m²",
+    "period": "Q2/2026",
+    "metric": "Giá bán bình quân",
+    "sourceName": "Bộ Xây dựng",
+    "sourceUrl": "https://moc.gov.vn/vn/Pages/chitiettin.aspx?ChuyenmucID=1184&IDNews=96449&tieude=thi-truong-bat-dong-san-quy-ii2026-nguon-cung-khoi-sac-tap-trung-thao-go-the-che-va-thuc-day-nha-o-xa-hoi.aspx",
+    "note": "Benchmark cấp thị trường, không dùng để suy ra giá của từng dự án."
+  },
+  "projects": [
+    {
+      "id": "times",
+      "name": "Vinhomes Times City",
+      "area": "Hai Bà Trưng, Hà Nội",
+      "aliases": [
+        "times city",
+        "vinhomes times",
+        "timescity"
+      ],
+      "low": 93.7,
+      "high": 130.7,
+      "change1y": null,
+      "change1m": null,
+      "listingCount": 247,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-times-city",
+      "note": "Khoảng giá rao tổng hợp; không phải giá giao dịch."
+    },
+    {
+      "id": "smart",
+      "name": "Vinhomes Smart City",
+      "area": "Tây Mỗ, Hà Nội",
+      "aliases": [
+        "smart city",
+        "vinhomes smart"
+      ],
+      "low": 76.08,
+      "high": 115.61,
+      "reference": 93.06,
+      "change1y": null,
+      "change1m": -2.28,
+      "listingCount": null,
+      "confidence": "Medium",
+      "sourceType": "popular_asking_rate",
+      "sourceName": "OneHousing",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Smart-City.102",
+      "note": "Đơn giá phổ biến 93,06 triệu/m²; khoảng giá 76,08–115,61 triệu/m²."
+    },
+    {
+      "id": "royal",
+      "name": "Vinhomes Royal City",
+      "area": "Thanh Xuân, Hà Nội",
+      "aliases": [
+        "royal city",
+        "royalcity"
+      ],
+      "low": 101,
+      "high": 141.6,
+      "change1y": 3.4,
+      "change1m": null,
+      "listingCount": 96,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/nha-dat-ban-royal-city",
+      "note": "Khoảng giá rao và biến động 1 năm do nền tảng công bố."
+    },
+    {
+      "id": "matrix",
+      "name": "The Matrix One",
+      "area": "Mễ Trì, Hà Nội",
+      "aliases": [
+        "matrix one",
+        "the matrix"
+      ],
+      "low": 91.5,
+      "high": 156.5,
+      "change1y": -8.4,
+      "change1m": null,
+      "listingCount": 66,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-the-matrix-one",
+      "note": "Khoảng giá rao và biến động 1 năm do nền tảng công bố."
+    },
+    {
+      "id": "masteri",
+      "name": "Masteri West Heights",
+      "area": "Tây Mỗ, Hà Nội",
+      "aliases": [
+        "masteri west heights",
+        "masteri smart city"
+      ],
+      "low": 78,
+      "high": 101.1,
+      "change1y": -6.1,
+      "change1m": null,
+      "listingCount": null,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-masteri-west-heights",
+      "note": "Khoảng giá rao và biến động 1 năm do nền tảng công bố."
+    },
+    {
+      "id": "imperia",
+      "name": "Imperia Smart City",
+      "area": "Tây Mỗ, Hà Nội",
+      "aliases": [
+        "imperia smart city",
+        "imperia"
+      ],
+      "low": 69,
+      "high": 101.8,
+      "change1y": -10,
+      "change1m": null,
+      "listingCount": null,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-imperia-smart-city",
+      "note": "Khoảng giá rao và biến động 1 năm do nền tảng công bố."
+    },
+    {
+      "id": "sunshine",
+      "name": "Sunshine City",
+      "area": "Phú Thượng, Hà Nội",
+      "aliases": [
+        "sunshine city",
+        "sunshine ciputra"
+      ],
+      "low": 95.6,
+      "high": 120,
+      "change1y": 5.8,
+      "change1m": null,
+      "listingCount": 108,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-sunshine-city",
+      "note": "Khoảng giá rao và biến động 1 năm do nền tảng công bố."
+    },
+    {
+      "id": "mipec",
+      "name": "Mipec Rubik 360",
+      "area": "Cầu Giấy, Hà Nội",
+      "aliases": [
+        "mipec rubik 360",
+        "mipec xuân thủy",
+        "mipec"
+      ],
+      "low": 103.5,
+      "high": 132.2,
+      "change1y": -1.3,
+      "change1m": null,
+      "listingCount": 56,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-mipec-rubik-360",
+      "note": "Khoảng giá rao và biến động 1 năm do nền tảng công bố."
+    },
+    {
+      "id": "goldmark",
+      "name": "Goldmark City",
+      "area": "Phú Diễn, Hà Nội",
+      "aliases": [
+        "goldmark city",
+        "goldmark"
+      ],
+      "low": 62.4,
+      "high": 83.6,
+      "change1y": -6.5,
+      "change1m": null,
+      "listingCount": 87,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-goldmark-city",
+      "note": "Khoảng giá rao và biến động 1 năm do nền tảng công bố."
+    },
+    {
+      "id": "skylake",
+      "name": "Vinhomes Skylake",
+      "area": "Mỹ Đình, Hà Nội",
+      "aliases": [
+        "vinhomes skylake",
+        "skylake"
+      ],
+      "low": 113,
+      "high": 144.2,
+      "change1y": 1.7,
+      "change1m": null,
+      "listingCount": 79,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-skylake",
+      "note": "Khoảng giá rao và biến động 1 năm do nền tảng công bố."
+    },
+    {
+      "id": "metropolis",
+      "name": "Vinhomes Metropolis",
+      "area": "Liễu Giai, Hà Nội",
+      "aliases": [
+        "vinhomes metropolis",
+        "metropolis liễu giai",
+        "metropolis"
+      ],
+      "low": 183.5,
+      "high": 254.5,
+      "change1y": 10,
+      "change1m": null,
+      "listingCount": null,
+      "confidence": "Medium",
+      "sourceType": "asking_range",
+      "sourceName": "Batdongsan.com.vn",
+      "sourcePeriod": "T9/2026",
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-metropolis-lieu-giai-14603",
+      "note": "Khoảng giá rao và biến động 1 năm do nền tảng công bố."
+    }
+  ]
+}
