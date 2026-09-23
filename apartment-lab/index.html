@@ -108,7 +108,18 @@ function modeledWeekly(sym){
    closes.push({date:new Date(t).toISOString().slice(0,10),close,historyType:"MODELED_WEEKLY_INTERPOLATION"});
  }
  if(closes.at(-1).date!==pts.at(-1).date)closes.push({date:pts.at(-1).date,close:pts.at(-1).close,historyType:"MODELED_WEEKLY_INTERPOLATION"});
- return closes.map((x,i)=>{const prev=i?closes[i-1].close:x.close;return{date:x.date,open:prev,high:Math.max(prev,x.close),low:Math.min(prev,x.close),close:x.close,historyType:x.historyType,confidence:"MODELED"}});
+ const rows=closes.map((x,i)=>{const prev=i?closes[i-1].close:x.close;return{date:x.date,open:prev,high:Math.max(prev,x.close),low:Math.min(prev,x.close),close:x.close,historyType:x.historyType,confidence:"MODELED"}});
+ return mergeObservedWeekly(sym,rows);
+}
+function mondayKey(date){
+ const d=new Date(date+"T00:00:00Z"),day=(d.getUTCDay()+6)%7;d.setUTCDate(d.getUTCDate()-day);return d.toISOString().slice(0,10);
+}
+function mergeObservedWeekly(sym,modeled){
+ const obs=(sym.weeklyObserved||[]).filter(x=>[x.open,x.high,x.low,x.close].every(Number.isFinite));
+ if(!obs.length)return modeled;
+ const byWeek=new Map(modeled.map(x=>[mondayKey(x.date),x]));
+ for(const o of obs)byWeek.set(mondayKey(o.date),{...o,date:mondayKey(o.date),historyType:"OBSERVED_WEEKLY",confidence:o.confidence||"OBSERVED"});
+ return [...byWeek.values()].sort((a,b)=>a.date.localeCompare(b.date));
 }
 function aggregateCandles(rows,keyFn,labelType){
  const groups=[];let cur=null;
@@ -158,7 +169,7 @@ function render(){
  $("symbolBtn").textContent=sym.symbol+" ▾";$("title").textContent=sym.symbol+" · "+sym.name;$("desc").textContent=sym.description;
  $("last").textContent=last?fmt(last.close):"—";$("lastMeta").innerHTML=(series.mode==="line"?"Reference close":"Candle close")+"<br>"+(last?.date||"—")+(ext&&timeframe==="M1"?" · Latest published ref "+fmt(ext.value)+" ("+ext.date+")":"");
  $("historyInfo").textContent="Khung "+TF[timeframe].label+" · "+rows.length+" nến · "+series.mode;
- $("sourceInfo").textContent=(sym.sources?.[0]?.name||"—")+(lastLoadedAt?" · loaded "+lastLoadedAt:"");$("confInfo").textContent=series.historyType;
+ $("sourceInfo").textContent=(sym.sources?.[0]?.name||"—")+(lastLoadedAt?" · loaded "+lastLoadedAt:"");$("confInfo").textContent=series.historyType+(series.rows.some(x=>x.historyType==="OBSERVED_WEEKLY")?" · observed override active":"");
  renderPrice(series);renderRSI(series);renderMACD(series);signalCards(series);
  const need=Math.max(settings.bbLen,settings.rsiLen+1,35),msg=[];
  if(!rows.length)msg.push("Chưa có dữ liệu phù hợp cho khung này.");
