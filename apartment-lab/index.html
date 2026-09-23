@@ -10,8 +10,8 @@
 .app{height:100dvh;display:grid;grid-template-rows:48px 1fr;overflow:hidden}.header{display:flex;align-items:center;padding:0 12px;border-bottom:1px solid var(--line);background:#0d1620;gap:10px}
 .logo{font-weight:850;font-size:13px;letter-spacing:.08em;white-space:nowrap}.logo b{color:var(--up)}.status{font-size:10px;border:1px solid #31475d;border-radius:999px;color:#9db2c7;padding:3px 7px}.header .right{margin-left:auto;color:var(--muted);font-size:11px}
 .body{display:grid;grid-template-columns:minmax(0,1fr) 280px;min-height:0}.workspace{display:grid;grid-template-rows:auto auto minmax(620px,1fr) auto;min-width:0;overflow:hidden}.watch{border-left:1px solid var(--line);background:var(--panel);padding:12px;overflow:auto}
-.toolbar{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);background:#0d1620;flex-wrap:wrap}.symbolBox{position:relative}.symbolBtn{background:#172433;border:1px solid #314357;color:var(--text);border-radius:6px;padding:7px 10px;font-weight:760;min-width:150px;text-align:left}.symbolMenu{position:absolute;z-index:30;top:40px;left:0;width:330px;background:#101c28;border:1px solid #34495f;border-radius:8px;box-shadow:0 12px 35px #0008;display:none;overflow:hidden}.symbolMenu.open{display:block}.symItem{display:block;width:100%;padding:10px;border:0;border-bottom:1px solid #243447;background:transparent;color:var(--text);text-align:left}.symItem:hover{background:#182a3a}.symItem strong{display:block}.symItem small{color:var(--muted)}
-.marketTabs{display:flex;gap:4px;overflow-x:auto;max-width:100%}.marketTab{border:1px solid #2b3e52;background:#101b27;color:#90a3b6;border-radius:6px;padding:7px 9px;font-size:11px;font-weight:800;white-space:nowrap}.marketTab:hover{background:#172536}.marketTab.active{background:#173b37;color:#66dfc2;border-color:#285d54}.tf{display:flex;gap:2px}.tf button,.indBtn,.refreshBtn,.viewBtn{border:0;background:transparent;color:#91a4b7;border-radius:5px;padding:7px 8px;font-size:12px;font-weight:700}.tf button:hover,.indBtn:hover,.refreshBtn:hover,.viewBtn:hover{background:#172536}.tf button.active{background:#173b37;color:#5fe0c0}.separator{width:1px;height:24px;background:var(--line)}
+.toolbar{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);background:#0d1620;flex-wrap:wrap;min-height:52px;position:relative;z-index:20}.symbolBox{position:relative}.symbolBtn{background:#172433;border:1px solid #314357;color:var(--text);border-radius:6px;padding:7px 10px;font-weight:760;min-width:150px;text-align:left}.symbolMenu{position:absolute;z-index:30;top:40px;left:0;width:330px;background:#101c28;border:1px solid #34495f;border-radius:8px;box-shadow:0 12px 35px #0008;display:none;overflow:hidden}.symbolMenu.open{display:block}.symItem{display:block;width:100%;padding:10px;border:0;border-bottom:1px solid #243447;background:transparent;color:var(--text);text-align:left}.symItem:hover{background:#182a3a}.symItem strong{display:block}.symItem small{color:var(--muted)}
+.marketTabs{display:flex;gap:4px;overflow-x:auto;max-width:100%}.toolbarLabel{font-size:9px;color:#60758a;font-weight:800;letter-spacing:.08em;margin-right:-2px}.marketTab{border:1px solid #2b3e52;background:#101b27;color:#90a3b6;border-radius:6px;padding:7px 9px;font-size:11px;font-weight:800;white-space:nowrap}.marketTab:hover{background:#172536}.marketTab.active{background:#173b37;color:#66dfc2;border-color:#285d54}.tf{display:flex;gap:2px}.tf button,.indBtn,.refreshBtn,.viewBtn{border:0;background:transparent;color:#91a4b7;border-radius:5px;padding:7px 8px;font-size:12px;font-weight:700}.tf button:hover,.indBtn:hover,.refreshBtn:hover,.viewBtn:hover{background:#172536}.tf button.active{background:#173b37;color:#5fe0c0}.separator{width:1px;height:24px;background:var(--line)}
 .indWrap{position:relative}.indPanel{position:absolute;z-index:40;top:38px;left:0;width:370px;background:#111d29;border:1px solid #33485d;border-radius:9px;padding:12px;display:none;box-shadow:0 12px 35px #0009}.indPanel.open{display:block}.indRow{display:grid;grid-template-columns:22px 1fr 70px 34px 72px;align-items:center;gap:7px;margin:7px 0;font-size:12px}.indRow input[type=number]{width:100%;background:#0c1620;color:var(--text);border:1px solid #30455a;border-radius:5px;padding:5px}.colorPick{width:30px;height:24px;padding:0;border:1px solid #40566b;border-radius:5px;background:transparent;cursor:pointer}
 .quote{display:flex;align-items:end;gap:15px;padding:10px 14px;border-bottom:1px solid var(--line);background:#0b131d;min-height:74px}.quote h1{font-size:19px;margin:0 0 3px}.quote .desc{font-size:11px;color:var(--muted);max-width:680px;line-height:1.45}.last{margin-left:auto;text-align:right;min-width:160px}.last strong{font-size:22px}.last span{display:block;color:var(--muted);font-size:11px;line-height:1.4}
 .chartCard{position:relative;background:#0a111a;min-height:0}.chartHint{position:absolute;right:10px;top:8px;z-index:5;color:#60768b;font-size:10px;pointer-events:none}.chartHead{position:absolute;z-index:4;top:8px;left:10px;display:flex;gap:11px;font-size:11px;color:var(--muted);pointer-events:none}.chart{width:100%;height:100%;min-height:620px}.emptyOverlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;pointer-events:none}.emptyOverlay>div{background:#0d1722e8;border:1px solid #2d4155;border-radius:8px;padding:12px 16px;color:#a9bacb;font-size:12px;line-height:1.6;max-width:390px}
@@ -25,7 +25,7 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
 </head>
 <body>
 <div class="app">
-<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.9.1</span><div class="right">Pan · zoom · crosshair · modeled + observed weekly</div></header>
+<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.9.2</span><div class="right">Pan · zoom · crosshair · modeled + observed weekly</div></header>
 <div class="body">
 <section class="workspace">
   <div class="toolbar">
@@ -33,9 +33,9 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
       <button id="symbolBtn" class="symbolBtn">HN-APT-ALL ▾</button>
       <div id="symbolMenu" class="symbolMenu"></div>
     </div>
-    <div id="marketTabs" class="marketTabs"></div>
+    <span class="toolbarLabel">MARKET</span><div id="marketTabs" class="marketTabs"></div>
     <div class="separator"></div>
-    <div id="tf" class="tf"></div>
+    <span class="toolbarLabel">TIMEFRAME</span><div id="tf" class="tf"></div>
     <div class="separator"></div>
     <button id="refreshBtn" class="refreshBtn">↻ Refresh</button><button id="fitBtn" class="viewBtn">Fit</button><button id="latestBtn" class="viewBtn">Latest</button><div class="indWrap">
       <button id="indBtn" class="indBtn">Indicators ▾</button>
@@ -58,7 +58,7 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
         <div class="indRow"><span></span><label></label><span></span><input id="signalColor" class="colorPick" type="color"><span>Signal</span></div>
         <div class="indRow"><span></span><label></label><span></span><input id="histUpColor" class="colorPick" type="color"><span>Hist +</span></div>
         <div class="indRow"><span></span><label></label><span></span><input id="histDownColor" class="colorPick" type="color"><span>Hist -</span></div>
-      </div></div>
+      </div>
     </div>
   </div>
   <div class="quote">
