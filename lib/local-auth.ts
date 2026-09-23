@@ -5,7 +5,10 @@ import { localAccounts, loginSessions, users } from "@/db/schema";
 
 export const SESSION_COOKIE = "chartlab_session";
 export const SESSION_AGE = 30 * 24 * 60 * 60;
-export const PASSWORD_ITERATIONS = 310_000;
+// Cloudflare Workers caps each PBKDF2 deriveBits call at 100,000 iterations.
+// Chain six bounded calls so a stored password still costs 600,000 iterations.
+export const PASSWORD_ITERATIONS = 600_000;
+const PBKDF2_CALL_LIMIT = 100_000;
 
 function encode(bytes: Uint8Array): string {
   return btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -24,10 +27,21 @@ export async function sha256(value: string): Promise<string> {
 }
 
 export async function hashPassword(password: string, salt: string, iterations = PASSWORD_ITERATIONS): Promise<string> {
-  const material = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
-  const saltBytes = Uint8Array.from(atob(salt.replace(/-/g, "+").replace(/_/g, "/")), char => char.charCodeAt(0));
-  const hash = await crypto.subtle.deriveBits({ name: "PBKDF2", salt: saltBytes, iterations, hash: "SHA-256" }, material, 256);
-  return encode(new Uint8Array(hash));
+  if (!Number.isSafeInteger(iterations) || iterations < PBKDF2_CALL_LIMIT || iterations > 1_000_000) throw new Error("Invalid password work factor");
+  const base64 = salt.replace(/-/g, "+").replace(/_/g, "/");
+  const saltBytes = Uint8Array.from(atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, "=")), char => char.charCodeAt(0));
+  if (saltBytes.length !== 16) throw new Error("Invalid password salt");
+  let material: Uint8Array<ArrayBuffer> = new TextEncoder().encode(password);
+  for (let round = 0, remaining = iterations; remaining > 0; round++) {
+    const roundSalt = new Uint8Array(saltBytes.length + 1);
+    roundSalt.set(saltBytes);
+    roundSalt[saltBytes.length] = round;
+    const key = await crypto.subtle.importKey("raw", material, "PBKDF2", false, ["deriveBits"]);
+    const work = Math.min(remaining, PBKDF2_CALL_LIMIT);
+    material = new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", salt: roundSalt, iterations: work, hash: "SHA-256" }, key, 256));
+    remaining -= work;
+  }
+  return encode(material);
 }
 
 export function sameHash(first: string, second: string): boolean {

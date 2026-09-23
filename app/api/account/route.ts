@@ -18,6 +18,7 @@ async function limit(key: string, maximum: number, duration: number, increment =
 export async function POST(request: Request) {
   const origin = request.headers.get("Origin");
   if (origin && origin !== new URL(request.url).origin) return Response.json({ error: "Yêu cầu không hợp lệ." }, { status: 403 });
+  let stage = "request";
   try {
     const body = await request.json() as { action?: string; username?: string; password?: string };
     const db = getDb();
@@ -36,34 +37,45 @@ export async function POST(request: Request) {
     const loginKey = `login:${await sha256(`${ipHash}:${username}`)}`;
     let userId: string;
     if (body.action === "register") {
+      stage = "register-limit";
       if (!await limit(`register:${ipHash}`, 5, 60 * 60 * 1000)) return Response.json({ error: "Tạo tài khoản quá nhiều lần. Vui lòng thử lại sau." }, { status: 429 });
+      stage = "register-lookup";
       if (await db.select({ username: localAccounts.username }).from(localAccounts).where(eq(localAccounts.username, username)).get()) return Response.json({ error: "Tên tài khoản đã được dùng." }, { status: 409 });
       userId = crypto.randomUUID();
       const salt = randomSalt();
+      stage = "register-hash";
       const passwordHash = await hashPassword(password, salt);
+      stage = "register-user";
       await db.insert(users).values({ id: userId, email: `${username}@local.chartlab.invalid`, role: "local", createdAt: Date.now() });
       try {
+        stage = "register-account";
         await db.insert(localAccounts).values({ username, userId, salt, passwordHash, iterations: PASSWORD_ITERATIONS, createdAt: Date.now() });
       } catch {
         await db.delete(users).where(eq(users.id, userId));
         return Response.json({ error: "Tên tài khoản đã được dùng." }, { status: 409 });
       }
     } else {
+      stage = "login-limit";
       if (!await limit(loginKey, 8, 15 * 60 * 1000, false)) return Response.json({ error: "Đăng nhập quá nhiều lần. Vui lòng thử lại sau 15 phút." }, { status: 429 });
+      stage = "login-lookup";
       const row = await db.select().from(localAccounts).where(eq(localAccounts.username, username)).get();
+      stage = "login-hash";
       const calculated = await hashPassword(password, row?.salt || "AAAAAAAAAAAAAAAAAAAAAA", row?.iterations || PASSWORD_ITERATIONS);
       if (!row || !sameHash(calculated, row.passwordHash)) {
         await limit(loginKey, 8, 15 * 60 * 1000);
         return Response.json({ error: "Tên tài khoản hoặc mật khẩu không đúng." }, { status: 401 });
       }
       userId = row.userId;
+      stage = "login-clear-attempts";
       await db.delete(authAttempts).where(eq(authAttempts.key, loginKey));
     }
     const token = randomToken();
+    stage = "session";
     await db.delete(loginSessions).where(lt(loginSessions.expiresAt, Date.now()));
     await db.insert(loginSessions).values({ tokenHash: await sha256(token), userId, expiresAt: Date.now() + SESSION_AGE * 1000 });
     return setSessionCookie(Response.json({ ok: true, username }, { headers: { "Cache-Control": "no-store" } }), token, request);
-  } catch {
+  } catch (error) {
+    console.error("Account operation failed", stage, error instanceof Error ? error.name : typeof error);
     return Response.json({ error: "Chưa thể xử lý tài khoản. Vui lòng thử lại." }, { status: 503 });
   }
 }
