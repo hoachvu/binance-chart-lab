@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "0.5.0",
+    "version": "0.6.0",
     "updatedAt": "2026-09-23",
     "currencyReference": "triệu đồng/m²",
     "policy": "Không nội suy dữ liệu tháng thành nến tuần. Chuỗi số hóa từ đồ thị luôn được gắn BACKFILLED_CHART_DIGITIZED và technical signal từ chuỗi này là tham khảo.",
@@ -8,7 +8,8 @@
       "BB20": 20,
       "RSI14": 15,
       "MACD": 35
-    }
+    },
+    "weeklyPolicy": "Weekly candles may be MODELED from dated monthly/quarterly anchors. Observed weekly OHLC may override modeled candles only when expressed in the same million VND/m² unit and matching the same week."
   },
   "symbols": [
     {
@@ -260,17 +261,7 @@
           "source": "Batdongsan.com.vn"
         }
       ],
-      "weeklyObserved": [
-        {
-          "date": "2026-09-23",
-          "open": 100,
-          "high": 100,
-          "low": 100,
-          "close": 100,
-          "confidence": "LOW",
-          "historyType": "OBSERVED_BASELINE"
-        }
-      ],
+      "weeklyObserved": [],
       "sources": [
         {
           "name": "Batdongsan.com.vn research",
@@ -287,7 +278,8 @@
           "url": "https://wiki.batdongsan.com.vn/tin-tuc/thi-truong-chung-cu-giam-gia-rao-ban-tang-nhu-cau-thue-855446",
           "note": "Giá rao bán trung bình Q2/2026 khoảng 85 triệu đồng/m², giảm 2% QoQ."
         }
-      ]
+      ],
+      "unit": "million_vnd_per_m2"
     },
     {
       "symbol": "HN-APT-SEC",
@@ -336,24 +328,15 @@
           "historyType": "PUBLISHED_REFERENCE"
         }
       ],
-      "weeklyObserved": [
-        {
-          "date": "2026-09-23",
-          "open": 100,
-          "high": 100,
-          "low": 100,
-          "close": 100,
-          "confidence": "LOW",
-          "historyType": "OBSERVED_BASELINE"
-        }
-      ],
+      "weeklyObserved": [],
       "sources": [
         {
           "name": "One Mount Group / OneHousing",
           "url": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf",
           "note": "Biểu đồ giá sơ cấp/thứ cấp theo quý 2024-2025; Q4/2025 thứ cấp khoảng 90 triệu/m², +7,4% QoQ."
         }
-      ]
+      ],
+      "unit": "million_vnd_per_m2"
     },
     {
       "symbol": "HN-APT-PRI",
@@ -422,24 +405,15 @@
           "historyType": "PUBLISHED_REFERENCE"
         }
       ],
-      "weeklyObserved": [
-        {
-          "date": "2026-09-23",
-          "open": 100,
-          "high": 100,
-          "low": 100,
-          "close": 100,
-          "confidence": "LOW",
-          "historyType": "OBSERVED_BASELINE"
-        }
-      ],
+      "weeklyObserved": [],
       "sources": [
         {
           "name": "One Mount Group / OneHousing",
           "url": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf",
           "note": "Chuỗi sơ cấp theo quý 2023-2025; các điểm không được ghi số trực tiếp được số hóa xấp xỉ từ đồ thị."
         }
-      ]
+      ],
+      "unit": "million_vnd_per_m2"
     }
   ]
 }
