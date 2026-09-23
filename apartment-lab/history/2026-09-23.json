@@ -1,0 +1,75 @@
+{
+  "snapshotDate": "2026-09-23",
+  "note": "First internally stored snapshot. Values are public asking-price summaries/reference metrics, not transaction prices.",
+  "marketBenchmark": {
+    "hanoiApartmentAvgQ2_2026": 123
+  },
+  "projects": [
+    {
+      "id": "times",
+      "low": 93.7,
+      "high": 130.7,
+      "reference": 112.2
+    },
+    {
+      "id": "smart",
+      "low": 76.08,
+      "high": 115.61,
+      "reference": 93.06
+    },
+    {
+      "id": "royal",
+      "low": 101,
+      "high": 141.6,
+      "reference": 121.3
+    },
+    {
+      "id": "matrix",
+      "low": 91.5,
+      "high": 156.5,
+      "reference": 124
+    },
+    {
+      "id": "masteri",
+      "low": 78,
+      "high": 101.1,
+      "reference": 89.55
+    },
+    {
+      "id": "imperia",
+      "low": 69,
+      "high": 101.8,
+      "reference": 85.4
+    },
+    {
+      "id": "sunshine",
+      "low": 95.6,
+      "high": 120,
+      "reference": 107.8
+    },
+    {
+      "id": "mipec",
+      "low": 103.5,
+      "high": 132.2,
+      "reference": 117.85
+    },
+    {
+      "id": "goldmark",
+      "low": 62.4,
+      "high": 83.6,
+      "reference": 73
+    },
+    {
+      "id": "skylake",
+      "low": 113,
+      "high": 144.2,
+      "reference": 128.6
+    },
+    {
+      "id": "metropolis",
+      "low": 183.5,
+      "high": 254.5,
+      "reference": 219
+    }
+  ]
+}
