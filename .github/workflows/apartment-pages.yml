@@ -27,6 +27,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Vendor Lightweight Charts
+        run: |
+          mkdir -p apartment-lab/vendor
+          curl -fL --retry 3 --retry-delay 2             https://unpkg.com/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js             -o apartment-lab/vendor/lightweight-charts.standalone.production.js
+          test -s apartment-lab/vendor/lightweight-charts.standalone.production.js
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
