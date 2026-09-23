@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "0.8.0",
+    "version": "0.9.0",
     "updatedAt": "2026-09-23T15:00:00+07:00",
     "currencyReference": "triệu đồng/m²",
     "policy": "Không nội suy dữ liệu tháng thành nến tuần. Chuỗi số hóa từ đồ thị luôn được gắn BACKFILLED_CHART_DIGITIZED và technical signal từ chuỗi này là tham khảo.",
@@ -11,7 +11,8 @@
     },
     "weeklyPolicy": "Weekly candles may be MODELED from dated monthly/quarterly anchors. Observed weekly OHLC may override modeled candles only when expressed in the same million VND/m² unit and matching the same week.",
     "refreshBehavior": "Browser refresh and the Refresh button always fetch the latest published JSON without cache. External-source ingestion remains separate; new source anchors appear after the data pipeline commits them.",
-    "volumeDefinition": "Volume pane = public listing/sample count when available. Missing periods remain missing; counts are never interpolated."
+    "volumeDefinition": "Volume pane = public listing/sample count when available. Missing periods remain missing; counts are never interpolated.",
+    "sampleUniverse": "HN-APT-ALL current activity sample uses the full public Hanoi apartment listing universe count when available, not only tracked-project counts."
   },
   "symbols": [
     {
@@ -296,12 +297,16 @@
       "unit": "million_vnd_per_m2",
       "weeklyVolume": [
         {
-          "date": "2026-09-15",
-          "value": 739,
-          "metric": "PUBLIC_LISTING_SAMPLE_COUNT",
-          "historyType": "OBSERVED_PARTIAL_SAMPLE",
-          "coverage": "7 tracked projects with published listing counts",
-          "note": "Partial public listing sample; not transaction volume."
+          "date": "2026-09-21",
+          "value": 14760,
+          "verifiedCount": 533,
+          "metric": "HANOI_PUBLIC_APARTMENT_LISTING_UNIVERSE",
+          "historyType": "OBSERVED_MARKET_UNIVERSE",
+          "coverage": "All Hanoi apartment sale listings shown by Batdongsan.com.vn at capture time",
+          "source": "Batdongsan.com.vn",
+          "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-tp-ha-noi",
+          "capturedAt": "2026-09-23",
+          "note": "Listing universe/activity proxy, not transaction volume. Includes listings across the Hanoi apartment market and may contain duplicates or mixed primary/secondary supply."
         }
       ]
     },
@@ -373,16 +378,8 @@
         }
       ],
       "unit": "million_vnd_per_m2",
-      "weeklyVolume": [
-        {
-          "date": "2026-09-15",
-          "value": 739,
-          "metric": "PUBLIC_LISTING_SAMPLE_COUNT",
-          "historyType": "OBSERVED_PARTIAL_SAMPLE",
-          "coverage": "7 tracked projects with published listing counts",
-          "note": "Partial public listing sample; not transaction volume."
-        }
-      ]
+      "weeklyVolume": [],
+      "volumeNote": "Secondary-only listing count is not yet reliably separated from the citywide listing universe; left blank rather than misclassify primary listings."
     },
     {
       "symbol": "HN-APT-PRI",
@@ -472,7 +469,8 @@
         }
       ],
       "unit": "million_vnd_per_m2",
-      "weeklyVolume": []
+      "weeklyVolume": [],
+      "volumeNote": "Primary-only listing count is not yet reliably separated from the citywide listing universe; left blank rather than mix secondary listings."
     }
   ]
 }
