@@ -8,11 +8,13 @@
 
 - Binance Spot và Futures USDⓈ-M.
 - Tìm coin theo ký hiệu như `ETH`, sau đó chọn đúng cặp giao dịch (`ETHUSDT`, `ETHUSDC`, ...).
-- Biểu đồ nến có kéo, zoom, tải thêm lịch sử và đổi khung `1m`, `5m`, `15m`, `1h`, `4h`, `1d`.
+- Biểu đồ nến có kéo, zoom/chụm hai ngón, tải thêm lịch sử và đổi khung `1m`, `5m`, `15m`, `1h`, `4h`, `1d`, `1w`.
 - Dữ liệu nến cập nhật qua WebSocket Binance và tự đồng bộ lại bằng REST khi mất kết nối.
+- Watchlist kiểu TradingView: nhiều danh sách, thêm/xóa/sắp xếp cặp Spot và Futures, giá cùng biến động 24 giờ theo thời gian thực.
+- Giao diện responsive cho điện thoại; watchlist và phần thiết lập mở dạng bảng trượt phía dưới để dành diện tích cho biểu đồ.
 - Chỉ báo MA, Bollinger Bands, RSI và Volume; có thể bật/tắt và chỉnh tham số.
 - Trình soạn chỉ báo tùy chỉnh với một tập con Pine Script an toàn; có thể thử và lưu mã.
-- Người chưa đăng nhập vẫn dùng được; cấu hình và chỉ báo tự tạo được lưu trong `localStorage` của trình duyệt.
+- Người chưa đăng nhập vẫn dùng được; cấu hình, watchlist và chỉ báo tự tạo được lưu trong `localStorage` của trình duyệt.
 
 ## Chạy trên máy cá nhân
 
@@ -45,7 +47,7 @@ Trình phân tích hiện hỗ trợ một `plot(...)` trên `open`, `high`, `lo
 
 - Lịch sử tải tối đa 500 nến mỗi yêu cầu; ứng dụng giữ tối đa 3.000 nến trên biểu đồ.
 - Spot REST: `data-api.binance.vision`.
-- Futures USDⓈ-M REST: `fapi.binance.com`.
+- Futures USDⓈ-M REST: `fapi.binance.com` cùng các máy chủ dự phòng chính thức của Binance.
 - Người dùng công khai: cấu hình nằm trong `localStorage`, không tự đồng bộ giữa trình duyệt hoặc thiết bị.
 - Khi chạy trong ChatGPT Sites và có danh tính người dùng, cấu hình có thể lưu trong Cloudflare D1 qua binding `DB`.
 

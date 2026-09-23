@@ -24,4 +24,5 @@ export const settings = sqliteTable("settings", {
   symbol: text("symbol").notNull().default("BTCUSDT"),
   interval: text("interval").notNull().default("1h"),
   enabled: text("enabled").notNull().default("{}"),
+  watchlist: text("watchlist").notNull().default("[]"),
 });

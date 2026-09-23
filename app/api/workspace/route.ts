@@ -2,6 +2,7 @@ import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { indicators, invitations, settings } from "@/db/schema";
 import { account } from "@/lib/access";
+import { normalizeWatchlists } from "@/lib/watchlist";
 
 export async function GET() {
   try {
@@ -45,6 +46,13 @@ export async function POST(request:Request) {
       const enabled = JSON.stringify(payload.enabled||{});
       if (enabled.length>4000 || !/^[A-Z0-9]{5,20}$/.test(symbol) || !/^(1m|3m|5m|15m|30m|1h|2h|4h|6h|8h|12h|1d|3d|1w|1M)$/.test(interval)) return Response.json({error:"Cấu hình không hợp lệ"},{status:400});
       await db.insert(settings).values({userId:me.id,market,symbol,interval,enabled}).onConflictDoUpdate({target:settings.userId,set:{market,symbol,interval,enabled}});
+      return Response.json({ok:true});
+    }
+    if (payload.action === "saveWatchlist") {
+      const watchlists = normalizeWatchlists(payload.watchlists);
+      const serialized = JSON.stringify(watchlists);
+      if (serialized.length > 50000) return Response.json({error:"Watchlist quá lớn"},{status:400});
+      await db.insert(settings).values({userId:me.id,watchlist:serialized}).onConflictDoUpdate({target:settings.userId,set:{watchlist:serialized}});
       return Response.json({ok:true});
     }
     if (payload.action === "invite" && me.role === "admin") {

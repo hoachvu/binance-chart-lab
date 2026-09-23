@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { CandlestickSeries, HistogramSeries, LineSeries, createChart, ColorType, type IChartApi, type ISeriesApi, type UTCTimestamp } from "lightweight-charts";
+import { Scan } from "lucide-react";
 import { bands, values, type Bar, type Formula, type IndicatorSettings } from "@/lib/indicators";
 
 type Props={bars:Bar[];enabled:Record<string,boolean>;settings:IndicatorSettings;formula:Formula|null;onNeedHistory:(endTime:number)=>void;onHover:(bar:Bar|null)=>void};
@@ -13,7 +14,7 @@ export default function CandleChart({bars,enabled,settings,formula,onNeedHistory
   useEffect(()=>{history.current=onNeedHistory;hovered.current=onHover;latest.current=bars;},[bars,onNeedHistory,onHover]);
   useEffect(()=>{
     if(!host.current)return;
-    const c=createChart(host.current,{autoSize:true,layout:{background:{type:ColorType.Solid,color:"#0b121c"},textColor:"#90a1b8",fontFamily:"Inter, system-ui, sans-serif",fontSize:12},grid:{vertLines:{color:"#1a2939"},horzLines:{color:"#1a2939"}},crosshair:{vertLine:{color:"#657f9b",labelBackgroundColor:"#26384c"},horzLine:{color:"#657f9b",labelBackgroundColor:"#26384c"}},rightPriceScale:{borderColor:"#314053"},timeScale:{borderColor:"#314053",timeVisible:true,secondsVisible:false,rightOffset:8,barSpacing:8},localization:{locale:"vi-VN"}});
+    const c=createChart(host.current,{autoSize:true,layout:{background:{type:ColorType.Solid,color:"#0b121c"},textColor:"#90a1b8",fontFamily:"Inter, system-ui, sans-serif",fontSize:12},grid:{vertLines:{color:"#1a2939"},horzLines:{color:"#1a2939"}},crosshair:{vertLine:{color:"#657f9b",labelBackgroundColor:"#26384c"},horzLine:{color:"#657f9b",labelBackgroundColor:"#26384c"}},rightPriceScale:{borderColor:"#314053"},timeScale:{borderColor:"#314053",timeVisible:true,secondsVisible:false,rightOffset:8,barSpacing:8},handleScroll:{mouseWheel:true,pressedMouseMove:true,horzTouchDrag:true,vertTouchDrag:false},handleScale:{axisPressedMouseMove:true,mouseWheel:true,pinch:true},kineticScroll:{mouse:true,touch:true},localization:{locale:"vi-VN"}});
     chart.current=c;candles.current=c.addSeries(CandlestickSeries,{upColor:"#28c4a6",downColor:"#f26972",wickUpColor:"#28c4a6",wickDownColor:"#f26972",borderVisible:false});
     c.subscribeCrosshairMove(param=>{const t=param.time as number|undefined;hovered.current(t?latest.current.find(x=>x.time===t)||null:null);});
     c.timeScale().subscribeVisibleLogicalRangeChange(range=>{if(range && range.from<60 && latest.current.length>0)history.current(latest.current[0].time*1000-1);});
@@ -42,5 +43,5 @@ export default function CandleChart({bars,enabled,settings,formula,onNeedHistory
     if(formula)line("custom",values(bars,formula),"#e8a0e6",formula.overlay?0:pane++,2);
     const panes=c.panes();if(panes.length>1&&changed){panes[0].setHeight(Math.max(250,Math.floor((host.current?.clientHeight||600)*.67)));}
   },[bars,enabled,settings,formula]);
-  return <div className="chart-surface" ref={host} aria-label="Biểu đồ nến Binance; kéo để xem lịch sử, dùng con lăn để phóng to" />;
+  return <><div className="chart-surface" ref={host} aria-label="Biểu đồ nến Binance; kéo để xem lịch sử, chụm hai ngón hoặc dùng con lăn để phóng to"/><button type="button" className="chart-reset" onClick={()=>chart.current?.timeScale().fitContent()} title="Vừa toàn bộ dữ liệu" aria-label="Vừa toàn bộ dữ liệu biểu đồ"><Scan size={17}/></button></>;
 }

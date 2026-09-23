@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DEFAULT_INDICATOR_SETTINGS, type IndicatorSettings, type PriceField } from "@/lib/indicators";
 
 type Key=keyof IndicatorSettings;
@@ -7,12 +7,11 @@ type Props={kind:Key;settings:IndicatorSettings;change:(kind:Key,patch:Record<st
 const sources:Array<[PriceField,string]>=[["close","Đóng cửa"],["open","Mở cửa"],["high","Cao nhất"],["low","Thấp nhất"],["hl2","HL2"],["hlc3","HLC3"],["ohlc4","OHLC4"]];
 function NumberInput({value,min,max,step=1,onChange}:{value:number;min:number;max:number;step?:number;onChange:(value:number)=>void}){
   const [draft,setDraft]=useState(String(value));
-  useEffect(()=>setDraft(String(value)),[value]);
   const commit=()=>{const n=Number(draft);const next=Number.isFinite(n)&&draft.trim()?Math.min(max,Math.max(min,step===1?Math.round(n):Math.round(n/step)*step)):value;setDraft(String(next));onChange(next)};
   return <input type="number" inputMode="decimal" min={min} max={max} step={step} value={draft} onChange={e=>setDraft(e.target.value)} onBlur={commit} onKeyDown={e=>{if(e.key==="Enter")e.currentTarget.blur()}}/>;
 }
 export default function IndicatorControls({kind,settings,change}:Props){
-  const number=(label:string,value:number,min:number,max:number,field:string,step=1)=><label className="setting-field"><span>{label}</span><NumberInput value={value} min={min} max={max} step={step} onChange={n=>change(kind,{[field]:n})}/></label>;
+  const number=(label:string,value:number,min:number,max:number,field:string,step=1)=><label className="setting-field"><span>{label}</span><NumberInput key={`${kind}-${field}-${value}`} value={value} min={min} max={max} step={step} onChange={n=>change(kind,{[field]:n})}/></label>;
   const color=(label:string,value:string,field:string)=><label className="setting-field"><span>{label}</span><input type="color" value={value} onChange={e=>change(kind,{[field]:e.target.value})}/></label>;
   const source=(value:PriceField)=><label className="setting-field"><span>Nguồn giá</span><select value={value} onChange={e=>change(kind,{source:e.target.value})}>{sources.map(([key,title])=><option key={key} value={key}>{title}</option>)}</select></label>;
   const method=(value:"sma"|"ema")=><label className="setting-field"><span>Kiểu trung bình</span><select value={value} onChange={e=>change(kind,{method:e.target.value})}><option value="sma">SMA</option><option value="ema">EMA</option></select></label>;
