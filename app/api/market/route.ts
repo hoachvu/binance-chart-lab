@@ -1,9 +1,6 @@
-import { account } from "@/lib/access";
-
 const INTERVALS = new Set(["1m","3m","5m","15m","30m","1h","2h","4h","6h","8h","12h","1d","3d","1w","1M"]);
 export async function GET(request: Request) {
   try {
-    if (!await account()) return Response.json({ error: "Không có quyền truy cập" }, { status: 403 });
     const q = new URL(request.url).searchParams;
     const market = q.get("market") === "futures" ? "futures" : "spot";
     const symbol = (q.get("symbol") || "BTCUSDT").toUpperCase();

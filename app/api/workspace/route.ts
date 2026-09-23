@@ -6,15 +6,15 @@ import { account } from "@/lib/access";
 export async function GET() {
   try {
     const me = await account();
-    if (!me) return Response.json({error:"Bạn chưa được cấp quyền vào ứng dụng."},{status:403});
+    if (!me) return Response.json({me:{email:"",role:"guest",displayName:"Khách"},scripts:[],config:null,invites:[]},{headers:{"Cache-Control":"no-store"}});
     const db = getDb();
     const [scripts, config, invites] = await Promise.all([
       db.select().from(indicators).where(eq(indicators.ownerId, me.id)).orderBy(desc(indicators.updatedAt)).all(),
       db.select().from(settings).where(eq(settings.userId, me.id)).get(),
       me.role === "admin" ? db.select().from(invitations).all() : Promise.resolve([]),
     ]);
-    return Response.json({me,scripts,config,invites});
-  } catch { return Response.json({error:"Không tải được dữ liệu đã lưu."},{status:503}); }
+    return Response.json({me,scripts,config,invites},{headers:{"Cache-Control":"no-store"}});
+  } catch { return Response.json({me:{email:"",role:"guest",displayName:"Khách"},scripts:[],config:null,invites:[]},{headers:{"Cache-Control":"no-store"}}); }
 }
 
 export async function POST(request:Request) {
