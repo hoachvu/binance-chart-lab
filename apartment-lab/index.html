@@ -9,23 +9,23 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}button,input{font:inherit}
 .app{height:100dvh;display:grid;grid-template-rows:48px 1fr;overflow:hidden}.header{display:flex;align-items:center;padding:0 12px;border-bottom:1px solid var(--line);background:#0d1620;gap:10px}
 .logo{font-weight:850;font-size:13px;letter-spacing:.08em;white-space:nowrap}.logo b{color:var(--up)}.status{font-size:10px;border:1px solid #31475d;border-radius:999px;color:#9db2c7;padding:3px 7px}.header .right{margin-left:auto;color:var(--muted);font-size:11px}
-.body{display:grid;grid-template-columns:minmax(0,1fr) 280px;min-height:0}.workspace{display:grid;grid-template-rows:auto auto minmax(520px,1fr) auto;min-width:0;overflow:hidden}.watch{border-left:1px solid var(--line);background:var(--panel);padding:12px;overflow:auto}
+.body{display:grid;grid-template-columns:minmax(0,1fr) 280px;min-height:0}.workspace{display:grid;grid-template-rows:auto auto minmax(620px,1fr) auto;min-width:0;overflow:hidden}.watch{border-left:1px solid var(--line);background:var(--panel);padding:12px;overflow:auto}
 .toolbar{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);background:#0d1620;flex-wrap:wrap}.symbolBox{position:relative}.symbolBtn{background:#172433;border:1px solid #314357;color:var(--text);border-radius:6px;padding:7px 10px;font-weight:760;min-width:150px;text-align:left}.symbolMenu{position:absolute;z-index:30;top:40px;left:0;width:330px;background:#101c28;border:1px solid #34495f;border-radius:8px;box-shadow:0 12px 35px #0008;display:none;overflow:hidden}.symbolMenu.open{display:block}.symItem{display:block;width:100%;padding:10px;border:0;border-bottom:1px solid #243447;background:transparent;color:var(--text);text-align:left}.symItem:hover{background:#182a3a}.symItem strong{display:block}.symItem small{color:var(--muted)}
 .tf{display:flex;gap:2px}.tf button,.indBtn,.refreshBtn,.viewBtn{border:0;background:transparent;color:#91a4b7;border-radius:5px;padding:7px 8px;font-size:12px;font-weight:700}.tf button:hover,.indBtn:hover,.refreshBtn:hover,.viewBtn:hover{background:#172536}.tf button.active{background:#173b37;color:#5fe0c0}.separator{width:1px;height:24px;background:var(--line)}
-.indWrap{position:relative}.indPanel{position:absolute;z-index:40;top:38px;left:0;width:300px;background:#111d29;border:1px solid #33485d;border-radius:9px;padding:12px;display:none;box-shadow:0 12px 35px #0009}.indPanel.open{display:block}.indRow{display:grid;grid-template-columns:22px 1fr 62px 55px;align-items:center;gap:7px;margin:7px 0;font-size:12px}.indRow input[type=number]{width:100%;background:#0c1620;color:var(--text);border:1px solid #30455a;border-radius:5px;padding:5px}
+.indWrap{position:relative}.indPanel{position:absolute;z-index:40;top:38px;left:0;width:300px;background:#111d29;border:1px solid #33485d;border-radius:9px;padding:12px;display:none;box-shadow:0 12px 35px #0009}.indPanel.open{display:block}.indRow{display:grid;grid-template-columns:22px 1fr 62px 34px 48px;align-items:center;gap:7px;margin:7px 0;font-size:12px}.indRow input[type=number]{width:100%;background:#0c1620;color:var(--text);border:1px solid #30455a;border-radius:5px;padding:5px}.colorPick{width:30px;height:24px;padding:0;border:1px solid #40566b;border-radius:5px;background:transparent;cursor:pointer}
 .quote{display:flex;align-items:end;gap:15px;padding:10px 14px;border-bottom:1px solid var(--line);background:#0b131d;min-height:74px}.quote h1{font-size:19px;margin:0 0 3px}.quote .desc{font-size:11px;color:var(--muted);max-width:680px;line-height:1.45}.last{margin-left:auto;text-align:right;min-width:160px}.last strong{font-size:22px}.last span{display:block;color:var(--muted);font-size:11px;line-height:1.4}
-.chartCard{position:relative;background:#0a111a;min-height:0}.chartHint{position:absolute;right:10px;top:8px;z-index:5;color:#60768b;font-size:10px;pointer-events:none}.chartHead{position:absolute;z-index:4;top:8px;left:10px;display:flex;gap:11px;font-size:11px;color:var(--muted);pointer-events:none}.chart{width:100%;height:100%;min-height:520px}.emptyOverlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;pointer-events:none}.emptyOverlay>div{background:#0d1722e8;border:1px solid #2d4155;border-radius:8px;padding:12px 16px;color:#a9bacb;font-size:12px;line-height:1.6;max-width:390px}
+.chartCard{position:relative;background:#0a111a;min-height:0}.chartHint{position:absolute;right:10px;top:8px;z-index:5;color:#60768b;font-size:10px;pointer-events:none}.chartHead{position:absolute;z-index:4;top:8px;left:10px;display:flex;gap:11px;font-size:11px;color:var(--muted);pointer-events:none}.chart{width:100%;height:100%;min-height:620px}.emptyOverlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;pointer-events:none}.emptyOverlay>div{background:#0d1722e8;border:1px solid #2d4155;border-radius:8px;padding:12px 16px;color:#a9bacb;font-size:12px;line-height:1.6;max-width:390px}
 .panel{display:none}.panelTitle{position:absolute;z-index:3;top:7px;left:10px;font-size:11px;color:#91a3b5}.subchart{width:100%;height:100%}.footer{border-top:1px solid var(--line);padding:7px 10px;color:#71869a;font-size:10px;display:flex;gap:14px;background:#0d1620}.footer span:last-child{margin-left:auto}
 .watch h3{font-size:11px;letter-spacing:.1em;color:#8296aa;margin:3px 0 9px}.witem{width:100%;border:0;border-bottom:1px solid #223244;background:transparent;color:var(--text);padding:10px 5px;text-align:left;display:grid;grid-template-columns:1fr auto;gap:5px}.witem:hover,.witem.active{background:#172738}.witem strong{font-size:12px}.witem small{grid-column:1/-1;color:var(--muted);font-size:10px}.price{font-size:12px;font-weight:760}.badge{display:inline-block;padding:2px 5px;border:1px solid #3b4e62;border-radius:4px;color:#96aabe;font-size:9px}
 .signal{margin-top:18px}.signalCard{border:1px solid #2a3d50;background:#13202d;border-radius:8px;padding:9px;margin:7px 0}.signalCard b{font-size:11px}.signalCard p{font-size:10px;line-height:1.45;color:#97aabd;margin:4px 0 0}.warn{color:#f1c37d}.good{color:#73e0c4}
 svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1}.axisText{fill:#6f8296;font-size:10px}.wickUp{stroke:var(--up);stroke-width:1.3}.wickDown{stroke:var(--down);stroke-width:1.3}.candleUp{fill:var(--up)}.candleDown{fill:var(--down)}.refLine{fill:none;stroke:var(--up);stroke-width:2}.refPoint{fill:var(--up)}.sma{fill:none;stroke:var(--blue);stroke-width:1.4}.ema{fill:none;stroke:var(--amber);stroke-width:1.4}.bb{fill:none;stroke:var(--purple);stroke-width:1.1;stroke-dasharray:4 3}.rsiLine{fill:none;stroke:var(--purple);stroke-width:1.5}.macdLine{fill:none;stroke:var(--blue);stroke-width:1.4}.signalLine{fill:none;stroke:var(--amber);stroke-width:1.3}.zero{stroke:#516276;stroke-width:1;stroke-dasharray:3 3}
 @media(max-width:850px){.body{grid-template-columns:1fr}.watch{display:none}.workspace{grid-template-rows:auto auto minmax(520px,1fr) auto}.header .right{display:none}.quote{padding:8px 10px}.quote .desc{display:none}.last strong{font-size:18px}.symbolMenu{width:min(330px,92vw)}}
-@media(max-width:520px){.header{padding:0 8px}.status{display:none}.toolbar{padding:6px;gap:4px}.symbolBtn{min-width:136px;padding:6px 8px}.tf button,.indBtn,.viewBtn{padding:6px}.separator{display:none}.quote h1{font-size:15px}.quote{min-height:58px}.workspace{grid-template-rows:auto auto minmax(500px,1fr) auto}.footer{overflow:auto;white-space:nowrap}}
+@media(max-width:520px){.header{padding:0 8px}.status{display:none}.toolbar{padding:6px;gap:4px}.symbolBtn{min-width:136px;padding:6px 8px}.tf button,.indBtn,.viewBtn{padding:6px}.separator{display:none}.quote h1{font-size:15px}.quote{min-height:58px}.workspace{grid-template-rows:auto auto minmax(560px,1fr) auto}.footer{overflow:auto;white-space:nowrap}}
 </style>
 </head>
 <body>
 <div class="app">
-<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.7</span><div class="right">Pan · zoom · crosshair · modeled + observed weekly</div></header>
+<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.8</span><div class="right">Pan · zoom · crosshair · modeled + observed weekly</div></header>
 <div class="body">
 <section class="workspace">
   <div class="toolbar">
@@ -39,11 +39,13 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
     <button id="refreshBtn" class="refreshBtn">↻ Refresh</button><button id="fitBtn" class="viewBtn">Fit</button><button id="latestBtn" class="viewBtn">Latest</button><div class="indWrap">
       <button id="indBtn" class="indBtn">Indicators ▾</button>
       <div id="indPanel" class="indPanel">
-        <div class="indRow"><input id="smaOn" type="checkbox"><label>SMA</label><input id="smaLen" type="number" min="2" max="200" value="20"><span>period</span></div>
-        <div class="indRow"><input id="emaOn" type="checkbox"><label>EMA</label><input id="emaLen" type="number" min="2" max="200" value="20"><span>period</span></div>
-        <div class="indRow"><input id="bbOn" type="checkbox" checked><label>Bollinger</label><input id="bbLen" type="number" min="2" max="200" value="20"><span>×2σ</span></div>
-        <div class="indRow"><input id="rsiOn" type="checkbox" checked><label>RSI</label><input id="rsiLen" type="number" min="2" max="100" value="14"><span>period</span></div>
-        <div class="indRow"><input id="macdOn" type="checkbox" checked><label>MACD</label><span style="color:#8094a8">12/26/9</span><span></span></div>
+        <div class="indRow"><input id="smaOn" type="checkbox"><label>SMA</label><input id="smaLen" type="number" min="2" max="200" value="20"><input id="smaColor" class="colorPick" type="color"><span>period</span></div>
+        <div class="indRow"><input id="emaOn" type="checkbox"><label>EMA</label><input id="emaLen" type="number" min="2" max="200" value="20"><input id="emaColor" class="colorPick" type="color"><span>period</span></div>
+        <div class="indRow"><input id="bbOn" type="checkbox" checked><label>Bollinger</label><input id="bbLen" type="number" min="2" max="200" value="20"><input id="bbColor" class="colorPick" type="color"><span>×2σ</span></div>
+        <div class="indRow"><input id="volumeOn" type="checkbox" checked><label>Volume</label><span style="color:#8094a8">sample</span><input id="volumeColor" class="colorPick" type="color"><span>count</span></div>
+        <div class="indRow"><input id="rsiOn" type="checkbox" checked><label>RSI</label><input id="rsiLen" type="number" min="2" max="100" value="14"><input id="rsiColor" class="colorPick" type="color"><span>period</span></div>
+        <div class="indRow"><input id="macdOn" type="checkbox" checked><label>MACD</label><span style="color:#8094a8">12/26/9</span><input id="macdColor" class="colorPick" type="color"><span>line</span></div>
+        <div class="indRow"><span></span><label>Signal</label><span style="color:#8094a8">9 EMA</span><input id="signalColor" class="colorPick" type="color"><span>line</span></div>
       </div>
     </div>
   </div>
@@ -67,11 +69,11 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
 </aside>
 </div>
 </div>
-<script src="https://unpkg.com/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"></script>
+<script src="./vendor/lightweight-charts.standalone.production.js"></script>
 <script>
 const TF={W1:{label:"1W"},M1:{label:"1M"},Q1:{label:"1Q"},Y1:{label:"1Y"}};
 let DATA=null,current="HN-APT-ALL",timeframe="W1",lastLoadedAt=null;
-const settings={sma:false,ema:false,bb:true,rsi:true,macd:true,smaLen:20,emaLen:20,bbLen:20,rsiLen:14};
+const settings={sma:false,ema:false,bb:true,volume:true,rsi:true,macd:true,smaLen:20,emaLen:20,bbLen:20,rsiLen:14,smaColor:"#5da6ff",emaColor:"#f0b865",bbColor:"#b18cff",volumeColor:"#53bba2",rsiColor:"#b18cff",macdColor:"#5da6ff",signalColor:"#f0b865"};
 const $=id=>document.getElementById(id),fmt=(v,d=1)=>Number(v).toLocaleString("vi-VN",{minimumFractionDigits:d,maximumFractionDigits:d});
 function sma(a,n){return a.map((_,i)=>i<n-1?null:a.slice(i-n+1,i+1).reduce((s,v)=>s+v,0)/n)}
 function ema(a,n){const out=Array(a.length).fill(null);if(a.length<n)return out;const k=2/(n+1),seed=a.slice(0,n).reduce((s,v)=>s+v,0)/n;out[n-1]=seed;for(let i=n;i<a.length;i++)out[i]=a[i]*k+out[i-1]*(1-k);return out}
@@ -116,7 +118,9 @@ function modeledWeekly(sym){
  }
  if(!closes.length)return [];
  if(closes.at(-1).date!==pts.at(-1).date)closes.push({date:pts.at(-1).date,close:pts.at(-1).close,historyType:"MODELED_WEEKLY_INTERPOLATION"});
- const rows=closes.map((x,i)=>{const prev=i?closes[i-1].close:x.close;return{date:x.date,open:prev,high:Math.max(prev,x.close),low:Math.min(prev,x.close),close:x.close,historyType:x.historyType,confidence:"MODELED"}});
+ const rows=closes.map((x,i)=>{const prev=i?closes[i-1].close:x.close;return{date:x.date,open:prev,high:Math.max(prev,x.close),low:Math.min(prev,x.close),close:x.close,sampleCount:null,historyType:x.historyType,confidence:"MODELED"}});
+ const vmap=new Map((sym.weeklyVolume||[]).map(v=>[mondayKey(v.date),Number(v.value)]));
+ rows.forEach(r=>{const v=vmap.get(mondayKey(r.date));if(Number.isFinite(v))r.sampleCount=v});
  return mergeObservedWeekly(sym,rows);
 }
 function mondayKey(date){
@@ -132,7 +136,7 @@ function mergeObservedWeekly(sym,modeled){
 function aggregateCandles(rows,keyFn,labelType){
  const groups=[];let cur=null;
  rows.forEach(r=>{const k=keyFn(r.date);if(!cur||cur.key!==k){cur={key:k,rows:[]};groups.push(cur)}cur.rows.push(r)});
- return groups.map(g=>({date:g.key,open:g.rows[0].open,high:Math.max(...g.rows.map(x=>x.high)),low:Math.min(...g.rows.map(x=>x.low)),close:g.rows.at(-1).close,historyType:labelType,confidence:"MODELED"}));
+ return groups.map(g=>({date:g.key,open:g.rows[0].open,high:Math.max(...g.rows.map(x=>x.high)),low:Math.min(...g.rows.map(x=>x.low)),close:g.rows.at(-1).close,sampleCount:g.rows.some(x=>Number.isFinite(x.sampleCount))?g.rows.reduce((s,x)=>s+(Number.isFinite(x.sampleCount)?x.sampleCount:0),0):null,historyType:labelType,confidence:"MODELED"}));
 }
 function getSeries(sym){
  const weekly=modeledWeekly(sym);
@@ -182,12 +186,13 @@ function renderPrice(series){
    const s=chart.addSeries(L.LineSeries,{color,lineWidth:width,priceLineVisible:false,lastValueVisible:true,crosshairMarkerVisible:false},pane);
    s.setData(lineData(rows,vals));return s;
  };
- if(settings.sma)addLine(sm,"#5da6ff",0,2);
- if(settings.ema)addLine(em,"#f0b865",0,2);
- if(settings.bb){addLine(bbv.up,"#b18cff",0,1);addLine(bbv.mid,"#9274d8",0,1);addLine(bbv.lo,"#b18cff",0,1);}
+ if(settings.sma)addLine(sm,settings.smaColor,0,2);
+ if(settings.ema)addLine(em,settings.emaColor,0,2);
+ if(settings.bb){addLine(bbv.up,settings.bbColor,0,1);addLine(bbv.mid,settings.bbColor,0,1);addLine(bbv.lo,settings.bbColor,0,1);}
  let pane=1;
+ if(settings.volume){const p=pane++;const vs=chart.addSeries(L.HistogramSeries,{priceFormat:{type:"volume"},priceLineVisible:false,lastValueVisible:true,color:settings.volumeColor},p);vs.setData(rows.flatMap(r=>Number.isFinite(r.sampleCount)?[{time:chartTime(r.date),value:r.sampleCount,color:settings.volumeColor}]:[]));}
  if(settings.rsi){
-   const rv=rsi(close,settings.rsiLen),rs=addLine(rv,"#b18cff",pane++,2);
+   const rv=rsi(close,settings.rsiLen),rs=addLine(rv,settings.rsiColor,pane++,2);
    rs.createPriceLine({price:70,color:"#bd6972",lineWidth:1,lineStyle:2,axisLabelVisible:true,title:"70"});
    rs.createPriceLine({price:30,color:"#48ae94",lineWidth:1,lineStyle:2,axisLabelVisible:true,title:"30"});
  }
@@ -195,11 +200,11 @@ function renderPrice(series){
    const mv=macd(close),p=pane++;
    const hist=chart.addSeries(L.HistogramSeries,{priceLineVisible:false,lastValueVisible:false},p);
    hist.setData(mv.hist.flatMap((v,i)=>v==null?[]:[{time:chartTime(rows[i].date),value:v,color:v>=0?"#2dc7a488":"#ef687588"}]));
-   addLine(mv.macd,"#5da6ff",p,2);addLine(mv.signal,"#f0b865",p,1);
+   addLine(mv.macd,settings.macdColor,p,2);addLine(mv.signal,settings.signalColor,p,1);
  }
- const panes=chart.panes();
- if(panes.length>1){panes[0].setHeight(Math.max(300,Math.floor((el.clientHeight||520)*.62)));for(let i=1;i<panes.length;i++)panes[i].setHeight(Math.max(95,Math.floor((el.clientHeight||520)*.18)));}
- const labelBase=[series.label];if(settings.sma)labelBase.push("SMA("+settings.smaLen+")");if(settings.ema)labelBase.push("EMA("+settings.emaLen+")");if(settings.bb)labelBase.push("BB("+settings.bbLen+",2)");
+ const panes=chart.panes(),subCount=Math.max(0,panes.length-1),total=el.clientHeight||620;
+ if(subCount){const mainRatio=subCount>=3?.50:subCount===2?.56:.68;panes[0].setHeight(Math.max(280,Math.floor(total*mainRatio)));const subH=Math.max(105,Math.floor(total*(1-mainRatio)/subCount));for(let i=1;i<panes.length;i++)panes[i].setHeight(subH);}
+ const labelBase=[series.label];if(settings.sma)labelBase.push("SMA("+settings.smaLen+")");if(settings.ema)labelBase.push("EMA("+settings.emaLen+")");if(settings.bb)labelBase.push("BB("+settings.bbLen+",2)");if(settings.volume)labelBase.push("Volume=listing samples");
  const resetHead=()=>{$("chartHead").textContent=labelBase.join(" · ")};
  resetHead();
  chart.subscribeCrosshairMove(param=>{
@@ -217,7 +222,7 @@ function signalCards(series){
  else{const c=a[last];cards.push(["Bollinger Bands",c<=bbv.lo[last]?"Close đang chạm/ở dưới BB Lower.":c>=bbv.up[last]?"Close đang chạm/ở trên BB Upper.":"Close đang nằm trong dải Bollinger."])}
  if(a.length<settings.rsiLen+1)cards.push(["RSI("+settings.rsiLen+")","Chưa đủ dữ liệu: cần "+(settings.rsiLen+1)+" kỳ."]);else cards.push(["RSI("+settings.rsiLen+")",fmt(rv[last],1)+(rv[last]<30?" · vùng quá bán":rv[last]>70?" · vùng quá mua":" · vùng trung tính")]);
  if(a.length<35)cards.push(["MACD","Chưa đủ dữ liệu: cần khoảng 35 kỳ cho MACD 12/26/9."]);else cards.push(["MACD",mv.macd[last]>mv.signal[last]?"MACD đang trên Signal Line.":"MACD đang dưới Signal Line."]);
- cards.push(["Data quality",series.historyType.includes("MODELED")?"Nến được nội suy từ các mốc tháng/quý đã công bố. Dùng cho phân tích kỹ thuật tham khảo, không phải giao dịch quan sát thật.":series.historyType.replaceAll("_"," ")]);
+ const vol=series.rows.filter(x=>Number.isFinite(x.sampleCount)).at(-1);if(settings.volume)cards.push(["Volume",vol?"Mẫu tin rao quan sát gần nhất: "+Math.round(vol.sampleCount).toLocaleString("vi-VN")+". Không phải khối lượng giao dịch.":"Chưa có lịch sử số mẫu đủ dày; các kỳ thiếu Volume được để trống."]);cards.push(["Data quality",series.historyType.includes("MODELED")?"Nến được nội suy từ các mốc tháng/quý đã công bố. Dùng cho phân tích kỹ thuật tham khảo, không phải giao dịch quan sát thật.":series.historyType.replaceAll("_"," ")]);
  $("signals").innerHTML=cards.map((x,i)=>'<div class="signalCard"><b class="'+(i<3?"warn":"good")+'">'+x[0]+'</b><p>'+x[1]+'</p></div>').join("");
 }
 function latestExternal(sym){const s=sym.sparseReferences||[];return s.length?s.at(-1):null}
@@ -242,8 +247,8 @@ function buildUI(){
  $("symbolMenu").innerHTML=DATA.symbols.map(s=>'<button class="symItem" data-s="'+s.symbol+'"><strong>'+s.symbol+'</strong><small>'+s.name+'</small></button>').join("");
  document.querySelectorAll(".symItem").forEach(b=>b.onclick=()=>{current=b.dataset.s;$("symbolMenu").classList.remove("open");render()});
  $("symbolBtn").onclick=e=>{e.stopPropagation();$("symbolMenu").classList.toggle("open")};$("indBtn").onclick=e=>{e.stopPropagation();$("indPanel").classList.toggle("open")};document.addEventListener("click",()=>{$("symbolMenu").classList.remove("open");$("indPanel").classList.remove("open")});$("indPanel").onclick=e=>e.stopPropagation();
- [["smaOn","sma"],["emaOn","ema"],["bbOn","bb"],["rsiOn","rsi"],["macdOn","macd"]].forEach(([id,k])=>{$(id).checked=settings[k];$(id).onchange=()=>{settings[k]=$(id).checked;render()}});
- [["smaLen","smaLen"],["emaLen","emaLen"],["bbLen","bbLen"],["rsiLen","rsiLen"]].forEach(([id,k])=>{$(id).value=settings[k];$(id).onchange=()=>{settings[k]=Math.max(2,parseInt($(id).value)||settings[k]);render()}});
+ [["smaOn","sma"],["emaOn","ema"],["bbOn","bb"],["volumeOn","volume"],["rsiOn","rsi"],["macdOn","macd"]].forEach(([id,k])=>{$(id).checked=settings[k];$(id).onchange=()=>{settings[k]=$(id).checked;render()}});
+ [["smaLen","smaLen"],["emaLen","emaLen"],["bbLen","bbLen"],["rsiLen","rsiLen"]].forEach(([id,k])=>{$(id).value=settings[k];$(id).onchange=()=>{settings[k]=Math.max(2,parseInt($(id).value)||settings[k]);render()}});[["smaColor","smaColor"],["emaColor","emaColor"],["bbColor","bbColor"],["volumeColor","volumeColor"],["rsiColor","rsiColor"],["macdColor","macdColor"],["signalColor","signalColor"]].forEach(([id,k])=>{$(id).value=settings[k];$(id).oninput=()=>{settings[k]=$(id).value;render()}});
 }
 async function loadData(rebuild=false){
  try{
