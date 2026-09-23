@@ -14,7 +14,7 @@
 - Giao diện responsive cho điện thoại; watchlist và phần thiết lập mở dạng bảng trượt phía dưới để dành diện tích cho biểu đồ.
 - Chỉ báo MA, Bollinger Bands, RSI và Volume; có thể bật/tắt, chỉnh tham số và chọn màu riêng cho từng đường, ngưỡng, vùng nền hoặc cột tăng/giảm.
 - Trình soạn chỉ báo tùy chỉnh với một tập con Pine Script an toàn; có thể thử và lưu mã, tối đa 8 đường `plot(...)` với tên và màu riêng.
-- Người chưa đăng nhập vẫn dùng được; cấu hình, watchlist và chỉ báo tự tạo được lưu trong `localStorage` của trình duyệt.
+- Người chưa đăng nhập vẫn dùng được; cấu hình, watchlist và chỉ báo tự tạo được lưu trong `localStorage` của trình duyệt. Thay đổi watchlist được ghi ngay khi thêm, xóa, đổi tên hoặc sắp xếp, và trang nhớ danh sách đang chọn.
 
 ## Chạy trên máy cá nhân
 

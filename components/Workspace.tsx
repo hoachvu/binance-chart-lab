@@ -25,6 +25,7 @@ const DEFAULT_ENABLED = { ma: true, bb: false, rsi: true, volume: true };
 const GUEST_SCRIPTS = "chartlab:guest:scripts:v1";
 const GUEST_SETTINGS = "chartlab:guest:settings:v1";
 const GUEST_WATCHLISTS = "chartlab:guest:watchlists:v2";
+const ACTIVE_WATCHLIST = "chartlab:active-watchlist:v1";
 const LEGACY_WATCHLIST = "chartlab:guest:watchlist:v1";
 const FRAMES = ["1m", "5m", "15m", "1h", "4h", "1d", "1w"];
 const SAMPLE = '//@version=5\nindicator("MA cá nhân", overlay=true)\nlength = input.int(30)\nplot(ta.sma(close, length))';
@@ -95,6 +96,7 @@ export default function Workspace() {
   const [watchlists, setWatchlists] = useState<WatchGroup[]>(DEFAULT_WATCHLISTS);
   const [activeGroupId, setActiveGroupId] = useState(DEFAULT_WATCHLISTS[0].id);
   const [watchReady, setWatchReady] = useState(false);
+  const watchlistsRef = useRef<WatchGroup[]>(DEFAULT_WATCHLISTS);
   const historyBusy = useRef(false);
   const oldest = useRef(0);
   const historyEnd = useRef(0);
@@ -178,8 +180,12 @@ export default function Workspace() {
           localStorage.setItem(GUEST_WATCHLISTS, JSON.stringify(loadedWatchlists));
         }
       } else loadedWatchlists = parseWatchlists(data.config?.watchlist);
+      watchlistsRef.current = loadedWatchlists;
       setWatchlists(loadedWatchlists);
-      setActiveGroupId(loadedWatchlists[0].id);
+      try {
+        const selected = localStorage.getItem(ACTIVE_WATCHLIST);
+        setActiveGroupId(loadedWatchlists.some(group => group.id === selected) ? selected! : loadedWatchlists[0].id);
+      } catch { setActiveGroupId(loadedWatchlists[0].id); }
       setWatchReady(true);
       setReady(true);
     }).catch(cause => {
@@ -201,12 +207,14 @@ export default function Workspace() {
   }, [ready, me, market, symbol, interval, enabled, activeScript, indicatorSettings, persist, flash]);
 
   useEffect(() => {
-    if (!watchReady || !me) return;
-    const timer = setTimeout(() => {
-      void persist({ action: "saveWatchlist", watchlists }).catch(() => flash("Chưa lưu được watchlist"));
-    }, 700);
-    return () => clearTimeout(timer);
+    if (!watchReady || !me || me.role === "guest") return;
+    void persist({ action: "saveWatchlist", watchlists }).catch(() => flash("Chưa lưu được watchlist"));
   }, [watchReady, me, watchlists, persist, flash]);
+
+  const selectWatchGroup = (id: string) => {
+    setActiveGroupId(id);
+    try { localStorage.setItem(ACTIVE_WATCHLIST, id); } catch { flash("Trình duyệt chưa lưu được danh sách đang chọn"); }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -448,7 +456,15 @@ export default function Workspace() {
     setPairOpen(false);
   };
 
-  const updateWatchlists = (updater: (groups: WatchGroup[]) => WatchGroup[]) => setWatchlists(current => normalizeWatchlists(updater(current)));
+  const updateWatchlists = (updater: (groups: WatchGroup[]) => WatchGroup[]) => {
+    const next = normalizeWatchlists(updater(watchlistsRef.current));
+    watchlistsRef.current = next;
+    if (me?.role === "guest") {
+      try { localStorage.setItem(GUEST_WATCHLISTS, JSON.stringify(next)); }
+      catch { flash("Trình duyệt chưa lưu được watchlist"); }
+    }
+    setWatchlists(next);
+  };
   const addWatchItem = (groupId: string, item: WatchItem) => updateWatchlists(groups => groups.map(group => group.id !== groupId || group.items.some(existing => existing.id === item.id) ? group : { ...group, items: [...group.items, item] }));
   const removeWatchItem = (groupId: string, itemId: string) => updateWatchlists(groups => groups.map(group => group.id === groupId ? { ...group, items: group.items.filter(item => item.id !== itemId) } : group));
   const moveWatchItem = (groupId: string, itemId: string, direction: -1 | 1) => updateWatchlists(groups => groups.map(group => {
@@ -463,14 +479,13 @@ export default function Workspace() {
   const createWatchGroup = (name: string) => {
     const id = `group-${Date.now().toString(36)}`;
     updateWatchlists(groups => [...groups, { id, name, items: [] }]);
-    setActiveGroupId(id);
+    selectWatchGroup(id);
   };
   const renameWatchGroup = (id: string, name: string) => updateWatchlists(groups => groups.map(group => group.id === id ? { ...group, name } : group));
   const deleteWatchGroup = (id: string) => {
     if (watchlists.length === 1 || !window.confirm("Xóa danh sách theo dõi này?")) return;
-    const next = watchlists.filter(group => group.id !== id);
-    setWatchlists(next);
-    setActiveGroupId(next[0].id);
+    updateWatchlists(groups => groups.filter(group => group.id !== id));
+    selectWatchGroup(watchlistsRef.current[0].id);
   };
   const addCurrentToWatchlist = () => {
     const pair = pairs.find(candidate => candidate.symbol === symbol);
@@ -557,7 +572,7 @@ export default function Workspace() {
           <button className={panel === "help" ? "active" : ""} onClick={() => setPanel("help")} title="Hướng dẫn"><CircleHelp size={18}/></button>
           <button className="panel-close" onClick={() => setPanelOpen(false)} title="Đóng"><X size={19}/></button>
         </div>
-        {panel === "watchlist" && <div className="panel-content watchlist-content"><Watchlist groups={watchlists} activeGroupId={activeGroupId} currentMarket={market} currentSymbol={symbol} pairs={pairs} onActiveGroup={setActiveGroupId} onSelect={selectWatchItem} onAdd={addWatchItem} onRemove={removeWatchItem} onMove={moveWatchItem} onCreateGroup={createWatchGroup} onRenameGroup={renameWatchGroup} onDeleteGroup={deleteWatchGroup}/></div>}
+        {panel === "watchlist" && <div className="panel-content watchlist-content"><Watchlist groups={watchlists} activeGroupId={activeGroupId} currentMarket={market} currentSymbol={symbol} pairs={pairs} onActiveGroup={selectWatchGroup} onSelect={selectWatchItem} onAdd={addWatchItem} onRemove={removeWatchItem} onMove={moveWatchItem} onCreateGroup={createWatchGroup} onRenameGroup={renameWatchGroup} onDeleteGroup={deleteWatchGroup}/></div>}
         {panel === "indicators" && <div className="panel-content"><div className="panel-eyebrow">PHÂN TÍCH</div><h2>Chỉ báo</h2><p className="subtext">Bật chỉ báo hoặc chọn bánh răng để chỉnh tham số.</p><div className="indicator-list">{PALETTE.map(item => <div key={item.key}><div className={`indicator-row ${enabled[item.key] ? "is-on" : ""}`}><span className="indicator-mark" style={{ background: mark(item.key) }}/><button className="indicator-toggle" type="button" onClick={() => toggle(item.key)} aria-label={`${enabled[item.key] ? "Tắt" : "Bật"} ${item.title}`} aria-pressed={!!enabled[item.key]}><span className="indicator-copy"><strong>{item.title}</strong><small>{detail(item.key)}</small></span><span className="switch"><i/></span></button><button className={`indicator-gear ${expanded === item.key ? "active" : ""}`} type="button" aria-label={`Tùy chỉnh ${item.title}`} aria-expanded={expanded === item.key} onClick={() => setExpanded(expanded === item.key ? null : item.key)}><Settings2 size={17}/></button></div>{expanded === item.key && <IndicatorControls kind={item.key} settings={indicatorSettings} change={changeIndicator}/>}</div>)}</div><div className="panel-subhead">CHỈ BÁO CỦA TÔI <button onClick={() => { setScriptId(null); setScriptName("Chỉ báo của tôi"); setSource(SAMPLE); setPanel("editor"); }}>+ Tạo mới</button></div>{scripts.length ? scripts.map(script => <button key={script.id} className={`saved-script ${script.id === activeScript ? "is-active" : ""}`} onClick={() => { setScriptId(script.id); setScriptName(script.name); setSource(script.source); setPanel("editor"); }}><Code2 size={16}/><span>{script.name}</span><ChevronDown size={13}/></button>) : <p className="empty">Chưa có chỉ báo tùy chỉnh.</p>}{formula && <button className="text-action" onClick={() => { setFormula(null); setActiveScript(null); }}>Ẩn chỉ báo tùy chỉnh đang áp dụng</button>}</div>}
         {panel === "editor" && <div className="panel-content editor"><div className="panel-eyebrow">PINE SCRIPT · TẬP CON</div><h2>{active?.name || "Chỉ báo của tôi"}</h2><p className="subtext">Dán mã Pine đơn giản hoặc dùng tối đa 8 lệnh plot. Mỗi đường có màu riêng và được lưu cùng mã chỉ báo.</p><label className="field-label">Tên chỉ báo</label><Input value={scriptName} onChange={event => setScriptName(event.target.value)} maxLength={80}/><label className="field-label">Mã chỉ báo</label><textarea className="code-area" spellCheck={false} value={source} onChange={event => setSource(event.target.value)} aria-label="Mã Pine Script"/>{sourceProgram && <div className="custom-plot-colors"><span>MÀU TỪNG ĐƯỜNG PLOT</span>{sourceProgram.plots.map((plot,index)=><label className="custom-plot-color" key={plot.id}><input type="color" value={plot.color} aria-label={`Màu ${plot.title}`} onInput={event=>changePlotColor(index,event.currentTarget.value)} onChange={event=>changePlotColor(index,event.target.value)}/><strong>{plot.title}</strong><small>{plot.kind.toUpperCase()}</small></label>)}</div>}<p className="code-tip">Hỗ trợ: Pine v5/v6, indicator(), input.int/float(), tối đa 8 plot() với close/open/high/low/volume hoặc ta.sma, ta.ema, ta.rsi, ta.stdev.</p><div className="editor-actions"><Button onClick={saveScript}>Lưu & áp dụng</Button><Button variant="outline" onClick={applyScript}>Thử trên biểu đồ</Button></div>{scriptId && <button className="delete-action" onClick={removeScript}>Xóa chỉ báo này</button>}</div>}
         {panel === "help" && <div className="panel-content"><div className="panel-eyebrow">HƯỚNG DẪN</div><h2>Cách sử dụng</h2><p className="subtext">Ai có đường link đều xem được biểu đồ. Watchlist, chỉ báo tự tạo và thiết lập của khách lưu trên trình duyệt này.</p><ul className="help-list"><li>Gõ ETH để chọn ETH/USDT, ETH/USDC hoặc cặp khác đang giao dịch trên Binance.</li><li>Mở Watchlist để thêm, xóa, sắp xếp và chuyển nhanh giữa Spot/Futures.</li><li>Kéo để xem lịch sử; chụm hai ngón hoặc lăn chuột để zoom.</li><li>Bật chỉ báo và dùng bánh răng để chỉnh chu kỳ, nguồn giá, màu và độ dày.</li></ul><div className="limit-box"><strong>Giới hạn hiện tại</strong><p>Hỗ trợ một tập con Pine Script, không chạy được mọi script TradingView. Futures ở đây là USDⓈ-M.</p></div></div>}
