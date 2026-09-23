@@ -5,87 +5,118 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>Apartment Price Lab</title>
 <style>
-:root{--bg:#0b121c;--panel:#111d2b;--panel2:#142331;--border:#29394b;--text:#e9f1fb;--muted:#8ea2b7;--green:#31d0ad;--blue:#66a9ff;--amber:#f2bd72;--red:#f07983}
+:root{--bg:#0b121c;--panel:#111d2b;--border:#29394b;--text:#e9f1fb;--muted:#8ea2b7;--green:#31d0ad;--blue:#66a9ff;--amber:#f2bd72;--red:#f07983}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}button,input{font:inherit}
 .app{min-height:100dvh;display:grid;grid-template-rows:58px 1fr}.top{display:flex;align-items:center;gap:14px;padding:0 18px;background:#101a26;border-bottom:1px solid var(--border)}
-.logo{font-weight:850;letter-spacing:.04em}.logo b{color:var(--green)}.badge{font-size:11px;color:#ffddb0;background:#49341d;border:1px solid #76522d;border-radius:999px;padding:4px 8px}.top small{margin-left:auto;color:var(--muted)}
-.grid{display:grid;grid-template-columns:245px minmax(0,1fr) 300px;min-height:0}.side,.detail{background:var(--panel);padding:16px;overflow:auto}.side{border-right:1px solid var(--border)}.detail{border-left:1px solid var(--border)}
+.logo{font-weight:850;letter-spacing:.04em}.logo b{color:var(--green)}.badge{font-size:11px;color:#c9fff2;background:#173e3b;border:1px solid #2a6d62;border-radius:999px;padding:4px 8px}.top small{margin-left:auto;color:var(--muted)}
+.grid{display:grid;grid-template-columns:250px minmax(0,1fr) 310px;min-height:0}.side,.detail{background:var(--panel);padding:16px;overflow:auto}.side{border-right:1px solid var(--border)}.detail{border-left:1px solid var(--border)}
 h2{font-size:13px;letter-spacing:.1em;color:#94a8bc;margin:0 0 12px}.search{width:100%;background:#0f1a26;border:1px solid #34495d;border-radius:9px;padding:10px;color:var(--text);outline:none}.search:focus{border-color:var(--green)}
 .results{margin-top:8px}.result,.watch{display:block;width:100%;border:0;border-bottom:1px solid #253548;background:transparent;color:var(--text);padding:11px 7px;text-align:left}.result:hover,.watch:hover,.watch.active{background:#1a2b3b}.result strong,.watch strong{display:block}.result span,.watch span{font-size:12px;color:var(--muted)}
 .watchhead{display:flex;justify-content:space-between;align-items:center;margin-top:22px}.watchhead h2{margin:0}.watchhead button{background:transparent;border:0;color:var(--green)}
-.main{min-width:0;display:flex;flex-direction:column}.toolbar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap}.project{font-weight:780;font-size:18px}.location{color:var(--muted);font-size:12px}.ranges{display:flex;gap:4px;margin-left:auto}.ranges button{border:0;background:#172638;color:#9eb0c2;border-radius:7px;padding:7px 9px;font-size:12px;font-weight:700}.ranges button.active{background:#1c433e;color:#55e1bd}
-.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--border)}.metric{padding:13px 16px;border-right:1px solid #223144}.metric:last-child{border:0}.metric span{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}.metric strong{font-size:18px}.up{color:var(--green)}.down{color:var(--red)}
-.chartwrap{position:relative;min-height:360px;flex:1;padding:18px}.chart{height:100%;min-height:330px;border:1px solid #203246;border-radius:10px;background:linear-gradient(180deg,#0d1722,#0b121c);overflow:hidden}.legend{position:absolute;left:32px;top:29px;z-index:2;font-size:12px;color:var(--muted);display:flex;gap:13px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.footer{padding:9px 18px;border-top:1px solid var(--border);font-size:11px;color:#74899d}
-.card{border:1px solid #304559;background:#152536;border-radius:10px;padding:13px;margin-bottom:11px}.card label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}.card strong{font-size:18px}.conf{display:inline-flex;align-items:center;gap:6px;color:#bff7e8;font-size:12px}.conf i{width:8px;height:8px;border-radius:50%;background:var(--green)}
-.notice{font-size:12px;line-height:1.55;color:#b6c8d8;background:#2f271b;border:1px solid #594b32;border-radius:9px;padding:12px}.facts{font-size:13px;color:#b9cad9;line-height:1.8}.facts b{color:#eef6fd}
-svg{width:100%;height:100%;display:block}.gridline{stroke:#1e3042;stroke-width:1}.axis{fill:#74899d;font-size:11px}.ask{fill:none;stroke:#31d0ad;stroke-width:2.4}.est{fill:none;stroke:#66a9ff;stroke-width:2.2}.band{fill:#66a9ff;opacity:.08}.point{fill:#31d0ad}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid var(--border)}.detail{border-left:0;border-top:1px solid var(--border)}.side{max-height:none}.results{display:none}.watchlist{display:flex;overflow:auto;gap:5px}.watch{min-width:170px;border:1px solid #2b4054;border-radius:8px}.metrics{grid-template-columns:repeat(2,1fr)}.metric:nth-child(2){border-right:0}.chartwrap{min-height:410px}.detail{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.detail h2,.detail .notice{grid-column:1/-1}.card{margin:0}.top small{display:none}}
-@media(max-width:520px){.top{padding:0 11px}.badge{display:none}.toolbar{padding:12px}.ranges{width:100%;margin:0;justify-content:space-between}.metrics{grid-template-columns:1fr 1fr}.metric strong{font-size:16px}.chartwrap{padding:10px;min-height:370px}.legend{left:22px;top:20px}.detail{grid-template-columns:1fr}.detail h2,.detail .notice{grid-column:auto}.project{font-size:16px}}
+.marketbox{margin-top:18px;padding:12px;border:1px solid #31465a;background:#152536;border-radius:10px}.marketbox label{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.marketbox strong{font-size:20px}.marketbox p{margin:5px 0 0;color:#8fa4b8;font-size:11px;line-height:1.45}
+.main{min-width:0;display:flex;flex-direction:column}.toolbar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap}.project{font-weight:780;font-size:18px}.location{color:var(--muted);font-size:12px}.source-pill{margin-left:auto;color:#8eb4d8;border:1px solid #304b63;background:#132335;border-radius:999px;padding:6px 9px;font-size:11px;text-decoration:none}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--border)}.metric{padding:13px 16px;border-right:1px solid #223144}.metric:last-child{border:0}.metric span{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}.metric strong{font-size:18px}.up{color:var(--green)!important}.down{color:var(--red)!important}
+.chartwrap{position:relative;min-height:390px;flex:1;padding:18px}.chart{height:100%;min-height:350px;border:1px solid #203246;border-radius:10px;background:linear-gradient(180deg,#0d1722,#0b121c);overflow:hidden}.legend{position:absolute;left:32px;top:29px;z-index:2;font-size:12px;color:var(--muted);display:flex;gap:13px;flex-wrap:wrap}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.footer{padding:9px 18px;border-top:1px solid var(--border);font-size:11px;color:#74899d}
+.card{border:1px solid #304559;background:#152536;border-radius:10px;padding:13px;margin-bottom:11px}.card label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}.card strong{font-size:18px}.conf{display:inline-flex;align-items:center;gap:6px;color:#bff7e8;font-size:12px}.conf i{width:8px;height:8px;border-radius:50%;background:var(--amber)}
+.notice{font-size:12px;line-height:1.55;color:#b6c8d8;background:#152536;border:1px solid #304559;border-radius:9px;padding:12px}.notice.warn{background:#2f271b;border-color:#594b32;color:#dccdad}.src{display:block;margin-top:10px;color:#66a9ff;text-decoration:none;overflow-wrap:anywhere}.emptyhist{display:flex;height:100%;min-height:350px;align-items:center;justify-content:center;text-align:center;color:#71879c;font-size:13px;padding:30px}
+svg{width:100%;height:100%;display:block}.gridline{stroke:#1e3042;stroke-width:1}.axis{fill:#74899d;font-size:11px}.range{stroke:#31d0ad;stroke-width:16;stroke-linecap:round;opacity:.7}.bench{stroke:#f2bd72;stroke-width:2;stroke-dasharray:6 6}.mid{fill:#66a9ff;stroke:#d9e9ff;stroke-width:2}.range-label{fill:#dce9f5;font-size:13px;font-weight:700}.bench-label{fill:#f2bd72;font-size:11px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid var(--border)}.detail{border-left:0;border-top:1px solid var(--border)}.results{display:none}.watchlist{display:flex;overflow:auto;gap:5px}.watch{min-width:180px;border:1px solid #2b4054;border-radius:8px}.marketbox{display:none}.metrics{grid-template-columns:repeat(2,1fr)}.metric:nth-child(2){border-right:0}.chartwrap{min-height:410px}.detail{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.detail h2,.detail .notice{grid-column:1/-1}.card{margin:0}.top small{display:none}}
+@media(max-width:520px){.top{padding:0 11px}.badge{display:none}.toolbar{padding:12px}.source-pill{margin-left:0}.metrics{grid-template-columns:1fr 1fr}.metric strong{font-size:16px}.chartwrap{padding:10px;min-height:350px}.legend{left:22px;top:20px}.detail{grid-template-columns:1fr}.detail h2,.detail .notice{grid-column:auto}.project{font-size:16px}}
 </style>
 </head>
 <body>
 <div class="app">
-<header class="top"><div class="logo">APARTMENT <b>PRICE LAB</b></div><span class="badge">DEMO DATA</span><small>Prototype · Hà Nội</small></header>
+<header class="top"><div class="logo">APARTMENT <b>PRICE LAB</b></div><span class="badge">SOURCED ASKING DATA</span><small>Hà Nội · v0.3</small></header>
 <div class="grid">
 <aside class="side">
 <h2>TÌM DỰ ÁN</h2>
-<input id="q" class="search" placeholder="Times City, Ocean Park..." autocomplete="off"/>
+<input id="q" class="search" placeholder="Times City, Skylake..." autocomplete="off"/>
 <div id="results" class="results"></div>
 <div class="watchhead"><h2>WATCHLIST</h2><button id="reset">Đặt lại</button></div>
 <div id="watch" class="watchlist"></div>
+<div class="marketbox"><label>Benchmark Hà Nội · Q2/2026</label><strong id="marketValue">—</strong><p id="marketNote"></p></div>
 </aside>
 <main class="main">
-<div class="toolbar"><div><div id="name" class="project"></div><div id="loc" class="location"></div></div><div class="ranges" id="ranges"></div></div>
+<div class="toolbar"><div><div id="name" class="project">Đang tải…</div><div id="loc" class="location"></div></div><a id="sourceLink" class="source-pill" href="#" target="_blank" rel="noreferrer">Nguồn</a></div>
 <div class="metrics">
-<div class="metric"><span>Giá rao trung vị</span><strong id="median"></strong></div>
-<div class="metric"><span>Estimated Market Value</span><strong id="estimate"></strong></div>
-<div class="metric"><span>Biến động kỳ</span><strong id="change"></strong></div>
-<div class="metric"><span>Mẫu tin hợp lệ</span><strong id="sample"></strong></div>
+<div class="metric"><span>Khoảng giá rao</span><strong id="range"></strong></div>
+<div class="metric"><span>Mốc tham chiếu</span><strong id="reference"></strong></div>
+<div class="metric"><span>Biến động 1 năm</span><strong id="change"></strong></div>
+<div class="metric"><span>Số tin/mẫu nguồn</span><strong id="sample"></strong></div>
 </div>
 <div class="chartwrap">
-<div class="legend"><span><i class="dot" style="background:#31d0ad"></i>Giá rao</span><span><i class="dot" style="background:#66a9ff"></i>Giá ước tính</span></div>
+<div class="legend"><span><i class="dot" style="background:#31d0ad"></i>Khoảng giá rao</span><span><i class="dot" style="background:#66a9ff"></i>Mốc tham chiếu</span><span><i class="dot" style="background:#f2bd72"></i>Benchmark Hà Nội</span></div>
 <div id="chart" class="chart"></div>
 </div>
-<div class="footer">Đơn vị: triệu đồng/m² · dữ liệu hiện tại chỉ để thử giao diện, không dùng cho quyết định mua bán.</div>
+<div class="footer">Đơn vị: triệu đồng/m² · Asking data ≠ transaction price · lịch sử thật bắt đầu tích lũy từ 23/09/2026.</div>
 </main>
 <aside class="detail">
 <h2>PROJECT SNAPSHOT</h2>
-<div class="card"><label>Dải P25–P75</label><strong id="band"></strong></div>
+<div class="card"><label>Loại số liệu</label><strong id="metricType" style="font-size:14px"></strong></div>
 <div class="card"><label>Data Confidence</label><div class="conf"><i></i><b id="confidence"></b></div></div>
 <div class="card"><label>1 tháng</label><strong id="m1"></strong></div>
 <div class="card"><label>1 năm</label><strong id="y1"></strong></div>
-<div class="card"><label>Cập nhật</label><strong style="font-size:14px">23/09/2026</strong></div>
-<div class="notice">Đây là bản preview công khai. Giá trong phiên bản này là dữ liệu mô phỏng có chủ đích. Bản production sẽ tách rõ Asking Price, Observed Transaction và AVM, kèm nguồn và độ tin cậy.</div>
+<div class="card"><label>Kỳ nguồn</label><strong id="period" style="font-size:14px"></strong></div>
+<div class="notice warn">Website hiện theo dõi <b>giá rao công khai</b>. Không coi đây là giá giao dịch thực tế. AVM/Estimated Fair Value chưa được bật cho đến khi có đủ lịch sử và dữ liệu giao dịch/comparable đáng tin cậy.</div>
+<div class="notice" style="margin-top:11px"><b>Lịch sử giá:</b> chưa dựng ngược dữ liệu quá khứ. Hệ thống sẽ lưu snapshot mới theo thời gian để biểu đồ lịch sử sau này phản ánh dữ liệu đã quan sát thật.</div>
 </aside>
 </div></div>
 <script>
-const P=[
-{id:"times",name:"Vinhomes Times City",aliases:["times city","vinhomes times","timescity"],loc:"Hai Bà Trưng, Hà Nội",base:78.2,est:76.9,sample:164,conf:"Medium",m1:1.8,y1:11.2},
-{id:"royal",name:"Vinhomes Royal City",aliases:["royal city","royalcity"],loc:"Thanh Xuân, Hà Nội",base:91.5,est:89.7,sample:132,conf:"Medium",m1:.9,y1:8.6},
-{id:"ocean",name:"Vinhomes Ocean Park",aliases:["ocean park","vinhomes ocean"],loc:"Gia Lâm, Hà Nội",base:62.4,est:61.8,sample:221,conf:"High",m1:-.5,y1:6.3},
-{id:"smart",name:"Vinhomes Smart City",aliases:["smart city","vinhomes smart"],loc:"Nam Từ Liêm, Hà Nội",base:74.8,est:73.6,sample:196,conf:"High",m1:1.2,y1:9.8},
-{id:"park",name:"Park Hill",aliases:["park hill","parkhill"],loc:"Hai Bà Trưng, Hà Nội",base:83.6,est:82.1,sample:88,conf:"Medium",m1:1.5,y1:10.1}
-];
-const periods={M1:1,M3:3,M6:6,Y1:12,Y3:36,ALL:60}; let current="times",period="Y1";
-const saved=()=>{try{return JSON.parse(localStorage.getItem("apl-watch")||"null")||["times","royal","ocean","smart"]}catch{return["times","royal","ocean","smart"]}};
-let watch=saved();
-const fmt=v=>v.toLocaleString("vi-VN",{minimumFractionDigits:1,maximumFractionDigits:1});
-function series(p,n){const a=[];for(let i=0;i<n;i++){const t=i/(n-1||1),wave=Math.sin(i*.8+p.base)*.9+Math.cos(i*.31)*.45;const trend=(t-1)*p.y1/100*p.base;const ask=p.base+trend+wave;const est=p.est+trend*.88+Math.sin(i*.47)*.35;a.push({i,ask,est,lo:est-3.6-Math.sin(i*.4)*.4,hi:est+4.2+Math.cos(i*.33)*.5})}return a}
-function path(arr,key,x,y){return arr.map((d,i)=>(i?"L":"M")+x(i)+" "+y(d[key])).join(" ")}
-function draw(p){const n=periods[period],a=series(p,n),w=900,h=430,pad={l:48,r:18,t:44,b:28};const vals=a.flatMap(d=>[d.ask,d.est,d.lo,d.hi]),mn=Math.min(...vals)-2,mx=Math.max(...vals)+2;const x=i=>pad.l+i*(w-pad.l-pad.r)/Math.max(1,a.length-1),y=v=>pad.t+(mx-v)*(h-pad.t-pad.b)/(mx-mn);
-let s='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none">';
-for(let k=0;k<5;k++){const yy=pad.t+k*(h-pad.t-pad.b)/4,val=mx-k*(mx-mn)/4;s+='<line class="gridline" x1="'+pad.l+'" y1="'+yy+'" x2="'+(w-pad.r)+'" y2="'+yy+'"/><text class="axis" x="4" y="'+(yy+4)+'">'+fmt(val)+'</text>'}
-const upper=a.map((d,i)=>x(i)+','+y(d.hi)).join(' '),lower=[...a].reverse().map((d,j)=>x(a.length-1-j)+','+y(d.lo)).join(' ');
-s+='<polygon class="band" points="'+upper+' '+lower+'"/><path class="est" d="'+path(a,"est",x,y)+'"/><path class="ask" d="'+path(a,"ask",x,y)+'"/>';
-const last=a[a.length-1];s+='<circle class="point" cx="'+x(a.length-1)+'" cy="'+y(last.ask)+'" r="4"/><text class="axis" x="'+(w-102)+'" y="'+(h-9)+'">'+n+' tháng</text></svg>';document.getElementById("chart").innerHTML=s}
+let DATA=null,P=[],current="times",watch=[];
+const fmt=v=>Number(v).toLocaleString("vi-VN",{minimumFractionDigits:1,maximumFractionDigits:1});
+const midpoint=p=>p.reference??((p.low+p.high)/2);
+const deltaText=v=>v==null?"Chưa có":(v>0?"+":"")+fmt(v)+"%";
+function saved(){try{return JSON.parse(localStorage.getItem("apl-watch-v03")||"null")||["times","smart","royal","skylake"]}catch{return["times","smart","royal","skylake"]}}
+function saveWatch(){localStorage.setItem("apl-watch-v03",JSON.stringify(watch))}
+function draw(p){
+ const bench=DATA.marketBenchmark.value, ref=midpoint(p), min=Math.max(0,Math.floor(Math.min(p.low,bench)-25)), max=Math.ceil(Math.max(p.high,bench)+25), w=900,h=390,pad={l:58,r:28,t:70,b:55};
+ const x=v=>pad.l+(v-min)*(w-pad.l-pad.r)/(max-min);
+ let s='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none">';
+ for(let k=0;k<6;k++){const val=min+k*(max-min)/5,xx=x(val);s+='<line class="gridline" x1="'+xx+'" y1="'+pad.t+'" x2="'+xx+'" y2="'+(h-pad.b)+'"/><text class="axis" x="'+(xx-13)+'" y="'+(h-23)+'">'+Math.round(val)+'</text>'}
+ s+='<line class="bench" x1="'+x(bench)+'" y1="'+(pad.t-8)+'" x2="'+x(bench)+'" y2="'+(h-pad.b+10)+'"/>';
+ s+='<text class="bench-label" x="'+Math.min(x(bench)+7,w-210)+'" y="'+(pad.t-18)+'">Hà Nội Q2/2026: '+fmt(bench)+' tr/m²</text>';
+ const yy=205;
+ s+='<line class="range" x1="'+x(p.low)+'" y1="'+yy+'" x2="'+x(p.high)+'" y2="'+yy+'"/>';
+ s+='<circle class="mid" cx="'+x(ref)+'" cy="'+yy+'" r="9"/>';
+ s+='<text class="range-label" x="'+Math.max(pad.l,x(p.low)-18)+'" y="'+(yy-28)+'">'+fmt(p.low)+'</text>';
+ s+='<text class="range-label" x="'+Math.min(w-70,x(p.high)-18)+'" y="'+(yy-28)+'">'+fmt(p.high)+'</text>';
+ s+='<text class="axis" x="'+Math.max(pad.l,x(ref)-65)+'" y="'+(yy+42)+'">Mốc tham chiếu: '+fmt(ref)+'</text>';
+ s+='<text class="axis" x="'+pad.l+'" y="'+(h-6)+'">Nguồn: '+p.sourceName+' · '+p.sourcePeriod+'</text></svg>';
+ document.getElementById("chart").innerHTML=s;
+}
 function render(){
-const p=P.find(x=>x.id===current)||P[0];document.getElementById("name").textContent=p.name;document.getElementById("loc").textContent=p.loc;document.getElementById("median").textContent=fmt(p.base)+" tr/m²";document.getElementById("estimate").textContent=fmt(p.est)+" tr/m²";
-const ch=period==="M1"?p.m1:period==="M3"?p.m1*2.1:period==="M6"?p.y1*.46:period==="Y1"?p.y1:p.y1*(period==="Y3"?2.35:3.1);const ce=document.getElementById("change");ce.textContent=(ch>=0?"+":"")+fmt(ch)+"%";ce.className=ch>=0?"up":"down";
-document.getElementById("sample").textContent=p.sample;document.getElementById("band").textContent=fmt(p.est-3.7)+"–"+fmt(p.est+4.3)+" tr/m²";document.getElementById("confidence").textContent=p.conf;document.getElementById("m1").textContent=(p.m1>=0?"+":"")+fmt(p.m1)+"%";document.getElementById("y1").textContent="+"+fmt(p.y1)+"%";
-document.getElementById("watch").innerHTML=watch.map(id=>{const z=P.find(x=>x.id===id);return '<button class="watch '+(id===current?'active':'')+'" data-id="'+id+'"><strong>'+z.name+'</strong><span>'+fmt(z.base)+' tr/m² · '+(z.m1>=0?'+':'')+fmt(z.m1)+'%</span></button>'}).join("");
-document.querySelectorAll(".watch").forEach(b=>b.onclick=()=>{current=b.dataset.id;render()});draw(p)}
-function search(){const q=document.getElementById("q").value.trim().toLowerCase();const r=!q?[]:P.filter(p=>p.name.toLowerCase().includes(q)||p.aliases.some(a=>a.includes(q))).slice(0,5);document.getElementById("results").innerHTML=r.map(p=>'<button class="result" data-id="'+p.id+'"><strong>'+p.name+'</strong><span>'+p.loc+' · '+fmt(p.base)+' tr/m²</span></button>').join("");document.querySelectorAll(".result").forEach(b=>b.onclick=()=>{current=b.dataset.id;if(!watch.includes(current)){watch.unshift(current);watch=watch.slice(0,6);localStorage.setItem("apl-watch",JSON.stringify(watch))}render()})}
-document.getElementById("q").addEventListener("input",search);document.getElementById("reset").onclick=()=>{watch=["times","royal","ocean","smart"];localStorage.setItem("apl-watch",JSON.stringify(watch));render()};
-document.getElementById("ranges").innerHTML=Object.keys(periods).map(k=>'<button data-p="'+k+'" class="'+(k===period?'active':'')+'">'+k.replace("M","T").replace("Y","N")+'</button>').join("");document.querySelectorAll("#ranges button").forEach(b=>b.onclick=()=>{period=b.dataset.p;document.querySelectorAll("#ranges button").forEach(x=>x.classList.toggle("active",x.dataset.p===period));render()});render();
+ const p=P.find(x=>x.id===current)||P[0]; if(!p)return;
+ document.getElementById("name").textContent=p.name; document.getElementById("loc").textContent=p.area;
+ document.getElementById("range").textContent=fmt(p.low)+"–"+fmt(p.high);
+ const ref=midpoint(p); document.getElementById("reference").textContent=fmt(ref)+" tr/m²";
+ const ce=document.getElementById("change"); ce.textContent=deltaText(p.change1y); ce.className=p.change1y==null?"":(p.change1y>=0?"up":"down");
+ document.getElementById("sample").textContent=p.listingCount??"—";
+ document.getElementById("metricType").textContent=p.sourceType==="popular_asking_rate"?"Đơn giá phổ biến / khoảng rao":"Khoảng giá rao tổng hợp";
+ document.getElementById("confidence").textContent=p.confidence;
+ document.getElementById("m1").textContent=deltaText(p.change1m); document.getElementById("m1").className=p.change1m==null?"":(p.change1m>=0?"up":"down");
+ document.getElementById("y1").textContent=deltaText(p.change1y); document.getElementById("y1").className=p.change1y==null?"":(p.change1y>=0?"up":"down");
+ document.getElementById("period").textContent=p.sourcePeriod;
+ const link=document.getElementById("sourceLink"); link.href=p.sourceUrl; link.textContent=p.sourceName+" ↗";
+ document.getElementById("watch").innerHTML=watch.map(id=>{const z=P.find(x=>x.id===id);if(!z)return"";const c=z.change1y==null?"":(" · "+deltaText(z.change1y));return '<button class="watch '+(id===current?'active':'')+'" data-id="'+id+'"><strong>'+z.name+'</strong><span>'+fmt(midpoint(z))+' tr/m²'+c+'</span></button>'}).join("");
+ document.querySelectorAll(".watch").forEach(b=>b.onclick=()=>{current=b.dataset.id;render()}); draw(p);
+}
+function search(){
+ const q=document.getElementById("q").value.trim().toLowerCase();
+ const r=!q?[]:P.filter(p=>p.name.toLowerCase().includes(q)||p.aliases.some(a=>a.includes(q))).slice(0,8);
+ document.getElementById("results").innerHTML=r.map(p=>'<button class="result" data-id="'+p.id+'"><strong>'+p.name+'</strong><span>'+p.area+' · '+fmt(p.low)+'–'+fmt(p.high)+' tr/m²</span></button>').join("");
+ document.querySelectorAll(".result").forEach(b=>b.onclick=()=>{current=b.dataset.id;if(!watch.includes(current)){watch.unshift(current);watch=watch.slice(0,8);saveWatch()}render()});
+}
+async function init(){
+ try{
+  const r=await fetch("./data/projects.json",{cache:"no-store"}); if(!r.ok)throw Error("Không tải được dữ liệu");
+  DATA=await r.json();P=DATA.projects;watch=saved().filter(id=>P.some(p=>p.id===id));if(!watch.length)watch=["times","smart","royal","skylake"];
+  document.getElementById("marketValue").textContent=fmt(DATA.marketBenchmark.value)+" tr/m²";
+  document.getElementById("marketNote").textContent=DATA.marketBenchmark.period+" · "+DATA.marketBenchmark.metric+". "+DATA.marketBenchmark.note;
+  document.getElementById("q").addEventListener("input",search);
+  document.getElementById("reset").onclick=()=>{watch=["times","smart","royal","skylake"];saveWatch();render()};
+  render();
+ }catch(e){document.getElementById("name").textContent="Lỗi tải dữ liệu";document.getElementById("chart").innerHTML='<div class="emptyhist">Không tải được projects.json. Hãy tải lại trang.</div>'}
+}
+init();
 </script>
 </body></html>
