@@ -26,3 +26,24 @@ export const settings = sqliteTable("settings", {
   enabled: text("enabled").notNull().default("{}"),
   watchlist: text("watchlist").notNull().default("[]"),
 });
+
+export const localAccounts = sqliteTable("local_accounts", {
+  username: text("username").primaryKey(),
+  userId: text("user_id").notNull().unique().references(() => users.id),
+  passwordHash: text("password_hash").notNull(),
+  salt: text("salt").notNull(),
+  iterations: integer("iterations").notNull(),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const loginSessions = sqliteTable("login_sessions", {
+  tokenHash: text("token_hash").primaryKey(),
+  userId: text("user_id").notNull().references(() => users.id),
+  expiresAt: integer("expires_at").notNull(),
+});
+
+export const authAttempts = sqliteTable("auth_attempts", {
+  key: text("key").primaryKey(),
+  failures: integer("failures").notNull(),
+  resetAt: integer("reset_at").notNull(),
+});

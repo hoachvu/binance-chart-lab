@@ -15,6 +15,7 @@
 - Chỉ báo MA, Bollinger Bands, RSI và Volume; có thể bật/tắt, chỉnh tham số và chọn màu riêng cho từng đường, ngưỡng, vùng nền hoặc cột tăng/giảm.
 - Trình soạn chỉ báo tùy chỉnh với một tập con Pine Script an toàn; có thể thử và lưu mã, tối đa 8 đường `plot(...)` với tên và màu riêng.
 - Người chưa đăng nhập vẫn dùng được; cấu hình, watchlist và chỉ báo tự tạo được lưu trong `localStorage` của trình duyệt. Thay đổi watchlist được ghi ngay khi thêm, xóa, đổi tên hoặc sắp xếp, và trang nhớ danh sách đang chọn.
+- Đăng ký/đăng nhập bằng tên tài khoản và mật khẩu để đồng bộ watchlist, cấu hình và chỉ báo giữa các thiết bị; dữ liệu tài khoản lưu trong D1. Khi đăng nhập lần đầu, dữ liệu Khách trên thiết bị được chuyển vào tài khoản mới nếu tài khoản chưa có dữ liệu.
 
 ## Chạy trên máy cá nhân
 
@@ -49,7 +50,8 @@ Trình phân tích hiện hỗ trợ tối đa 8 lệnh `plot(...)` trên `open`
 - Spot REST: `data-api.binance.vision`.
 - Futures USDⓈ-M REST: `fapi.binance.com` cùng các máy chủ dự phòng chính thức của Binance.
 - Người dùng công khai: cấu hình nằm trong `localStorage`, không tự đồng bộ giữa trình duyệt hoặc thiết bị.
-- Khi chạy trong ChatGPT Sites và có danh tính người dùng, cấu hình có thể lưu trong Cloudflare D1 qua binding `DB`.
+- Tài khoản Chart Lab: dữ liệu lưu trong Cloudflare D1 theo từng tài khoản. Mật khẩu được băm với PBKDF2 và muối riêng; phiên đăng nhập dùng cookie HttpOnly, SameSite=Lax. Hiện chưa có khôi phục mật khẩu, nên người dùng cần lưu mật khẩu an toàn.
+- Danh tính ChatGPT đã được cấp quyền trước đây vẫn có thể dùng dữ liệu riêng trong D1.
 
 Không commit file `.env`, khóa API hoặc token vào repository. Các mẫu bí mật đã được loại khỏi `.gitignore`.
 

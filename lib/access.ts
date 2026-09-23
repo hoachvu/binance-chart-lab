@@ -1,9 +1,12 @@
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { localAccount } from "@/lib/local-auth";
 import { users, invitations } from "@/db/schema";
 
 export async function account() {
+  const signedIn = await localAccount();
+  if (signedIn) return signedIn;
   const user = await getChatGPTUser();
   if (!user) return null;
   const db = getDb();

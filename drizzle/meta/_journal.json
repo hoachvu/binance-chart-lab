@@ -15,6 +15,13 @@
       "when": 1790146486064,
       "tag": "0001_massive_jack_flag",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790171770176,
+      "tag": "0002_clammy_cannonball",
+      "breakpoints": true
     }
   ]
 }

@@ -3,6 +3,7 @@ import { getDb } from "@/db";
 import { indicators, invitations, settings } from "@/db/schema";
 import { account } from "@/lib/access";
 import { normalizeWatchlists } from "@/lib/watchlist";
+import { parsePine } from "@/lib/indicators";
 
 export async function GET() {
   try {
@@ -15,14 +16,43 @@ export async function GET() {
       me.role === "admin" ? db.select().from(invitations).all() : Promise.resolve([]),
     ]);
     return Response.json({me,scripts,config,invites},{headers:{"Cache-Control":"no-store"}});
-  } catch { return Response.json({me:{email:"",role:"guest",displayName:"Khách"},scripts:[],config:null,invites:[]},{headers:{"Cache-Control":"no-store"}}); }
+  } catch { return Response.json({error:"Chưa tải được dữ liệu tài khoản. Vui lòng thử lại."},{status:503,headers:{"Cache-Control":"no-store"}}); }
 }
 
 export async function POST(request:Request) {
   try {
+    const origin = request.headers.get("Origin");
+    if (origin && origin !== new URL(request.url).origin) return Response.json({error:"Yêu cầu không hợp lệ"},{status:403});
     const me = await account(); if (!me) return Response.json({error:"Không có quyền"},{status:403});
     const payload = await request.json() as Record<string,unknown>;
     const db = getDb();
+    if (payload.action === "importGuest" && me.role === "local") {
+      if (await db.select({ userId: settings.userId }).from(settings).where(eq(settings.userId, me.id)).get()) return Response.json({ ok: true, imported: false });
+      const guest = payload.data && typeof payload.data === "object" ? payload.data as Record<string,unknown> : {};
+      const rawConfig = guest.config && typeof guest.config === "object" ? guest.config as Record<string,unknown> : {};
+      const rawScripts = Array.isArray(guest.scripts) ? guest.scripts.slice(0,30) : [];
+      const scriptsToImport = rawScripts.flatMap((value,index) => {
+        if (!value || typeof value !== "object") return [];
+        const script = value as Record<string,unknown>;
+        const name = String(script.name || "").trim().slice(0,80);
+        const source = String(script.source || "").trim();
+        if (!name || !source || source.length > 10000) return [];
+        try { parsePine(source); } catch { return []; }
+        return [{ oldId: String(script.id || ""), id: `import-${me.id}-${index}`, name, source }];
+      });
+      const market = rawConfig.market === "futures" ? "futures" : "spot";
+      const symbol = /^[A-Z0-9]{5,20}$/.test(String(rawConfig.symbol || "")) ? String(rawConfig.symbol) : "BTCUSDT";
+      const interval = /^(1m|5m|15m|1h|4h|1d|1w)$/.test(String(rawConfig.interval || "")) ? String(rawConfig.interval) : "1h";
+      let enabled: Record<string,unknown> = {};
+      try { const parsed = JSON.parse(String(rawConfig.enabled || "{}")); if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) enabled = parsed; } catch { /* Use defaults. */ }
+      if (typeof enabled._activeScript === "string") enabled._activeScript = scriptsToImport.find(script => script.oldId === enabled._activeScript)?.id || null;
+      const enabledText = JSON.stringify(enabled);
+      const watchlist = JSON.stringify(normalizeWatchlists(guest.watchlists));
+      if (enabledText.length > 4000 || watchlist.length > 50000) return Response.json({ error: "Dữ liệu trên thiết bị quá lớn." }, { status: 400 });
+      for (const script of scriptsToImport) await db.insert(indicators).values({ id: script.id, ownerId: me.id, name: script.name, source: script.source, createdAt: Date.now(), updatedAt: Date.now() }).onConflictDoNothing();
+      await db.insert(settings).values({ userId: me.id, market, symbol, interval, enabled: enabledText, watchlist }).onConflictDoNothing();
+      return Response.json({ ok: true, imported: true });
+    }
     if (payload.action === "saveScript") {
       const name = String(payload.name || "").trim().slice(0,80);
       const source = String(payload.source || "").trim();

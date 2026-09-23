@@ -5,6 +5,7 @@ import { Activity, ChartCandlestick, ChevronDown, CircleHelp, Code2, List, Refre
 import CandleChart from "./CandleChart";
 import IndicatorControls from "./IndicatorControls";
 import Watchlist, { type Pair } from "./Watchlist";
+import AccountDialog from "./AccountDialog";
 import { DEFAULT_INDICATOR_SETTINGS, normalizeIndicatorSettings, parsePine, setPinePlotColor, type Bar, type Formula, type IndicatorSettings } from "@/lib/indicators";
 import { DEFAULT_WATCHLISTS, normalizeWatchlists, parseWatchlists, quoteKey, type Market, type WatchGroup, type WatchItem } from "@/lib/watchlist";
 import { Button } from "@/components/ui/button";
@@ -85,6 +86,8 @@ export default function Workspace() {
   const [panel, setPanel] = useState<Panel>("watchlist");
   const [panelOpen, setPanelOpen] = useState(false);
   const [me, setMe] = useState<Account | null>(null);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const closeAccount = useCallback(() => setAccountOpen(false), []);
   const [scripts, setScripts] = useState<Script[]>([]);
   const [ready, setReady] = useState(false);
   const [notice, setNotice] = useState("");
@@ -136,6 +139,19 @@ export default function Workspace() {
     }
     throw new Error("Thao tác này cần đăng nhập.");
   }, [me?.role, scripts]);
+
+  const finishSignIn = async () => {
+    let guest: Record<string, unknown> = {};
+    try {
+      guest = {
+        config: JSON.parse(localStorage.getItem(GUEST_SETTINGS) || "null"),
+        scripts: JSON.parse(localStorage.getItem(GUEST_SCRIPTS) || "[]"),
+        watchlists: JSON.parse(localStorage.getItem(GUEST_WATCHLISTS) || "null"),
+      };
+    } catch { /* An empty local profile can still sign in. */ }
+    await workspaceApi({ action: "importGuest", data: guest });
+    window.location.reload();
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -543,7 +559,7 @@ export default function Workspace() {
       <span className="top-divider"/><span className="product-label">BINANCE MARKETS</span><div className="top-grow"/>
       <button type="button" className="mobile-watch-button" onClick={() => openPanel("watchlist")}><List size={17}/><span>Watchlist</span></button>
       <span className={`status ${status === "Trực tiếp" ? "live" : ""}`}>{status === "Trực tiếp" ? <Wifi size={14}/> : <WifiOff size={14}/>} {status}</span>
-      <span className="account" title={me?.role === "guest" ? "Dữ liệu lưu trong trình duyệt này" : me?.email}>{me?.role === "guest" ? "Khách · lưu trên thiết bị" : (me?.email || "Đang tải")}</span>
+      {me?.role === "guest" || me?.role === "local" ? <button type="button" className="account account-trigger" onClick={() => setAccountOpen(true)} title={me.role === "guest" ? "Đăng nhập để đồng bộ dữ liệu" : "Tài khoản và đăng xuất"}>{me.role === "guest" ? "Đăng nhập" : me.displayName}</button> : <span className="account" title={me?.email}>{me?.email || "Đang tải"}</span>}
     </header>
     <div className="body-grid">
       <section className="main-column">
@@ -580,5 +596,6 @@ export default function Workspace() {
       </aside>
     </div>
     {notice && <div className="toast" role="status">{notice}</div>}
+    {accountOpen && <AccountDialog username={me?.role === "local" ? me.displayName : null} close={closeAccount} onSignedIn={finishSignIn}/>}
   </main>;
 }
