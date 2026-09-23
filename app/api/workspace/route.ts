@@ -42,8 +42,8 @@ export async function POST(request:Request) {
       const market = payload.market === "futures" ? "futures" : "spot";
       const symbol = String(payload.symbol||"BTCUSDT").toUpperCase();
       const interval = String(payload.interval||"1h");
-      const enabled = JSON.stringify(payload.enabled||{}).slice(0,1000);
-      if (!/^[A-Z0-9]{5,20}$/.test(symbol) || !/^(1m|3m|5m|15m|30m|1h|2h|4h|6h|8h|12h|1d|3d|1w|1M)$/.test(interval)) return Response.json({error:"Cấu hình không hợp lệ"},{status:400});
+      const enabled = JSON.stringify(payload.enabled||{});
+      if (enabled.length>4000 || !/^[A-Z0-9]{5,20}$/.test(symbol) || !/^(1m|3m|5m|15m|30m|1h|2h|4h|6h|8h|12h|1d|3d|1w|1M)$/.test(interval)) return Response.json({error:"Cấu hình không hợp lệ"},{status:400});
       await db.insert(settings).values({userId:me.id,market,symbol,interval,enabled}).onConflictDoUpdate({target:settings.userId,set:{market,symbol,interval,enabled}});
       return Response.json({ok:true});
     }

@@ -1,5 +1,42 @@
 export type Bar = {time:number;open:number;high:number;low:number;close:number;volume:number};
-type Field = "open"|"high"|"low"|"close"|"volume";
+export type PriceField = "open"|"high"|"low"|"close"|"hl2"|"hlc3"|"ohlc4";
+type Field = PriceField|"volume";
+export type IndicatorSettings = {
+  ma:{period:number;source:PriceField;method:"sma"|"ema";color:string;width:1|2|3|4};
+  bb:{period:number;source:PriceField;method:"sma"|"ema";deviation:number;color:string;width:1|2|3|4};
+  rsi:{period:number;source:PriceField;color:string;width:1|2|3|4;overbought:number;oversold:number};
+  volume:{upColor:string;downColor:string};
+};
+export const DEFAULT_INDICATOR_SETTINGS:IndicatorSettings={
+  ma:{period:20,source:"close",method:"sma",color:"#ffcc73",width:2},
+  bb:{period:20,source:"close",method:"sma",deviation:2,color:"#ad8ef8",width:1},
+  rsi:{period:14,source:"close",color:"#7daaff",width:2,overbought:70,oversold:30},
+  volume:{upColor:"#249e8c",downColor:"#d15b67"},
+};
+export function normalizeIndicatorSettings(raw:unknown):IndicatorSettings {
+  const o=raw && typeof raw==="object"?raw as Record<string,unknown>:{};
+  const part=(key:string)=>o[key] && typeof o[key]==="object"?o[key] as Record<string,unknown>:{};
+  const num=(v:unknown,fallback:number,min:number,max:number)=>typeof v==="number"&&Number.isFinite(v)?Math.min(max,Math.max(min,v)):fallback;
+  const color=(v:unknown,fallback:string)=>typeof v==="string"&&/^#[0-9a-f]{6}$/i.test(v)?v:fallback;
+  const source=(v:unknown,fallback:PriceField):PriceField=>["open","high","low","close","hl2","hlc3","ohlc4"].includes(String(v))?v as PriceField:fallback;
+  const method=(v:unknown,fallback:"sma"|"ema")=>v==="sma"||v==="ema"?v:fallback;
+  const width=(v:unknown,fallback:1|2|3|4)=>Math.round(num(v,fallback,1,4)) as 1|2|3|4;
+  const ma=part("ma"),bb=part("bb"),rsi=part("rsi"),volume=part("volume"),d=DEFAULT_INDICATOR_SETTINGS;
+  const overbought=Math.round(num(rsi.overbought,d.rsi.overbought,2,99));
+  const oversold=Math.min(overbought-1,Math.round(num(rsi.oversold,d.rsi.oversold,1,98)));
+  return {
+    ma:{period:Math.round(num(ma.period,d.ma.period,2,500)),source:source(ma.source,d.ma.source),method:method(ma.method,d.ma.method),color:color(ma.color,d.ma.color),width:width(ma.width,d.ma.width)},
+    bb:{period:Math.round(num(bb.period,d.bb.period,2,500)),source:source(bb.source,d.bb.source),method:method(bb.method,d.bb.method),deviation:num(bb.deviation,d.bb.deviation,.1,10),color:color(bb.color,d.bb.color),width:width(bb.width,d.bb.width)},
+    rsi:{period:Math.round(num(rsi.period,d.rsi.period,2,200)),source:source(rsi.source,d.rsi.source),color:color(rsi.color,d.rsi.color),width:width(rsi.width,d.rsi.width),overbought,oversold},
+    volume:{upColor:color(volume.upColor,d.volume.upColor),downColor:color(volume.downColor,d.volume.downColor)},
+  };
+}
+function fieldValue(b:Bar,field:Field){
+  if(field==="hl2")return (b.high+b.low)/2;
+  if(field==="hlc3")return (b.high+b.low+b.close)/3;
+  if(field==="ohlc4")return (b.open+b.high+b.low+b.close)/4;
+  return b[field];
+}
 export type Formula = {kind:"sma"|"ema"|"rsi"|"stdev"|"field";field:Field;length:number;overlay:boolean};
 
 export function parsePine(source:string):Formula {
@@ -28,7 +65,7 @@ export function parsePine(source:string):Formula {
 }
 
 export function values(bars:Bar[], formula:Formula):Array<number|null> {
-  const a=bars.map(b=>b[formula.field]); const n=formula.length;
+  const a=bars.map(b=>fieldValue(b,formula.field)); const n=formula.length;
   if(formula.kind==="field") return a;
   const result:Array<number|null>=Array(a.length).fill(null);
   if (a.length<n) return result;
@@ -49,8 +86,8 @@ export function values(bars:Bar[], formula:Formula):Array<number|null> {
   }return result;
 }
 
-export function bands(bars:Bar[],length=20,multiplier=2){
-  const mean=values(bars,{kind:"sma",field:"close",length,overlay:true});
-  const sd=values(bars,{kind:"stdev",field:"close",length,overlay:true});
+export function bands(bars:Bar[],length=20,multiplier=2,field:PriceField="close",method:"sma"|"ema"="sma"){
+  const mean=values(bars,{kind:method,field,length,overlay:true});
+  const sd=values(bars,{kind:"stdev",field,length,overlay:true});
   return {middle:mean,upper:mean.map((v,i)=>v===null||sd[i]===null?null:v+multiplier*sd[i]!),lower:mean.map((v,i)=>v===null||sd[i]===null?null:v-multiplier*sd[i]!)};
 }
