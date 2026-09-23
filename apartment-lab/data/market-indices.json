@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "0.6.0",
+    "version": "0.8.0",
     "updatedAt": "2026-09-23T15:00:00+07:00",
     "currencyReference": "triệu đồng/m²",
     "policy": "Không nội suy dữ liệu tháng thành nến tuần. Chuỗi số hóa từ đồ thị luôn được gắn BACKFILLED_CHART_DIGITIZED và technical signal từ chuỗi này là tham khảo.",
@@ -10,7 +10,8 @@
       "MACD": 35
     },
     "weeklyPolicy": "Weekly candles may be MODELED from dated monthly/quarterly anchors. Observed weekly OHLC may override modeled candles only when expressed in the same million VND/m² unit and matching the same week.",
-    "refreshBehavior": "Browser refresh and the Refresh button always fetch the latest published JSON without cache. External-source ingestion remains separate; new source anchors appear after the data pipeline commits them."
+    "refreshBehavior": "Browser refresh and the Refresh button always fetch the latest published JSON without cache. External-source ingestion remains separate; new source anchors appear after the data pipeline commits them.",
+    "volumeDefinition": "Volume pane = public listing/sample count when available. Missing periods remain missing; counts are never interpolated."
   },
   "symbols": [
     {
@@ -292,7 +293,17 @@
           "note": "Published reference range 64.2–97.7 million VND/m² in Sep 2026; website uses midpoint only as a low-confidence current anchor."
         }
       ],
-      "unit": "million_vnd_per_m2"
+      "unit": "million_vnd_per_m2",
+      "weeklyVolume": [
+        {
+          "date": "2026-09-15",
+          "value": 739,
+          "metric": "PUBLIC_LISTING_SAMPLE_COUNT",
+          "historyType": "OBSERVED_PARTIAL_SAMPLE",
+          "coverage": "7 tracked projects with published listing counts",
+          "note": "Partial public listing sample; not transaction volume."
+        }
+      ]
     },
     {
       "symbol": "HN-APT-SEC",
@@ -361,7 +372,17 @@
           "note": "Secondary average approx. 60 million VND/m² at end-Q2/2026, down 2.5% QoQ."
         }
       ],
-      "unit": "million_vnd_per_m2"
+      "unit": "million_vnd_per_m2",
+      "weeklyVolume": [
+        {
+          "date": "2026-09-15",
+          "value": 739,
+          "metric": "PUBLIC_LISTING_SAMPLE_COUNT",
+          "historyType": "OBSERVED_PARTIAL_SAMPLE",
+          "coverage": "7 tracked projects with published listing counts",
+          "note": "Partial public listing sample; not transaction volume."
+        }
+      ]
     },
     {
       "symbol": "HN-APT-PRI",
@@ -450,7 +471,8 @@
           "note": "Primary apartment average approx. 95 million VND/m² at end-Q2/2026."
         }
       ],
-      "unit": "million_vnd_per_m2"
+      "unit": "million_vnd_per_m2",
+      "weeklyVolume": []
     }
   ]
 }
