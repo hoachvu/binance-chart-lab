@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "version": "0.4.0",
+    "baseDate": "2026-09-23",
+    "baseValue": 100,
+    "currencyReference": "triệu đồng/m²",
+    "methodology": "Quality-adjusted market index. Weekly observations are the atomic series; longer candles aggregate weekly index observations. No synthetic historical path is generated.",
+    "historyPolicy": {
+      "observed": "Measured/stored snapshots only.",
+      "backfilled": "Allowed only when a dated historical source provides enough observations.",
+      "modelled": "Never mixed into observed candles; must be labelled separately."
+    },
+    "indicatorMinimums": {
+      "SMA20": 20,
+      "EMA20": 20,
+      "BB20": 20,
+      "RSI14": 15,
+      "MACD": 35
+    }
+  },
+  "symbols": [
+    {
+      "symbol": "HN-APT-ALL",
+      "name": "Chung cư Hà Nội - toàn thị trường",
+      "segment": "ALL",
+      "description": "Khung chỉ số tổng hợp chung cư Hà Nội. Chưa trộn cơ học sơ cấp và thứ cấp cho đến khi hoàn tất trọng số.",
+      "status": "COLLECTING",
+      "referencePrice": {
+        "value": 123,
+        "period": "Q2/2026",
+        "label": "Giá bán bình quân chung cư Hà Nội",
+        "source": "Bộ Xây dựng",
+        "url": "https://moc.gov.vn/vn/Pages/chitiettin.aspx?ChuyenmucID=1184&IDNews=96449&tieude=thi-truong-bat-dong-san-quy-ii2026-nguon-cung-khoi-sac-tap-trung-thao-go-the-che-va-thuc-day-nha-o-xa-hoi.aspx"
+      },
+      "weekly": [
+        {
+          "date": "2026-09-23",
+          "open": 100,
+          "high": 100,
+          "low": 100,
+          "close": 100,
+          "sampleCount": null,
+          "projectsCount": null,
+          "confidence": "LOW",
+          "historyType": "OBSERVED_BASELINE"
+        }
+      ]
+    },
+    {
+      "symbol": "HN-APT-SEC",
+      "name": "Chung cư Hà Nội - thứ cấp",
+      "segment": "SECONDARY",
+      "description": "Chỉ số dành cho căn hộ chuyển nhượng/thứ cấp. Giá rao và dữ liệu nguồn phải được làm sạch, khử trùng lặp và điều chỉnh cơ cấu trước khi vào index.",
+      "status": "COLLECTING",
+      "referencePrice": null,
+      "weekly": [
+        {
+          "date": "2026-09-23",
+          "open": 100,
+          "high": 100,
+          "low": 100,
+          "close": 100,
+          "sampleCount": null,
+          "projectsCount": 11,
+          "confidence": "LOW",
+          "historyType": "OBSERVED_BASELINE"
+        }
+      ]
+    },
+    {
+      "symbol": "HN-APT-PRI",
+      "name": "Chung cư Hà Nội - sơ cấp",
+      "segment": "PRIMARY",
+      "description": "Chỉ số dành cho nguồn cung mở bán sơ cấp. Báo cáo thị trường theo quý được dùng làm nguồn kiểm chứng, không nội suy thành nến tuần.",
+      "status": "COLLECTING",
+      "referencePrice": null,
+      "weekly": [
+        {
+          "date": "2026-09-23",
+          "open": 100,
+          "high": 100,
+          "low": 100,
+          "close": 100,
+          "sampleCount": null,
+          "projectsCount": null,
+          "confidence": "LOW",
+          "historyType": "OBSERVED_BASELINE"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Bộ Xây dựng",
+      "purpose": "Benchmark thị trường",
+      "url": "https://moc.gov.vn/vn/Pages/chitiettin.aspx?ChuyenmucID=1184&IDNews=96449&tieude=thi-truong-bat-dong-san-quy-ii2026-nguon-cung-khoi-sac-tap-trung-thao-go-the-che-va-thuc-day-nha-o-xa-hoi.aspx"
+    },
+    {
+      "name": "Batdongsan.com.vn",
+      "purpose": "Nguồn tham khảo giá rao công khai / lịch sử giá công bố",
+      "url": "https://batdongsan.com.vn/ban-can-ho-chung-cu-tp-ha-noi"
+    },
+    {
+      "name": "OneHousing",
+      "purpose": "Nguồn tham khảo thị trường sơ cấp/thứ cấp và dữ liệu dự án",
+      "url": "https://onehousing.vn/bctt/bao-cao-thi-truong-bat-dong-san-quy-2-2026"
+    }
+  ]
+}
