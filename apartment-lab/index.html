@@ -3,120 +3,133 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Apartment Price Lab</title>
+<title>Hanoi Apartment Market Terminal</title>
 <style>
-:root{--bg:#0b121c;--panel:#111d2b;--border:#29394b;--text:#e9f1fb;--muted:#8ea2b7;--green:#31d0ad;--blue:#66a9ff;--amber:#f2bd72;--red:#f07983}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}button,input{font:inherit}
-.app{min-height:100dvh;display:grid;grid-template-rows:58px 1fr}.top{display:flex;align-items:center;gap:14px;padding:0 18px;background:#101a26;border-bottom:1px solid var(--border)}
-.logo{font-weight:850;letter-spacing:.04em}.logo b{color:var(--green)}.badge{font-size:11px;color:#c9fff2;background:#173e3b;border:1px solid #2a6d62;border-radius:999px;padding:4px 8px}.top small{margin-left:auto;color:var(--muted)}
-.grid{display:grid;grid-template-columns:250px minmax(0,1fr) 310px;min-height:0}.side,.detail{background:var(--panel);padding:16px;overflow:auto}.side{border-right:1px solid var(--border)}.detail{border-left:1px solid var(--border)}
-h2{font-size:13px;letter-spacing:.1em;color:#94a8bc;margin:0 0 12px}.search{width:100%;background:#0f1a26;border:1px solid #34495d;border-radius:9px;padding:10px;color:var(--text);outline:none}.search:focus{border-color:var(--green)}
-.results{margin-top:8px}.result,.watch{display:block;width:100%;border:0;border-bottom:1px solid #253548;background:transparent;color:var(--text);padding:11px 7px;text-align:left}.result:hover,.watch:hover,.watch.active{background:#1a2b3b}.result strong,.watch strong{display:block}.result span,.watch span{font-size:12px;color:var(--muted)}
-.watchhead{display:flex;justify-content:space-between;align-items:center;margin-top:22px}.watchhead h2{margin:0}.watchhead button{background:transparent;border:0;color:var(--green)}
-.marketbox{margin-top:18px;padding:12px;border:1px solid #31465a;background:#152536;border-radius:10px}.marketbox label{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.marketbox strong{font-size:20px}.marketbox p{margin:5px 0 0;color:#8fa4b8;font-size:11px;line-height:1.45}
-.main{min-width:0;display:flex;flex-direction:column}.toolbar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap}.project{font-weight:780;font-size:18px}.location{color:var(--muted);font-size:12px}.source-pill{margin-left:auto;color:#8eb4d8;border:1px solid #304b63;background:#132335;border-radius:999px;padding:6px 9px;font-size:11px;text-decoration:none}
-.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--border)}.metric{padding:13px 16px;border-right:1px solid #223144}.metric:last-child{border:0}.metric span{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}.metric strong{font-size:18px}.up{color:var(--green)!important}.down{color:var(--red)!important}
-.chartwrap{position:relative;min-height:390px;flex:1;padding:18px}.chart{height:100%;min-height:350px;border:1px solid #203246;border-radius:10px;background:linear-gradient(180deg,#0d1722,#0b121c);overflow:hidden}.legend{position:absolute;left:32px;top:29px;z-index:2;font-size:12px;color:var(--muted);display:flex;gap:13px;flex-wrap:wrap}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.footer{padding:9px 18px;border-top:1px solid var(--border);font-size:11px;color:#74899d}
-.card{border:1px solid #304559;background:#152536;border-radius:10px;padding:13px;margin-bottom:11px}.card label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}.card strong{font-size:18px}.conf{display:inline-flex;align-items:center;gap:6px;color:#bff7e8;font-size:12px}.conf i{width:8px;height:8px;border-radius:50%;background:var(--amber)}
-.notice{font-size:12px;line-height:1.55;color:#b6c8d8;background:#152536;border:1px solid #304559;border-radius:9px;padding:12px}.notice.warn{background:#2f271b;border-color:#594b32;color:#dccdad}.src{display:block;margin-top:10px;color:#66a9ff;text-decoration:none;overflow-wrap:anywhere}.emptyhist{display:flex;height:100%;min-height:350px;align-items:center;justify-content:center;text-align:center;color:#71879c;font-size:13px;padding:30px}
-svg{width:100%;height:100%;display:block}.gridline{stroke:#1e3042;stroke-width:1}.axis{fill:#74899d;font-size:11px}.range{stroke:#31d0ad;stroke-width:16;stroke-linecap:round;opacity:.7}.bench{stroke:#f2bd72;stroke-width:2;stroke-dasharray:6 6}.mid{fill:#66a9ff;stroke:#d9e9ff;stroke-width:2}.range-label{fill:#dce9f5;font-size:13px;font-weight:700}.bench-label{fill:#f2bd72;font-size:11px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid var(--border)}.detail{border-left:0;border-top:1px solid var(--border)}.results{display:none}.watchlist{display:flex;overflow:auto;gap:5px}.watch{min-width:180px;border:1px solid #2b4054;border-radius:8px}.marketbox{display:none}.metrics{grid-template-columns:repeat(2,1fr)}.metric:nth-child(2){border-right:0}.chartwrap{min-height:410px}.detail{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.detail h2,.detail .notice{grid-column:1/-1}.card{margin:0}.top small{display:none}}
-@media(max-width:520px){.top{padding:0 11px}.badge{display:none}.toolbar{padding:12px}.source-pill{margin-left:0}.metrics{grid-template-columns:1fr 1fr}.metric strong{font-size:16px}.chartwrap{padding:10px;min-height:350px}.legend{left:22px;top:20px}.detail{grid-template-columns:1fr}.detail h2,.detail .notice{grid-column:auto}.project{font-size:16px}}
+:root{--bg:#090f16;--panel:#0f1823;--panel2:#131f2c;--line:#263648;--text:#e7eef7;--muted:#8496a9;--up:#2dc7a4;--down:#ef6875;--blue:#5da6ff;--amber:#f0b865;--purple:#b18cff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}button,select,input{font:inherit}
+.app{height:100dvh;display:grid;grid-template-rows:48px 1fr;overflow:hidden}.header{display:flex;align-items:center;padding:0 12px;border-bottom:1px solid var(--line);background:#0d1620;gap:10px}
+.logo{font-weight:850;font-size:13px;letter-spacing:.08em;white-space:nowrap}.logo b{color:var(--up)}.status{font-size:10px;border:1px solid #31475d;border-radius:999px;color:#9db2c7;padding:3px 7px}.header .right{margin-left:auto;color:var(--muted);font-size:11px}
+.body{display:grid;grid-template-columns:minmax(0,1fr) 260px;min-height:0}.workspace{display:grid;grid-template-rows:auto auto minmax(310px,1fr) 150px 150px auto;min-width:0;overflow:hidden}.watch{border-left:1px solid var(--line);background:var(--panel);padding:12px;overflow:auto}
+.toolbar{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);background:#0d1620;flex-wrap:wrap}.symbolBox{position:relative}.symbolBtn{background:#172433;border:1px solid #314357;color:var(--text);border-radius:6px;padding:7px 10px;font-weight:760;min-width:150px;text-align:left}.symbolMenu{position:absolute;z-index:30;top:40px;left:0;width:330px;background:#101c28;border:1px solid #34495f;border-radius:8px;box-shadow:0 12px 35px #0008;display:none;overflow:hidden}.symbolMenu.open{display:block}.symItem{display:block;width:100%;padding:10px;border:0;border-bottom:1px solid #243447;background:transparent;color:var(--text);text-align:left}.symItem:hover{background:#182a3a}.symItem strong{display:block}.symItem small{color:var(--muted)}
+.tf{display:flex;gap:2px}.tf button,.indBtn{border:0;background:transparent;color:#91a4b7;border-radius:5px;padding:7px 8px;font-size:12px;font-weight:700}.tf button:hover,.indBtn:hover{background:#172536}.tf button.active{background:#173b37;color:#5fe0c0}.separator{width:1px;height:24px;background:var(--line)}
+.indWrap{position:relative}.indPanel{position:absolute;z-index:40;top:38px;left:0;width:300px;background:#111d29;border:1px solid #33485d;border-radius:9px;padding:12px;display:none;box-shadow:0 12px 35px #0009}.indPanel.open{display:block}.indRow{display:grid;grid-template-columns:22px 1fr 62px 55px;align-items:center;gap:7px;margin:7px 0;font-size:12px}.indRow input[type=number]{width:100%;background:#0c1620;color:var(--text);border:1px solid #30455a;border-radius:5px;padding:5px}
+.quote{display:flex;align-items:end;gap:15px;padding:10px 14px;border-bottom:1px solid var(--line);background:#0b131d;min-height:70px}.quote h1{font-size:19px;margin:0 0 3px}.quote .desc{font-size:11px;color:var(--muted);max-width:620px}.last{margin-left:auto;text-align:right}.last strong{font-size:22px}.last span{display:block;color:var(--muted);font-size:11px}
+.chartCard{position:relative;background:#0a111a;min-height:0}.chartHead{position:absolute;z-index:4;top:8px;left:10px;display:flex;gap:11px;font-size:11px;color:var(--muted);pointer-events:none}.chart{width:100%;height:100%;min-height:310px}.emptyOverlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;pointer-events:none}.emptyOverlay>div{background:#0d1722e8;border:1px solid #2d4155;border-radius:8px;padding:12px 16px;color:#a9bacb;font-size:12px;line-height:1.6;max-width:340px}
+.panel{border-top:1px solid var(--line);position:relative;background:#0a111a;min-height:0}.panelTitle{position:absolute;z-index:3;top:7px;left:10px;font-size:11px;color:#91a3b5}.subchart{width:100%;height:100%}.footer{border-top:1px solid var(--line);padding:7px 10px;color:#71869a;font-size:10px;display:flex;gap:14px;background:#0d1620}.footer span:last-child{margin-left:auto}
+.watch h3{font-size:11px;letter-spacing:.1em;color:#8296aa;margin:3px 0 9px}.witem{width:100%;border:0;border-bottom:1px solid #223244;background:transparent;color:var(--text);padding:10px 5px;text-align:left;display:grid;grid-template-columns:1fr auto;gap:5px}.witem:hover,.witem.active{background:#172738}.witem strong{font-size:12px}.witem small{grid-column:1/-1;color:var(--muted);font-size:10px}.price{font-size:12px;font-weight:760}.badge{display:inline-block;padding:2px 5px;border:1px solid #3b4e62;border-radius:4px;color:#96aabe;font-size:9px}
+.signal{margin-top:18px}.signalCard{border:1px solid #2a3d50;background:#13202d;border-radius:8px;padding:9px;margin:7px 0}.signalCard b{font-size:11px}.signalCard p{font-size:10px;line-height:1.45;color:#97aabd;margin:4px 0 0}.warn{color:#f1c37d}.good{color:#73e0c4}
+svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1}.axisText{fill:#6f8296;font-size:10px}.wickUp{stroke:var(--up);stroke-width:1.3}.wickDown{stroke:var(--down);stroke-width:1.3}.candleUp{fill:var(--up)}.candleDown{fill:var(--down)}.sma{fill:none;stroke:var(--blue);stroke-width:1.4}.ema{fill:none;stroke:var(--amber);stroke-width:1.4}.bb{fill:none;stroke:var(--purple);stroke-width:1.1;stroke-dasharray:4 3}.rsiLine{fill:none;stroke:var(--purple);stroke-width:1.5}.macdLine{fill:none;stroke:var(--blue);stroke-width:1.4}.signalLine{fill:none;stroke:var(--amber);stroke-width:1.3}.zero{stroke:#516276;stroke-width:1;stroke-dasharray:3 3}
+@media(max-width:850px){.body{grid-template-columns:1fr}.watch{display:none}.workspace{grid-template-rows:auto auto minmax(330px,1fr) 125px 125px auto}.header .right{display:none}.quote{padding:8px 10px}.quote .desc{display:none}.last strong{font-size:18px}.symbolMenu{width:min(330px,92vw)}}
+@media(max-width:520px){.header{padding:0 8px}.status{display:none}.toolbar{padding:6px;gap:4px}.symbolBtn{min-width:136px;padding:6px 8px}.tf button,.indBtn{padding:6px}.separator{display:none}.quote h1{font-size:15px}.quote{min-height:58px}.workspace{grid-template-rows:auto auto minmax(300px,1fr) 112px 112px auto}.footer{overflow:auto;white-space:nowrap}}
 </style>
 </head>
 <body>
 <div class="app">
-<header class="top"><div class="logo">APARTMENT <b>PRICE LAB</b></div><span class="badge">SOURCED ASKING DATA</span><small>Hà Nội · v0.3</small></header>
-<div class="grid">
-<aside class="side">
-<h2>TÌM DỰ ÁN</h2>
-<input id="q" class="search" placeholder="Times City, Skylake..." autocomplete="off"/>
-<div id="results" class="results"></div>
-<div class="watchhead"><h2>WATCHLIST</h2><button id="reset">Đặt lại</button></div>
-<div id="watch" class="watchlist"></div>
-<div class="marketbox"><label>Benchmark Hà Nội · Q2/2026</label><strong id="marketValue">—</strong><p id="marketNote"></p></div>
+<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.4</span><div class="right">Observed history only · Không tạo lịch sử giả</div></header>
+<div class="body">
+<section class="workspace">
+  <div class="toolbar">
+    <div class="symbolBox">
+      <button id="symbolBtn" class="symbolBtn">HN-APT-ALL ▾</button>
+      <div id="symbolMenu" class="symbolMenu"></div>
+    </div>
+    <div class="separator"></div>
+    <div id="tf" class="tf"></div>
+    <div class="separator"></div>
+    <div class="indWrap">
+      <button id="indBtn" class="indBtn">Indicators ▾</button>
+      <div id="indPanel" class="indPanel">
+        <div class="indRow"><input id="smaOn" type="checkbox"><label>SMA</label><input id="smaLen" type="number" min="2" max="200" value="20"><span>period</span></div>
+        <div class="indRow"><input id="emaOn" type="checkbox"><label>EMA</label><input id="emaLen" type="number" min="2" max="200" value="20"><span>period</span></div>
+        <div class="indRow"><input id="bbOn" type="checkbox" checked><label>Bollinger</label><input id="bbLen" type="number" min="2" max="200" value="20"><span>×2σ</span></div>
+        <div class="indRow"><input id="rsiOn" type="checkbox" checked><label>RSI</label><input id="rsiLen" type="number" min="2" max="100" value="14"><span>period</span></div>
+        <div class="indRow"><input id="macdOn" type="checkbox" checked><label>MACD</label><span style="color:#8094a8">12/26/9</span><span></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="quote">
+    <div><h1 id="title">—</h1><div id="desc" class="desc"></div></div>
+    <div class="last"><strong id="last">—</strong><span id="lastMeta">Index points</span></div>
+  </div>
+  <div class="chartCard">
+    <div id="chartHead" class="chartHead"></div>
+    <div id="priceChart" class="chart"></div>
+    <div id="emptyOverlay" class="emptyOverlay"></div>
+  </div>
+  <div class="panel"><div class="panelTitle">RSI</div><div id="rsiChart" class="subchart"></div></div>
+  <div class="panel"><div class="panelTitle">MACD</div><div id="macdChart" class="subchart"></div></div>
+  <div class="footer"><span id="historyInfo"></span><span id="refInfo"></span><span id="confInfo"></span></div>
+</section>
+<aside class="watch">
+  <h3>MARKET WATCHLIST</h3>
+  <div id="watchList"></div>
+  <div class="signal"><h3>TECHNICAL SIGNALS</h3><div id="signals"></div></div>
 </aside>
-<main class="main">
-<div class="toolbar"><div><div id="name" class="project">Đang tải…</div><div id="loc" class="location"></div></div><a id="sourceLink" class="source-pill" href="#" target="_blank" rel="noreferrer">Nguồn</a></div>
-<div class="metrics">
-<div class="metric"><span>Khoảng giá rao</span><strong id="range"></strong></div>
-<div class="metric"><span>Mốc tham chiếu</span><strong id="reference"></strong></div>
-<div class="metric"><span>Biến động 1 năm</span><strong id="change"></strong></div>
-<div class="metric"><span>Số tin/mẫu nguồn</span><strong id="sample"></strong></div>
 </div>
-<div class="chartwrap">
-<div class="legend"><span><i class="dot" style="background:#31d0ad"></i>Khoảng giá rao</span><span><i class="dot" style="background:#66a9ff"></i>Mốc tham chiếu</span><span><i class="dot" style="background:#f2bd72"></i>Benchmark Hà Nội</span></div>
-<div id="chart" class="chart"></div>
 </div>
-<div class="footer">Đơn vị: triệu đồng/m² · Asking data ≠ transaction price · lịch sử thật bắt đầu tích lũy từ 23/09/2026.</div>
-</main>
-<aside class="detail">
-<h2>PROJECT SNAPSHOT</h2>
-<div class="card"><label>Loại số liệu</label><strong id="metricType" style="font-size:14px"></strong></div>
-<div class="card"><label>Data Confidence</label><div class="conf"><i></i><b id="confidence"></b></div></div>
-<div class="card"><label>1 tháng</label><strong id="m1"></strong></div>
-<div class="card"><label>1 năm</label><strong id="y1"></strong></div>
-<div class="card"><label>Kỳ nguồn</label><strong id="period" style="font-size:14px"></strong></div>
-<div class="notice warn">Website hiện theo dõi <b>giá rao công khai</b>. Không coi đây là giá giao dịch thực tế. AVM/Estimated Fair Value chưa được bật cho đến khi có đủ lịch sử và dữ liệu giao dịch/comparable đáng tin cậy.</div>
-<div class="notice" style="margin-top:11px"><b>Lịch sử giá:</b> chưa dựng ngược dữ liệu quá khứ. Hệ thống sẽ lưu snapshot mới theo thời gian để biểu đồ lịch sử sau này phản ánh dữ liệu đã quan sát thật.</div>
-</aside>
-</div></div>
 <script>
-let DATA=null,P=[],current="times",watch=[];
-const fmt=v=>Number(v).toLocaleString("vi-VN",{minimumFractionDigits:1,maximumFractionDigits:1});
-const midpoint=p=>p.reference??((p.low+p.high)/2);
-const deltaText=v=>v==null?"Chưa có":(v>0?"+":"")+fmt(v)+"%";
-function saved(){try{return JSON.parse(localStorage.getItem("apl-watch-v03")||"null")||["times","smart","royal","skylake"]}catch{return["times","smart","royal","skylake"]}}
-function saveWatch(){localStorage.setItem("apl-watch-v03",JSON.stringify(watch))}
-function draw(p){
- const bench=DATA.marketBenchmark.value, ref=midpoint(p), min=Math.max(0,Math.floor(Math.min(p.low,bench)-25)), max=Math.ceil(Math.max(p.high,bench)+25), w=900,h=390,pad={l:58,r:28,t:70,b:55};
- const x=v=>pad.l+(v-min)*(w-pad.l-pad.r)/(max-min);
+const TF={W1:{label:"1W",weeks:1},M1:{label:"1M",weeks:4},M3:{label:"3M",weeks:13},M6:{label:"6M",weeks:26},Y1:{label:"1Y",weeks:52}};
+let DATA=null,current="HN-APT-ALL",timeframe="W1";
+const settings={sma:false,ema:false,bb:true,rsi:true,macd:true,smaLen:20,emaLen:20,bbLen:20,rsiLen:14};
+const $=id=>document.getElementById(id), fmt=(v,d=2)=>Number(v).toLocaleString("vi-VN",{minimumFractionDigits:d,maximumFractionDigits:d});
+function aggregate(rows,n){
+ if(n===1)return rows.map(x=>({...x}));
+ const out=[]; for(let i=0;i<rows.length;i+=n){const g=rows.slice(i,i+n);if(!g.length)continue;out.push({date:g[g.length-1].date,open:g[0].open,high:Math.max(...g.map(x=>x.high)),low:Math.min(...g.map(x=>x.low)),close:g[g.length-1].close,sampleCount:g.reduce((a,x)=>a+(x.sampleCount||0),0)||null,projectsCount:Math.max(...g.map(x=>x.projectsCount||0))||null,confidence:g.every(x=>x.confidence==="HIGH")?"HIGH":g.some(x=>x.confidence==="LOW")?"LOW":"MEDIUM"})} return out;
+}
+function sma(a,n){return a.map((_,i)=>i<n-1?null:a.slice(i-n+1,i+1).reduce((s,v)=>s+v,0)/n)}
+function ema(a,n){const out=Array(a.length).fill(null);if(a.length<n)return out;const k=2/(n+1),seed=a.slice(0,n).reduce((s,v)=>s+v,0)/n;out[n-1]=seed;for(let i=n;i<a.length;i++)out[i]=a[i]*k+out[i-1]*(1-k);return out}
+function bb(a,n,k=2){const mid=sma(a,n),up=[],lo=[];for(let i=0;i<a.length;i++){if(mid[i]==null){up.push(null);lo.push(null);continue}const g=a.slice(i-n+1,i+1),m=mid[i],sd=Math.sqrt(g.reduce((s,v)=>s+(v-m)*(v-m),0)/n);up.push(m+k*sd);lo.push(m-k*sd)}return{mid,up,lo}}
+function rsi(a,n=14){const out=Array(a.length).fill(null);if(a.length<=n)return out;let gain=0,loss=0;for(let i=1;i<=n;i++){const d=a[i]-a[i-1];gain+=Math.max(d,0);loss+=Math.max(-d,0)}gain/=n;loss/=n;out[n]=loss===0?100:100-100/(1+gain/loss);for(let i=n+1;i<a.length;i++){const d=a[i]-a[i-1];gain=(gain*(n-1)+Math.max(d,0))/n;loss=(loss*(n-1)+Math.max(-d,0))/n;out[i]=loss===0?100:100-100/(1+gain/loss)}return out}
+function macd(a){const e12=ema(a,12),e26=ema(a,26),m=a.map((_,i)=>e12[i]==null||e26[i]==null?null:e12[i]-e26[i]);const compact=m.filter(v=>v!=null),sigCompact=ema(compact,9);let j=0;const sig=m.map(v=>v==null?null:sigCompact[j++]);return{macd:m,signal:sig,hist:m.map((v,i)=>v==null||sig[i]==null?null:v-sig[i])}}
+function poly(vals,x,y,cls){let d="",started=false;vals.forEach((v,i)=>{if(v==null){started=false;return}d+=(started?"L":"M")+x(i)+" "+y(v)+" ";started=true});return d?'<path class="'+cls+'" d="'+d+'"/>':""}
+function renderPrice(rows){
+ const el=$("priceChart"), w=1000,h=430,p={l:52,r:58,t:38,b:27}; const close=rows.map(x=>x.close);
+ const bbv=bb(close,settings.bbLen),sm=sma(close,settings.smaLen),em=ema(close,settings.emaLen);
+ let vals=rows.flatMap(x=>[x.low,x.high]); if(settings.bb)vals.push(...bbv.up.filter(v=>v!=null),...bbv.lo.filter(v=>v!=null));if(settings.sma)vals.push(...sm.filter(v=>v!=null));if(settings.ema)vals.push(...em.filter(v=>v!=null));
+ let mn=Math.min(...vals),mx=Math.max(...vals); if(!isFinite(mn)||mn===mx){mn=(rows[0]?.close||100)-2;mx=(rows[0]?.close||100)+2}const pad=(mx-mn)*.12;mn-=pad;mx+=pad;
+ const step=(w-p.l-p.r)/Math.max(rows.length,8),x=i=>p.l+step*(i+.5),y=v=>p.t+(mx-v)*(h-p.t-p.b)/(mx-mn),bw=Math.max(4,Math.min(13,step*.55));
  let s='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none">';
- for(let k=0;k<6;k++){const val=min+k*(max-min)/5,xx=x(val);s+='<line class="gridline" x1="'+xx+'" y1="'+pad.t+'" x2="'+xx+'" y2="'+(h-pad.b)+'"/><text class="axis" x="'+(xx-13)+'" y="'+(h-23)+'">'+Math.round(val)+'</text>'}
- s+='<line class="bench" x1="'+x(bench)+'" y1="'+(pad.t-8)+'" x2="'+x(bench)+'" y2="'+(h-pad.b+10)+'"/>';
- s+='<text class="bench-label" x="'+Math.min(x(bench)+7,w-210)+'" y="'+(pad.t-18)+'">Hà Nội Q2/2026: '+fmt(bench)+' tr/m²</text>';
- const yy=205;
- s+='<line class="range" x1="'+x(p.low)+'" y1="'+yy+'" x2="'+x(p.high)+'" y2="'+yy+'"/>';
- s+='<circle class="mid" cx="'+x(ref)+'" cy="'+yy+'" r="9"/>';
- s+='<text class="range-label" x="'+Math.max(pad.l,x(p.low)-18)+'" y="'+(yy-28)+'">'+fmt(p.low)+'</text>';
- s+='<text class="range-label" x="'+Math.min(w-70,x(p.high)-18)+'" y="'+(yy-28)+'">'+fmt(p.high)+'</text>';
- s+='<text class="axis" x="'+Math.max(pad.l,x(ref)-65)+'" y="'+(yy+42)+'">Mốc tham chiếu: '+fmt(ref)+'</text>';
- s+='<text class="axis" x="'+pad.l+'" y="'+(h-6)+'">Nguồn: '+p.sourceName+' · '+p.sourcePeriod+'</text></svg>';
- document.getElementById("chart").innerHTML=s;
+ for(let k=0;k<5;k++){const yy=p.t+k*(h-p.t-p.b)/4,val=mx-k*(mx-mn)/4;s+='<line class="gridline" x1="'+p.l+'" y1="'+yy+'" x2="'+(w-p.r)+'" y2="'+yy+'"/><text class="axisText" x="'+(w-p.r+7)+'" y="'+(yy+3)+'">'+fmt(val)+'</text>'}
+ rows.forEach((d,i)=>{const up=d.close>=d.open,cls=up?"Up":"Down",xx=x(i),yo=y(d.open),yc=y(d.close),top=Math.min(yo,yc),hh=Math.max(2,Math.abs(yc-yo));s+='<line class="wick'+cls+'" x1="'+xx+'" y1="'+y(d.high)+'" x2="'+xx+'" y2="'+y(d.low)+'"/><rect class="candle'+cls+'" x="'+(xx-bw/2)+'" y="'+top+'" width="'+bw+'" height="'+hh+'"/>';if(i===0||i===rows.length-1||rows.length<8)s+='<text class="axisText" x="'+(xx-26)+'" y="'+(h-7)+'">'+d.date.slice(5)+'</text>'});
+ if(settings.sma)s+=poly(sm,x,y,"sma");if(settings.ema)s+=poly(em,x,y,"ema");if(settings.bb){s+=poly(bbv.up,x,y,"bb")+poly(bbv.mid,x,y,"bb")+poly(bbv.lo,x,y,"bb")}s+='</svg>';el.innerHTML=s;
+ const head=[];if(settings.sma)head.push("SMA("+settings.smaLen+")");if(settings.ema)head.push("EMA("+settings.emaLen+")");if(settings.bb)head.push("BB("+settings.bbLen+",2)");$("chartHead").textContent=head.join(" · ");
+}
+function renderRSI(rows){const close=rows.map(x=>x.close),vals=rsi(close,settings.rsiLen),w=1000,h=150,p={l:52,r:58,t:22,b:20},x=i=>p.l+(w-p.l-p.r)*(i+.5)/Math.max(rows.length,8),y=v=>p.t+(100-v)*(h-p.t-p.b)/100;let s='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><line class="zero" x1="'+p.l+'" y1="'+y(70)+'" x2="'+(w-p.r)+'" y2="'+y(70)+'"/><line class="zero" x1="'+p.l+'" y1="'+y(30)+'" x2="'+(w-p.r)+'" y2="'+y(30)+'"/><text class="axisText" x="'+(w-p.r+7)+'" y="'+(y(70)+3)+'">70</text><text class="axisText" x="'+(w-p.r+7)+'" y="'+(y(30)+3)+'">30</text>';if(settings.rsi)s+=poly(vals,x,y,"rsiLine");s+='</svg>';$("rsiChart").innerHTML=s}
+function renderMACD(rows){const close=rows.map(x=>x.close),m=macd(close),all=[...m.macd,...m.signal,...m.hist].filter(v=>v!=null);const w=1000,h=150,p={l:52,r:58,t:22,b:20};let mn=all.length?Math.min(...all,0):-1,mx=all.length?Math.max(...all,0):1;if(mn===mx){mn-=1;mx+=1}const x=i=>p.l+(w-p.l-p.r)*(i+.5)/Math.max(rows.length,8),y=v=>p.t+(mx-v)*(h-p.t-p.b)/(mx-mn);let s='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><line class="zero" x1="'+p.l+'" y1="'+y(0)+'" x2="'+(w-p.r)+'" y2="'+y(0)+'"/>';if(settings.macd){m.hist.forEach((v,i)=>{if(v==null)return;const yy=y(v),yz=y(0);s+='<rect x="'+(x(i)-3)+'" y="'+Math.min(yy,yz)+'" width="6" height="'+Math.max(1,Math.abs(yz-yy))+'" fill="'+(v>=0?'#2dc7a4':'#ef6875')+'" opacity=".65"/>'});s+=poly(m.macd,x,y,"macdLine")+poly(m.signal,x,y,"signalLine")}s+='</svg>';$("macdChart").innerHTML=s}
+function signalCards(rows){
+ const close=rows.map(x=>x.close),cards=[],last=close.length-1;
+ const bbv=bb(close,settings.bbLen),rv=rsi(close,settings.rsiLen),mv=macd(close),need=Math.max(settings.bbLen,settings.rsiLen+1,35);
+ if(rows.length<settings.bbLen)cards.push(["Bollinger Bands","Chưa đủ dữ liệu: cần "+settings.bbLen+" nến, hiện có "+rows.length+"."]);
+ else{const c=close[last];cards.push(["Bollinger Bands",c<=bbv.lo[last]?"Close đang chạm/ở dưới BB Lower.":c>=bbv.up[last]?"Close đang chạm/ở trên BB Upper.":"Close đang nằm trong dải Bollinger."])}
+ if(rows.length<settings.rsiLen+1)cards.push(["RSI("+settings.rsiLen+")","Chưa đủ dữ liệu: cần "+(settings.rsiLen+1)+" nến."]);
+ else cards.push(["RSI("+settings.rsiLen+")",fmt(rv[last],1)+(rv[last]<30?" · vùng quá bán":rv[last]>70?" · vùng quá mua":" · vùng trung tính")]);
+ if(rows.length<35)cards.push(["MACD","Chưa đủ dữ liệu: cần khoảng 35 nến để EMA26 và Signal ổn định."]);
+ else cards.push(["MACD",mv.macd[last]>mv.signal[last]?"MACD đang trên Signal Line.":"MACD đang dưới Signal Line."]);
+ cards.push(["Data readiness",rows.length+"/"+need+" nến tối thiểu cho bộ tín hiệu hiện tại."]);
+ $("signals").innerHTML=cards.map((x,i)=>'<div class="signalCard"><b class="'+(i<3?"warn":"good")+'">'+x[0]+'</b><p>'+x[1]+'</p></div>').join("");
 }
 function render(){
- const p=P.find(x=>x.id===current)||P[0]; if(!p)return;
- document.getElementById("name").textContent=p.name; document.getElementById("loc").textContent=p.area;
- document.getElementById("range").textContent=fmt(p.low)+"–"+fmt(p.high);
- const ref=midpoint(p); document.getElementById("reference").textContent=fmt(ref)+" tr/m²";
- const ce=document.getElementById("change"); ce.textContent=deltaText(p.change1y); ce.className=p.change1y==null?"":(p.change1y>=0?"up":"down");
- document.getElementById("sample").textContent=p.listingCount??"—";
- document.getElementById("metricType").textContent=p.sourceType==="popular_asking_rate"?"Đơn giá phổ biến / khoảng rao":"Khoảng giá rao tổng hợp";
- document.getElementById("confidence").textContent=p.confidence;
- document.getElementById("m1").textContent=deltaText(p.change1m); document.getElementById("m1").className=p.change1m==null?"":(p.change1m>=0?"up":"down");
- document.getElementById("y1").textContent=deltaText(p.change1y); document.getElementById("y1").className=p.change1y==null?"":(p.change1y>=0?"up":"down");
- document.getElementById("period").textContent=p.sourcePeriod;
- const link=document.getElementById("sourceLink"); link.href=p.sourceUrl; link.textContent=p.sourceName+" ↗";
- document.getElementById("watch").innerHTML=watch.map(id=>{const z=P.find(x=>x.id===id);if(!z)return"";const c=z.change1y==null?"":(" · "+deltaText(z.change1y));return '<button class="watch '+(id===current?'active':'')+'" data-id="'+id+'"><strong>'+z.name+'</strong><span>'+fmt(midpoint(z))+' tr/m²'+c+'</span></button>'}).join("");
- document.querySelectorAll(".watch").forEach(b=>b.onclick=()=>{current=b.dataset.id;render()}); draw(p);
+ const sym=DATA.symbols.find(x=>x.symbol===current)||DATA.symbols[0],tf=TF[timeframe],rows=aggregate(sym.weekly,tf.weeks),last=rows[rows.length-1];
+ $("symbolBtn").textContent=sym.symbol+" ▾";$("title").textContent=sym.symbol+" · "+sym.name;$("desc").textContent=sym.description;$("last").textContent=last?fmt(last.close):"—";$("lastMeta").textContent="Index · base 100 @ 23/09/2026";
+ $("historyInfo").textContent="Nến "+tf.label+": "+rows.length+" · weekly observations: "+sym.weekly.length;
+ $("refInfo").textContent=sym.referencePrice?"Benchmark: "+fmt(sym.referencePrice.value,1)+" tr/m² · "+sym.referencePrice.period:"Benchmark giá/m²: đang hoàn thiện";
+ $("confInfo").textContent="Confidence: "+(last?.confidence||"—");
+ renderPrice(rows);renderRSI(rows);renderMACD(rows);signalCards(rows);
+ const need=Math.max(settings.bbLen,settings.rsiLen+1,35);$("emptyOverlay").innerHTML=rows.length<need?'<div><b>Đang tích lũy dữ liệu '+tf.label+'</b><br>Hiện có '+rows.length+' nến quan sát. BB/RSI/MACD sẽ tự hoạt động khi đủ số kỳ.<br><span style="color:#6fe0c1">Không tạo nến lịch sử giả để lấp biểu đồ.</span></div>':"";
+ $("watchList").innerHTML=DATA.symbols.map(s=>{const rr=aggregate(s.weekly,tf.weeks),v=rr.at(-1)?.close;return '<button class="witem '+(s.symbol===current?'active':'')+'" data-s="'+s.symbol+'"><strong>'+s.symbol+'</strong><span class="price">'+(v==null?"—":fmt(v))+'</span><small>'+s.name+' · <span class="badge">'+s.status+'</span></small></button>'}).join("");
+ document.querySelectorAll(".witem").forEach(b=>b.onclick=()=>{current=b.dataset.s;render()});
 }
-function search(){
- const q=document.getElementById("q").value.trim().toLowerCase();
- const r=!q?[]:P.filter(p=>p.name.toLowerCase().includes(q)||p.aliases.some(a=>a.includes(q))).slice(0,8);
- document.getElementById("results").innerHTML=r.map(p=>'<button class="result" data-id="'+p.id+'"><strong>'+p.name+'</strong><span>'+p.area+' · '+fmt(p.low)+'–'+fmt(p.high)+' tr/m²</span></button>').join("");
- document.querySelectorAll(".result").forEach(b=>b.onclick=()=>{current=b.dataset.id;if(!watch.includes(current)){watch.unshift(current);watch=watch.slice(0,8);saveWatch()}render()});
+function buildUI(){
+ $("tf").innerHTML=Object.entries(TF).map(([k,v])=>'<button data-t="'+k+'" class="'+(k===timeframe?'active':'')+'">'+v.label+'</button>').join("");
+ document.querySelectorAll("#tf button").forEach(b=>b.onclick=()=>{timeframe=b.dataset.t;document.querySelectorAll("#tf button").forEach(x=>x.classList.toggle("active",x.dataset.t===timeframe));render()});
+ $("symbolMenu").innerHTML=DATA.symbols.map(s=>'<button class="symItem" data-s="'+s.symbol+'"><strong>'+s.symbol+'</strong><small>'+s.name+'</small></button>').join("");
+ document.querySelectorAll(".symItem").forEach(b=>b.onclick=()=>{current=b.dataset.s;$("symbolMenu").classList.remove("open");render()});
+ $("symbolBtn").onclick=e=>{e.stopPropagation();$("symbolMenu").classList.toggle("open")};$("indBtn").onclick=e=>{e.stopPropagation();$("indPanel").classList.toggle("open")};document.addEventListener("click",()=>{$("symbolMenu").classList.remove("open");$("indPanel").classList.remove("open")});$("indPanel").onclick=e=>e.stopPropagation();
+ [["smaOn","sma"],["emaOn","ema"],["bbOn","bb"],["rsiOn","rsi"],["macdOn","macd"]].forEach(([id,k])=>{$(id).checked=settings[k];$(id).onchange=()=>{settings[k]=$(id).checked;render()}});
+ [["smaLen","smaLen"],["emaLen","emaLen"],["bbLen","bbLen"],["rsiLen","rsiLen"]].forEach(([id,k])=>{$(id).value=settings[k];$(id).onchange=()=>{settings[k]=Math.max(2,parseInt($(id).value)||settings[k]);render()}});
 }
-async function init(){
- try{
-  const r=await fetch("./data/projects.json",{cache:"no-store"}); if(!r.ok)throw Error("Không tải được dữ liệu");
-  DATA=await r.json();P=DATA.projects;watch=saved().filter(id=>P.some(p=>p.id===id));if(!watch.length)watch=["times","smart","royal","skylake"];
-  document.getElementById("marketValue").textContent=fmt(DATA.marketBenchmark.value)+" tr/m²";
-  document.getElementById("marketNote").textContent=DATA.marketBenchmark.period+" · "+DATA.marketBenchmark.metric+". "+DATA.marketBenchmark.note;
-  document.getElementById("q").addEventListener("input",search);
-  document.getElementById("reset").onclick=()=>{watch=["times","smart","royal","skylake"];saveWatch();render()};
-  render();
- }catch(e){document.getElementById("name").textContent="Lỗi tải dữ liệu";document.getElementById("chart").innerHTML='<div class="emptyhist">Không tải được projects.json. Hãy tải lại trang.</div>'}
-}
+async function init(){try{const r=await fetch("./data/market-indices.json",{cache:"no-store"});if(!r.ok)throw Error("data");DATA=await r.json();buildUI();render()}catch(e){$("title").textContent="Không tải được market-indices.json";$("emptyOverlay").innerHTML="<div>Hãy tải lại trang.</div>"}}
 init();
 </script>
-</body></html>
+</body>
+</html>
