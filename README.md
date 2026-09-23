@@ -1,21 +1,87 @@
 # Binance Chart Lab
 
-Website biểu đồ Binance Spot và Futures USDⓈ-M, có nến lịch sử và cập nhật trực tiếp, MA 20, Bollinger Bands 20/2, RSI 14, Volume, kéo/zoom/đổi khung và chỉ báo Pine Script đơn giản.
+Ứng dụng biểu đồ Binance dùng dữ liệu thị trường theo thời gian thực, được xây dựng để sử dụng cá nhân hoặc chia sẻ bằng đường link.
 
-## Quyền truy cập và lưu dữ liệu
+**Bản đang chạy:** https://binance-chart-lab.vuhoach-idc.chatgpt.site
 
-Website được chia sẻ công khai: bất kỳ ai có đường link đều có thể truy cập. Người chưa đăng nhập có thể xem biểu đồ và tạo/lưu chỉ báo tùy chỉnh trong `localStorage` của trình duyệt. Các chỉ báo này chỉ có trên cùng trình duyệt, không đồng bộ giữa thiết bị và sẽ mất nếu người dùng xóa dữ liệu website. Nếu Sites cung cấp danh tính ChatGPT và người dùng đã có bản ghi được cấp quyền trong D1, cấu hình và chỉ báo của họ vẫn dùng kho lưu trữ riêng trên máy chủ. Giao diện không còn yêu cầu thêm email vào danh sách để mở biểu đồ.
+## Tính năng
 
-## Sử dụng
+- Binance Spot và Futures USDⓈ-M.
+- Tìm coin theo ký hiệu như `ETH`, sau đó chọn đúng cặp giao dịch (`ETHUSDT`, `ETHUSDC`, ...).
+- Biểu đồ nến có kéo, zoom, tải thêm lịch sử và đổi khung `1m`, `5m`, `15m`, `1h`, `4h`, `1d`.
+- Dữ liệu nến cập nhật qua WebSocket Binance và tự đồng bộ lại bằng REST khi mất kết nối.
+- Chỉ báo MA, Bollinger Bands, RSI và Volume; có thể bật/tắt và chỉnh tham số.
+- Trình soạn chỉ báo tùy chỉnh với một tập con Pine Script an toàn; có thể thử và lưu mã.
+- Người chưa đăng nhập vẫn dùng được; cấu hình và chỉ báo tự tạo được lưu trong `localStorage` của trình duyệt.
 
-Nhập cặp như `BTCUSDT`, Enter, chọn Spot hoặc Futures USDⓈ-M rồi chọn khung. Kéo biểu đồ để xem lịch sử, lăn chuột để zoom. Tab chỉ báo bật MA, Bollinger Bands, RSI, Volume. Tab mã cho phép dán, thử và lưu Pine Script thuộc tập con hỗ trợ.
+## Chạy trên máy cá nhân
+
+Yêu cầu:
+
+- Node.js `>= 22.13.0`
+- pnpm `11.25.0`
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Kiểm tra trước khi triển khai:
+
+```bash
+pnpm lint
+pnpm build
+```
+
+Ứng dụng không cần Binance API key vì chỉ đọc dữ liệu thị trường công khai.
 
 ## Pine Script được hỗ trợ
 
-Một `plot(...)` trên `open`, `high`, `low`, `close`, `volume` hoặc `ta.sma`, `ta.ema`, `ta.rsi`, `ta.stdev` với độ dài nguyên 2–200. Có thể khai báo `length = input.int(20)` và `indicator(..., overlay=false)`. Dòng `//@version=5/6` được chấp nhận như chú thích. Các cú pháp khác bị từ chối rõ ràng. Đây không phải môi trường Pine Script đầy đủ; không thể nhập mọi chỉ báo TradingView. Mã được phân tích cú pháp giới hạn, không chạy `eval` hoặc mã JS tùy ý.
+Trình phân tích hiện hỗ trợ một `plot(...)` trên `open`, `high`, `low`, `close`, `volume` hoặc `ta.sma`, `ta.ema`, `ta.rsi`, `ta.stdev`, với độ dài nguyên từ 2 đến 200. Có thể dùng `length = input.int(20)`, `indicator(..., overlay=false)` và chú thích `//@version=5/6`.
 
-## Dữ liệu và giới hạn
+Đây là tập con Pine Script, không phải toàn bộ môi trường Pine của TradingView. Mã không được chạy bằng `eval` và không thể chạy JavaScript tùy ý.
 
-Lịch sử tối đa 500 nến mỗi yêu cầu từ Binance; tải thêm khi kéo về quá khứ. Biểu đồ giữ tối đa 3.000 nến. WebSocket trực tiếp giữa trình duyệt và Binance cập nhật nến mở; khi mất kết nối hệ thống thử nối lại và đồng bộ REST định kỳ. Nguồn REST Spot là `data-api.binance.vision`, Futures USDⓈ-M là `fapi.binance.com`. Không có giao dịch, không cần API key Binance. Độ trễ và khả năng tải dữ liệu phụ thuộc Binance, mạng người dùng và hạn mức triển khai. Việc giữ chi phí bằng 0 lâu dài chưa được bảo đảm.
+## Dữ liệu và lưu trữ
 
-Biểu đồ dùng Lightweight Charts theo giấy phép và ghi công TradingView ở footer.
+- Lịch sử tải tối đa 500 nến mỗi yêu cầu; ứng dụng giữ tối đa 3.000 nến trên biểu đồ.
+- Spot REST: `data-api.binance.vision`.
+- Futures USDⓈ-M REST: `fapi.binance.com`.
+- Người dùng công khai: cấu hình nằm trong `localStorage`, không tự đồng bộ giữa trình duyệt hoặc thiết bị.
+- Khi chạy trong ChatGPT Sites và có danh tính người dùng, cấu hình có thể lưu trong Cloudflare D1 qua binding `DB`.
+
+Không commit file `.env`, khóa API hoặc token vào repository. Các mẫu bí mật đã được loại khỏi `.gitignore`.
+
+## Triển khai lâu dài
+
+### ChatGPT Sites
+
+File `.openai/hosting.json` liên kết source với dự án Sites hiện tại. Có thể tiếp tục yêu cầu ChatGPT/Codex sửa mã, kiểm thử và xuất bản phiên bản mới lên cùng địa chỉ website.
+
+### Cloudflare Workers
+
+Kiến trúc hiện tại dùng Vinext, Wrangler và D1 nên Cloudflare Workers là hướng tự triển khai phù hợp nhất. Khi chuyển khỏi Sites cần tạo D1 database, chạy migration trong `drizzle/`, khai báo binding `DB` và cấu hình lại phần nhận diện người dùng nếu muốn đồng bộ dữ liệu máy chủ.
+
+Vercel/hosting Node thông thường sẽ cần thay phần D1, runtime Cloudflare và xác thực đặc thù Sites; không phải quy trình triển khai một nút từ source hiện tại.
+
+## Quy trình chỉnh sửa
+
+```bash
+git clone <URL_REPOSITORY>
+cd binance-chart-lab
+pnpm install
+pnpm dev
+```
+
+Sau khi sửa:
+
+```bash
+git add .
+git commit -m "Mô tả thay đổi"
+git push
+```
+
+GitHub là bản sao lưu source lâu dài. Website đang chạy trên Sites không tự cập nhật chỉ vì có commit mới trên GitHub; cần xuất bản lại qua Sites hoặc thiết lập một quy trình triển khai Cloudflare riêng.
+
+## Giấy phép thư viện
+
+Biểu đồ sử dụng Lightweight Charts và hiển thị ghi công TradingView theo giấy phép của thư viện. Dự án này không liên kết với, không được TradingView hoặc Binance bảo trợ.
