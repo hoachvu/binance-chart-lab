@@ -41,6 +41,30 @@ SECONDARY_PROJECTS = [
   ("hanoihomeland","Ha Noi Homeland","https://batdongsan.com.vn/ban-can-ho-chung-cu-ha-noi-homeland"),
 ]
 
+ONEHOUSING_SECONDARY = [
+  ("ocean","Vinhomes Ocean Park","https://onehousing.vn/phan-tich/du-an/can-ho-biet-thu-lien-ke-du-an-Vinhomes-Ocean-Park.877"),
+  ("smart","Vinhomes Smart City","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Smart-City.102"),
+  ("masteri","Masteri West Heights","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-West-Heights.10"),
+  ("times","Vinhomes Times City","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Times-City.136"),
+  ("royal","Vinhomes Royal City","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Royal-City.634"),
+  ("skylake","Vinhomes Skylake","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Skylake.939"),
+  ("metropolis","Vinhomes Metropolis","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Metropolis.1061"),
+  ("goldmark","Goldmark City","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Goldmark-City.68"),
+  ("sunshine","Sunshine City","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Sunshine-City.750"),
+  ("mipec","Mipec Rubik 360","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Mipec-Rubik-360.610"),
+  ("gardenia","Vinhomes Gardenia","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Gardenia.867"),
+  ("zei","The Zei","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-The-Zei.1046"),
+  ("hanoihomeland","Ha Noi Homeland","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Ha-Noi-Homeland.354"),
+]
+
+ONEHOUSING_PRIMARY = [
+  ("mga","Masteri Grand Avenue","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-Grand-Avenue.1171"),
+  ("senique","The Senique Hanoi","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-The-Senique-Hanoi.1181"),
+]
+
+ALL_BASKET_BASE = 80.5
+PRI_BASKET_BASE = 95.0
+
 def num(s):
     return float(s.replace(".", "").replace(",", "."))
 
@@ -180,7 +204,45 @@ def upsert_daily(history,symbol,row):
     arr.sort(key=lambda x:x.get("date",""))
     if len(arr)>740:del arr[:-740]
 
-def all_market():
+def onehousing_snapshot(pid, name, url):
+    txt=text_of(fetch(url))
+    m=re.search(r"Đơn giá phổ biến.{0,260}?(\d{1,4}(?:[\.,]\d+)?)\s*triệu\/m²\s*([+-]?\d+(?:[\.,]\d+)?)%",txt,re.I)
+    if not m:
+        m=re.search(r"Đơn giá phổ biến.{0,260}?(\d{1,4}(?:[\.,]\d+)?)\s*triệu\/m²",txt,re.I)
+    if not m:
+        raise ValueError("OneHousing unit-price block not found")
+    price=num(m.group(1))
+    change_pct=num(m.group(2)) if m.lastindex and m.lastindex>=2 and m.group(2) is not None else None
+    pm=re.search(r"tháng\s*(\d{1,2})\/(\d{4})",txt,re.I)
+    period=(pm.group(2)+"-"+pm.group(1).zfill(2)) if pm else None
+    return {"id":pid,"name":name,"url":url,"price":round(price,2),"changePct":change_pct,"period":period}
+
+def fetch_onehousing_basket(items):
+    rows=[]
+    for pid,name,url in items:
+        try:
+            rows.append(onehousing_snapshot(pid,name,url))
+        except Exception as e:
+            print(f"[onehousing-fetch-error] {name}: {e}")
+        time.sleep(0.35)
+    return rows
+
+def basket_ratio(rows, baseline):
+    pairs=[]
+    for r in rows:
+        base=(baseline or {}).get(r.get("id"))
+        cur=r.get("price")
+        if base and cur and 0.65 <= float(cur)/float(base) <= 1.35:
+            pairs.append(float(cur)/float(base))
+    return statistics.median(pairs) if len(pairs)>=2 else None
+
+def ensure_baseline(rows, previous):
+    baseline=dict(previous or {})
+    if not baseline:
+        baseline={r["id"]:float(r["price"]) for r in rows if r.get("id") and r.get("price")}
+    return baseline
+
+def def all_market():
     values=[]; listing_count=verified_count=None; last_update=None
     pages=[ALL_BASE] + [ALL_BASE + f"/p{i}" for i in range(2,9)]
     ok=0
@@ -210,12 +272,21 @@ def main():
     now_dt=datetime.now(ZoneInfo("Asia/Ho_Chi_Minh"))
     now=now_dt.isoformat(timespec="seconds")
     today=now_dt.date().isoformat()
-    all_stats,all_count,verified,last_update,pages_ok=all_market()
-    pri_rows,pri_stats=weighted_project_proxy(PRIMARY_PROJECTS)
-    sec_rows,sec_stats=weighted_project_proxy(SECONDARY_PROJECTS)
-    sec_ratio,sec_ratio_detail=fixed_basket_ratio(sec_rows,baselines)
+    # Batdongsan blocks GitHub-hosted runners (HTTP 403), so automated nowcast uses fixed OneHousing baskets.
+    sec_rows=fetch_onehousing_basket(ONEHOUSING_SECONDARY)
+    pri_rows=fetch_onehousing_basket(ONEHOUSING_PRIMARY)
+    all_rows=sec_rows+pri_rows
+    old_symbols=(prev.get("symbols") or {})
+    sec_baseline=ensure_baseline(sec_rows,(old_symbols.get("HN-APT-SEC") or {}).get("sourceBasketBaseline"))
+    pri_baseline=ensure_baseline(pri_rows,(old_symbols.get("HN-APT-PRI") or {}).get("sourceBasketBaseline"))
+    all_baseline=ensure_baseline(all_rows,(old_symbols.get("HN-APT-ALL") or {}).get("sourceBasketBaseline"))
+    sec_ratio=basket_ratio(sec_rows,sec_baseline) or 1.0
+    pri_ratio=basket_ratio(pri_rows,pri_baseline) or 1.0
+    all_ratio=basket_ratio(all_rows,all_baseline) or 1.0
     sec_bridge_aug=round(SEC_BENCHMARK_Q2*SEC_PROP_3M_FACTOR,2)
-    sec_chart_price=round(sec_bridge_aug*sec_ratio,2) if sec_ratio is not None else None
+    sec_chart_price=round(sec_bridge_aug*sec_ratio,2)
+    pri_chart_price=round(PRI_BASKET_BASE*pri_ratio,2)
+    all_chart_price=round(ALL_BASKET_BASE*all_ratio,2)
     out={
       "meta":{
         "updatedAt":now,
@@ -231,71 +302,78 @@ def main():
         if obj.get("price") is None and old:return old
         return obj
     out["symbols"]["HN-APT-ALL"]=keep_or("HN-APT-ALL",{
-      "price": all_stats["median"] if all_stats else None,
-      "mean": all_stats["mean"] if all_stats else None,
-      "p25": all_stats["p25"] if all_stats else None,
-      "p75": all_stats["p75"] if all_stats else None,
-      "parsedSampleCount": all_stats["sampleCount"] if all_stats else 0,
-      "listingCount": all_count,
-      "verifiedCount": verified,
-      "sourceLastListingUpdate": last_update,
-      "pagesParsed": pages_ok,
-      "sourceUrl": ALL_BASE,
-      "historyType":"LIVE_LISTING_NOWCAST",
-      "anchorCompatible": True,
-      "trendDirection":"SOFT"
+      "price": all_chart_price,
+      "chartPrice": all_chart_price,
+      "sourceBasketBaseline": all_baseline,
+      "fixedBasketRatio":round(all_ratio,5),
+      "projects":all_rows,
+      "parsedProjectCount":len(all_rows),
+      "listingCount":(old_symbols.get("HN-APT-ALL") or {}).get("listingCount"),
+      "verifiedCount":(old_symbols.get("HN-APT-ALL") or {}).get("verifiedCount"),
+      "historyType":"LIVE_ALL_FIXED_BASKET_NOWCAST",
+      "anchorCompatible": len(all_rows)>=4,
+      "trendDirection":"LIVE",
+      "source":"OneHousing fixed basket",
+      "note":"Calibrated to 80.5 million VND/m² at basket start; subsequent moves use the median relative change of a fixed OneHousing project basket."
     })
     out["symbols"]["HN-APT-PRI"]=keep_or("HN-APT-PRI",{
-      "price": pri_stats["median"] if pri_stats else None,
-      "p25": pri_stats["p25"] if pri_stats else None,
-      "p75": pri_stats["p75"] if pri_stats else None,
-      "parsedSampleCount": sum((r.get("parsedSampleCount") or 0) for r in pri_rows),
-      "listingCount": sum((r.get("listingCount") or 0) for r in pri_rows),
+      "price": pri_chart_price,
+      "chartPrice": pri_chart_price,
+      "sourceBasketBaseline": pri_baseline,
+      "fixedBasketRatio":round(pri_ratio,5),
       "projects":pri_rows,
-      "historyType":"LIVE_PRIMARY_PROJECT_BASKET_PROXY",
-      "anchorCompatible": False,
-      "trendDirection":"HIGH_STABLE",
-      "note":"Current asking-price proxy from a maintained basket of projects still selling / recently launched. Not directly comparable to CBRE primary benchmark."
+      "parsedProjectCount":len(pri_rows),
+      "historyType":"LIVE_PRIMARY_FIXED_BASKET_NOWCAST",
+      "anchorCompatible": len(pri_rows)>=2,
+      "trendDirection":"LIVE",
+      "confidence":"LOW",
+      "note":"Low-confidence primary nowcast: CBRE Q2 benchmark level calibrated to a small fixed OneHousing primary basket; expands as more projects become parseable."
     })
     out["symbols"]["HN-APT-SEC"]=keep_or("HN-APT-SEC",{
-      "price": sec_stats["median"] if sec_stats else None,
+      "price": sec_chart_price,
       "chartPrice": sec_chart_price,
-      "p25": sec_stats["p25"] if sec_stats else None,
-      "p75": sec_stats["p75"] if sec_stats else None,
-      "parsedSampleCount": sum((r.get("parsedSampleCount") or 0) for r in sec_rows),
-      "listingCount": sum((r.get("listingCount") or 0) for r in sec_rows),
+      "sourceBasketBaseline": sec_baseline,
+      "fixedBasketRatio":round(sec_ratio,5),
       "projects":sec_rows,
-      "fixedBasket":sec_ratio_detail,
-      "fixedBasketRatioVsSep23":round(sec_ratio,5) if sec_ratio is not None else None,
+      "parsedProjectCount":len(sec_rows),
       "historyType":"LIVE_SECONDARY_FIXED_BASKET_NOWCAST",
-      "anchorCompatible": sec_chart_price is not None,
-      "trendDirection":"DOWN",
+      "anchorCompatible": len(sec_rows)>=4,
+      "trendDirection":"DOWN" if sec_chart_price < SEC_BENCHMARK_Q2 else "LIVE",
+      "source":"OneHousing fixed basket",
       "nowcastAnchors":[
-        {"date":"2026-06-30","price":SEC_BENCHMARK_Q2,"historyType":"PUBLISHED_BENCHMARK_CBRED_Q2"},
+        {"date":"2026-06-30","price":SEC_BENCHMARK_Q2,"historyType":"PUBLISHED_BENCHMARK_CBRE_Q2"},
         {"date":"2026-08-06","price":sec_bridge_aug,"historyType":"MODELED_BRIDGE_PROPLAB_3M","confidence":"LOW"},
-        {"date":"2026-09-23","price":sec_bridge_aug,"historyType":"FIXED_BASKET_BASELINE_START","confidence":"LOW"},
-        *([{"date":today,"price":sec_chart_price,"historyType":"FIXED_BASKET_NOWCAST","confidence":"MEDIUM"}] if sec_chart_price is not None else [])
+        {"date":today,"price":sec_chart_price,"historyType":"FIXED_BASKET_NOWCAST","confidence":"MEDIUM" if len(sec_rows)>=6 else "LOW"}
       ],
-      "note":"Chart nowcast uses CBRE Q2 benchmark plus a low-confidence PropLab decline bridge, then updates from a fixed Sep-23 project basket. Raw asking-basket absolute price is shown separately."
+      "note":"CBRE Q2 benchmark is bridged by the observed PropLab decline, then future movement is chained from a fixed OneHousing secondary project basket. No absolute basket price is mixed into the benchmark."
     })
 
     # Persist one observation per day so weekly candles gradually become observed nowcast history.
     all_live=out["symbols"].get("HN-APT-ALL",{})
     if all_live.get("price") is not None:
-        upsert_daily(history,"HN-APT-ALL",{"date":today,"price":all_live.get("price"),"listingCount":all_live.get("listingCount"),"historyType":"LIVE_LISTING_NOWCAST","anchorCompatible":True})
+        upsert_daily(history,"HN-APT-ALL",{"date":today,"price":all_live.get("chartPrice",all_live.get("price")),"projectCount":all_live.get("parsedProjectCount"),"fixedBasketRatio":all_live.get("fixedBasketRatio"),"historyType":"LIVE_ALL_FIXED_BASKET_NOWCAST","anchorCompatible":all_live.get("anchorCompatible",False)})
     sec_live=out["symbols"].get("HN-APT-SEC",{})
     if sec_live.get("chartPrice") is not None:
-        upsert_daily(history,"HN-APT-SEC",{"date":today,"price":sec_live.get("chartPrice"),"rawProxyPrice":sec_live.get("price"),"listingCount":sec_live.get("listingCount"),"fixedBasketRatioVsSep23":sec_live.get("fixedBasketRatioVsSep23"),"historyType":"FIXED_BASKET_NOWCAST","anchorCompatible":True})
+        upsert_daily(history,"HN-APT-SEC",{"date":today,"price":sec_live.get("chartPrice"),"projectCount":sec_live.get("parsedProjectCount"),"fixedBasketRatio":sec_live.get("fixedBasketRatio"),"historyType":"FIXED_BASKET_NOWCAST","anchorCompatible":sec_live.get("anchorCompatible",False)})
     pri_live=out["symbols"].get("HN-APT-PRI",{})
     if pri_live.get("price") is not None:
-        upsert_daily(history,"HN-APT-PRI",{"date":today,"price":pri_live.get("price"),"listingCount":pri_live.get("listingCount"),"historyType":"LIVE_PRIMARY_PROJECT_BASKET_PROXY","anchorCompatible":False})
+        upsert_daily(history,"HN-APT-PRI",{"date":today,"price":pri_live.get("chartPrice",pri_live.get("price")),"projectCount":pri_live.get("parsedProjectCount"),"fixedBasketRatio":pri_live.get("fixedBasketRatio"),"historyType":"LIVE_PRIMARY_FIXED_BASKET_NOWCAST","anchorCompatible":pri_live.get("anchorCompatible",False)})
     history["meta"]={"version":1,"updatedAt":now,"cadence":"daily-upsert from hourly fetch","note":"Observed listing-nowcast history; not transaction-price history."}
 
     os.makedirs(os.path.dirname(OUT),exist_ok=True)
     with open(HISTORY_OUT,"w",encoding="utf-8") as f:json.dump(history,f,ensure_ascii=False,indent=2)
     os.makedirs(os.path.dirname(OUT),exist_ok=True)
     with open(OUT,"w",encoding="utf-8") as f:json.dump(out,f,ensure_ascii=False,indent=2)
-    print(json.dumps({"updatedAt":now,"all":out["symbols"]["HN-APT-ALL"],"priPrice":out["symbols"]["HN-APT-PRI"].get("price"),"secRawPrice":out["symbols"]["HN-APT-SEC"].get("price"),"secChartPrice":out["symbols"]["HN-APT-SEC"].get("chartPrice"),"secRatio":out["symbols"]["HN-APT-SEC"].get("fixedBasketRatioVsSep23")},ensure_ascii=False))
+    print(json.dumps({
+      "updatedAt":now,
+      "allPrice":out["symbols"]["HN-APT-ALL"].get("chartPrice"),
+      "allProjects":out["symbols"]["HN-APT-ALL"].get("parsedProjectCount"),
+      "priPrice":out["symbols"]["HN-APT-PRI"].get("chartPrice"),
+      "priProjects":out["symbols"]["HN-APT-PRI"].get("parsedProjectCount"),
+      "secPrice":out["symbols"]["HN-APT-SEC"].get("chartPrice"),
+      "secProjects":out["symbols"]["HN-APT-SEC"].get("parsedProjectCount"),
+      "secRatio":out["symbols"]["HN-APT-SEC"].get("fixedBasketRatio")
+    },ensure_ascii=False))
 
 if __name__=="__main__":
     main()
