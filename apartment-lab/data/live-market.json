@@ -1,46 +1,347 @@
 {
   "meta": {
-    "updatedAt": "2026-10-04T11:06:44+07:00",
+    "updatedAt": "2026-10-04T11:10:01+07:00",
     "cadence": "hourly",
     "mode": "LIVE_LISTING_NOWCAST",
     "method": "Public asking-listing proxy; not observed transaction price.",
-    "source": "Batdongsan.com.vn"
+    "source": "OneHousing fixed baskets"
   },
   "symbols": {
     "HN-APT-ALL": {
       "price": 80.5,
-      "referenceRangeLow": 66.2,
-      "referenceRangeHigh": 94.8,
+      "chartPrice": 80.5,
+      "sourceBasketBaseline": {
+        "ocean": 736.0,
+        "smart": 9208.0,
+        "masteri": 11075.0,
+        "times": 11093.0,
+        "royal": 12261.0,
+        "skylake": 12701.0,
+        "metropolis": 20233.0,
+        "goldmark": 6904.0,
+        "sunshine": 89.0,
+        "mipec": 10927.0,
+        "gardenia": 9926.0,
+        "zei": 9193.0,
+        "hanoihomeland": 6633.0,
+        "mga": 10456.0,
+        "senique": 7665.0
+      },
+      "fixedBasketRatio": 1.0,
+      "projects": [
+        {
+          "id": "ocean",
+          "name": "Vinhomes Ocean Park",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-biet-thu-lien-ke-du-an-Vinhomes-Ocean-Park.877",
+          "price": 736.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "smart",
+          "name": "Vinhomes Smart City",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Smart-City.102",
+          "price": 9208.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "masteri",
+          "name": "Masteri West Heights",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-West-Heights.10",
+          "price": 11075.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "times",
+          "name": "Vinhomes Times City",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Times-City.136",
+          "price": 11093.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "royal",
+          "name": "Vinhomes Royal City",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Royal-City.634",
+          "price": 12261.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "skylake",
+          "name": "Vinhomes Skylake",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Skylake.939",
+          "price": 12701.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "metropolis",
+          "name": "Vinhomes Metropolis",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Metropolis.1061",
+          "price": 20233.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "goldmark",
+          "name": "Goldmark City",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Goldmark-City.68",
+          "price": 6904.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "sunshine",
+          "name": "Sunshine City",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Sunshine-City.750",
+          "price": 89.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "mipec",
+          "name": "Mipec Rubik 360",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Mipec-Rubik-360.610",
+          "price": 10927.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "gardenia",
+          "name": "Vinhomes Gardenia",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Gardenia.867",
+          "price": 9926.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "zei",
+          "name": "The Zei",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-The-Zei.1046",
+          "price": 9193.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "hanoihomeland",
+          "name": "Ha Noi Homeland",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Ha-Noi-Homeland.354",
+          "price": 6633.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "mga",
+          "name": "Masteri Grand Avenue",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-Grand-Avenue.1171",
+          "price": 10456.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "senique",
+          "name": "The Senique Hanoi",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-The-Senique-Hanoi.1181",
+          "price": 7665.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        }
+      ],
+      "parsedProjectCount": 15,
       "listingCount": 15836,
       "verifiedCount": 501,
-      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-ha-noi",
-      "historyType": "LIVE_LISTING_NOWCAST",
-      "note": "Midpoint of current published Hanoi reference range; listing universe count from current page.",
+      "historyType": "LIVE_ALL_FIXED_BASKET_NOWCAST",
       "anchorCompatible": true,
-      "trendDirection": "SOFT"
+      "trendDirection": "LIVE",
+      "source": "OneHousing fixed basket",
+      "note": "Calibrated to 80.5 million VND/m² at basket start; subsequent moves use the median relative change of a fixed OneHousing project basket."
     },
     "HN-APT-PRI": {
-      "price": 86.35,
-      "listingCount": 196,
-      "parsedSampleCount": 196,
-      "historyType": "LIVE_PRIMARY_PROJECT_BASKET_PROXY",
-      "note": "Primary live basket absolute asking level is composition-sensitive and is not connected directly to CBRE benchmark.",
-      "anchorCompatible": false,
-      "trendDirection": "HIGH_STABLE"
+      "price": 95.0,
+      "chartPrice": 95.0,
+      "sourceBasketBaseline": {
+        "mga": 10456.0,
+        "senique": 7665.0
+      },
+      "fixedBasketRatio": 1.0,
+      "projects": [
+        {
+          "id": "mga",
+          "name": "Masteri Grand Avenue",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-Grand-Avenue.1171",
+          "price": 10456.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "senique",
+          "name": "The Senique Hanoi",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-The-Senique-Hanoi.1181",
+          "price": 7665.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        }
+      ],
+      "parsedProjectCount": 2,
+      "historyType": "LIVE_PRIMARY_FIXED_BASKET_NOWCAST",
+      "anchorCompatible": true,
+      "trendDirection": "LIVE",
+      "confidence": "LOW",
+      "note": "Low-confidence primary nowcast: CBRE Q2 benchmark level calibrated to a small fixed OneHousing primary basket; expands as more projects become parseable."
     },
     "HN-APT-SEC": {
-      "price": 84.05,
-      "listingCount": 1644,
-      "parsedSampleCount": 1644,
-      "historyType": "LIVE_SECONDARY_PROJECT_BASKET_PROXY",
-      "note": "Weighted median midpoint of a broad completed/resale project basket. Asking-price proxy, not transaction average.",
-      "anchorCompatible": false,
+      "price": 56.52,
+      "chartPrice": 56.52,
+      "sourceBasketBaseline": {
+        "ocean": 736.0,
+        "smart": 9208.0,
+        "masteri": 11075.0,
+        "times": 11093.0,
+        "royal": 12261.0,
+        "skylake": 12701.0,
+        "metropolis": 20233.0,
+        "goldmark": 6904.0,
+        "sunshine": 89.0,
+        "mipec": 10927.0,
+        "gardenia": 9926.0,
+        "zei": 9193.0,
+        "hanoihomeland": 6633.0
+      },
+      "fixedBasketRatio": 1.0,
+      "projects": [
+        {
+          "id": "ocean",
+          "name": "Vinhomes Ocean Park",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-biet-thu-lien-ke-du-an-Vinhomes-Ocean-Park.877",
+          "price": 736.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "smart",
+          "name": "Vinhomes Smart City",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Smart-City.102",
+          "price": 9208.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "masteri",
+          "name": "Masteri West Heights",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-West-Heights.10",
+          "price": 11075.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "times",
+          "name": "Vinhomes Times City",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Times-City.136",
+          "price": 11093.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "royal",
+          "name": "Vinhomes Royal City",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Royal-City.634",
+          "price": 12261.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "skylake",
+          "name": "Vinhomes Skylake",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Skylake.939",
+          "price": 12701.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "metropolis",
+          "name": "Vinhomes Metropolis",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Metropolis.1061",
+          "price": 20233.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "goldmark",
+          "name": "Goldmark City",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Goldmark-City.68",
+          "price": 6904.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "sunshine",
+          "name": "Sunshine City",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Sunshine-City.750",
+          "price": 89.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "mipec",
+          "name": "Mipec Rubik 360",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Mipec-Rubik-360.610",
+          "price": 10927.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "gardenia",
+          "name": "Vinhomes Gardenia",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Gardenia.867",
+          "price": 9926.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "zei",
+          "name": "The Zei",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-The-Zei.1046",
+          "price": 9193.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        },
+        {
+          "id": "hanoihomeland",
+          "name": "Ha Noi Homeland",
+          "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Ha-Noi-Homeland.354",
+          "price": 6633.0,
+          "changePct": 0.0,
+          "period": "2026-10"
+        }
+      ],
+      "parsedProjectCount": 13,
+      "historyType": "LIVE_SECONDARY_FIXED_BASKET_NOWCAST",
+      "anchorCompatible": true,
       "trendDirection": "DOWN",
-      "trendEvidence": {
-        "cbreQ2": "60 million VND/m², down 2.5-3% QoQ",
-        "proplabAug": "65/74 two-bedroom projects lower vs 3 months earlier; typical whole-sample change about -5.8%",
-        "note": "Direction evidence only; live basket absolute asking-price level is not comparable to CBRE secondary average."
-      }
+      "source": "OneHousing fixed basket",
+      "nowcastAnchors": [
+        {
+          "date": "2026-06-30",
+          "price": 60.0,
+          "historyType": "PUBLISHED_BENCHMARK_CBRE_Q2"
+        },
+        {
+          "date": "2026-08-06",
+          "price": 56.52,
+          "historyType": "MODELED_BRIDGE_PROPLAB_3M",
+          "confidence": "LOW"
+        },
+        {
+          "date": "2026-10-04",
+          "price": 56.52,
+          "historyType": "FIXED_BASKET_NOWCAST",
+          "confidence": "MEDIUM"
+        }
+      ],
+      "note": "CBRE Q2 benchmark is bridged by the observed PropLab decline, then future movement is chained from a fixed OneHousing secondary project basket. No absolute basket price is mixed into the benchmark."
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": 1,
-    "updatedAt": "2026-10-04T11:06:44+07:00",
+    "updatedAt": "2026-10-04T11:10:01+07:00",
     "cadence": "daily-upsert from hourly fetch",
     "note": "Observed listing-nowcast history; not transaction-price history."
   },
@@ -10,19 +10,30 @@
       {
         "date": "2026-10-04",
         "price": 80.5,
-        "listingCount": 15836,
-        "historyType": "LIVE_LISTING_NOWCAST",
+        "projectCount": 15,
+        "fixedBasketRatio": 1.0,
+        "historyType": "LIVE_ALL_FIXED_BASKET_NOWCAST",
         "anchorCompatible": true
       }
     ],
-    "HN-APT-SEC": [],
+    "HN-APT-SEC": [
+      {
+        "date": "2026-10-04",
+        "price": 56.52,
+        "projectCount": 13,
+        "fixedBasketRatio": 1.0,
+        "historyType": "FIXED_BASKET_NOWCAST",
+        "anchorCompatible": true
+      }
+    ],
     "HN-APT-PRI": [
       {
         "date": "2026-10-04",
-        "price": 86.35,
-        "listingCount": 196,
-        "historyType": "LIVE_PRIMARY_PROJECT_BASKET_PROXY",
-        "anchorCompatible": false
+        "price": 95.0,
+        "projectCount": 2,
+        "fixedBasketRatio": 1.0,
+        "historyType": "LIVE_PRIMARY_FIXED_BASKET_NOWCAST",
+        "anchorCompatible": true
       }
     ]
   }
