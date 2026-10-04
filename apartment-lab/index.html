@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Hanoi Apartment Market Terminal</title>
+<title>gianha</title>
 <style>
 :root{--bg:#090f16;--panel:#0f1823;--panel2:#131f2c;--line:#263648;--text:#e7eef7;--muted:#8496a9;--up:#2dc7a4;--down:#ef6875;--blue:#5da6ff;--amber:#f0b865;--purple:#b18cff}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}button,input{font:inherit}
@@ -183,7 +183,7 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
 </head>
 <body>
 <div class="app">
-<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.11</span><div class="right">Pan · zoom · crosshair · modeled + observed weekly</div></header>
+<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">gianha v0.12</span><div class="right">Pan · zoom · crosshair · modeled + observed weekly</div></header>
 <div class="body">
 <section class="workspace">
   <div class="toolbar">
@@ -203,13 +203,17 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
         <div class="indHelp">Bật/tắt chỉ báo và bấm trực tiếp ô màu để đổi màu cho từng đường.</div>
 
         <div class="indGroup">
-          <div class="indGroupTitle"><input id="smaOn" type="checkbox"><label>SMA</label><input id="smaLen" type="number" min="2" max="200" value="20"></div>
-          <div class="lineOption"><span>Đường SMA</span><code>SMA line</code><input id="smaColor" class="colorPick" type="color"></div>
+          <div class="indGroupTitle"><label>SMA</label><span style="margin-left:auto;color:#6f8497;font-size:10px">20 / 50 / 100</span></div>
+          <div class="lineOption"><span><input id="sma20On" type="checkbox"> SMA 20</span><code>SMA20</code><input id="sma20Color" class="colorPick" type="color"></div>
+          <div class="lineOption"><span><input id="sma50On" type="checkbox"> SMA 50</span><code>SMA50</code><input id="sma50Color" class="colorPick" type="color"></div>
+          <div class="lineOption"><span><input id="sma100On" type="checkbox"> SMA 100</span><code>SMA100</code><input id="sma100Color" class="colorPick" type="color"></div>
         </div>
 
         <div class="indGroup">
-          <div class="indGroupTitle"><input id="emaOn" type="checkbox"><label>EMA</label><input id="emaLen" type="number" min="2" max="200" value="20"></div>
-          <div class="lineOption"><span>Đường EMA</span><code>EMA line</code><input id="emaColor" class="colorPick" type="color"></div>
+          <div class="indGroupTitle"><label>EMA</label><span style="margin-left:auto;color:#6f8497;font-size:10px">20 / 50 / 100</span></div>
+          <div class="lineOption"><span><input id="ema20On" type="checkbox"> EMA 20</span><code>EMA20</code><input id="ema20Color" class="colorPick" type="color"></div>
+          <div class="lineOption"><span><input id="ema50On" type="checkbox"> EMA 50</span><code>EMA50</code><input id="ema50Color" class="colorPick" type="color"></div>
+          <div class="lineOption"><span><input id="ema100On" type="checkbox"> EMA 100</span><code>EMA100</code><input id="ema100Color" class="colorPick" type="color"></div>
         </div>
 
         <div class="indGroup">
@@ -274,7 +278,7 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
 <script>
 const TF={W1:{label:"1W"},M1:{label:"1M"},Q1:{label:"1Q"},Y1:{label:"1Y"}};
 let DATA=null,LIVE=null,LIVE_HISTORY=null,current="HN-APT-ALL",timeframe="W1",lastLoadedAt=null;
-const settings={sma:false,ema:false,bb:true,volume:true,rsi:true,macd:true,smaLen:20,emaLen:20,bbLen:20,rsiLen:14,smaColor:"#5da6ff",emaColor:"#f0b865",bbUpperColor:"#b18cff",bbMidColor:"#9274d8",bbLowerColor:"#d0b4ff",volumeUpColor:"#2dc7a4",volumeDownColor:"#ef6875",rsiColor:"#b18cff",rsiOverColor:"#bd6972",rsiUnderColor:"#48ae94",macdColor:"#5da6ff",signalColor:"#f0b865",histUpColor:"#2dc7a4",histDownColor:"#ef6875",mainPaneRatio:.46};
+const settings={sma20:false,sma50:false,sma100:false,ema20:false,ema50:false,ema100:false,bb:true,volume:true,rsi:true,macd:true,bbLen:20,rsiLen:14,sma20Color:"#5da6ff",sma50Color:"#36c6d3",sma100Color:"#7f8cff",ema20Color:"#f0b865",ema50Color:"#f08c65",ema100Color:"#e56aa6",bbUpperColor:"#b18cff",bbMidColor:"#9274d8",bbLowerColor:"#d0b4ff",volumeUpColor:"#2dc7a4",volumeDownColor:"#ef6875",rsiColor:"#b18cff",rsiOverColor:"#bd6972",rsiUnderColor:"#48ae94",macdColor:"#5da6ff",signalColor:"#f0b865",histUpColor:"#2dc7a4",histDownColor:"#ef6875",mainPaneRatio:.46};
 const $=id=>document.getElementById(id),fmt=(v,d=1)=>Number(v).toLocaleString("vi-VN",{minimumFractionDigits:d,maximumFractionDigits:d});
 function sma(a,n){return a.map((_,i)=>i<n-1?null:a.slice(i-n+1,i+1).reduce((s,v)=>s+v,0)/n)}
 function ema(a,n){const out=Array(a.length).fill(null);if(a.length<n)return out;const k=2/(n+1),seed=a.slice(0,n).reduce((s,v)=>s+v,0)/n;out[n-1]=seed;for(let i=n;i<a.length;i++)out[i]=a[i]*k+out[i-1]*(1-k);return out}
@@ -394,13 +398,17 @@ function renderPrice(series){
  LW_CHART=chart;
  const candles=chart.addSeries(L.CandlestickSeries,{upColor:"#2dc7a4",downColor:"#ef6875",wickUpColor:"#2dc7a4",wickDownColor:"#ef6875",borderVisible:false,priceFormat:{type:"price",precision:1,minMove:.1}});
  candles.setData(rows.map(r=>({time:chartTime(r.date),open:r.open,high:r.high,low:r.low,close:r.close})));
- const close=closeArray(series),bbv=bb(close,settings.bbLen),sm=sma(close,settings.smaLen),em=ema(close,settings.emaLen);
+ const close=closeArray(series),bbv=bb(close,settings.bbLen);
  const addLine=(vals,color,pane=0,width=1)=>{
    const s=chart.addSeries(L.LineSeries,{color,lineWidth:width,priceLineVisible:false,lastValueVisible:true,crosshairMarkerVisible:false},pane);
    s.setData(lineData(rows,vals));return s;
  };
- if(settings.sma)addLine(sm,settings.smaColor,0,2);
- if(settings.ema)addLine(em,settings.emaColor,0,2);
+ if(settings.sma20)addLine(sma(close,20),settings.sma20Color,0,2);
+ if(settings.sma50)addLine(sma(close,50),settings.sma50Color,0,2);
+ if(settings.sma100)addLine(sma(close,100),settings.sma100Color,0,2);
+ if(settings.ema20)addLine(ema(close,20),settings.ema20Color,0,2);
+ if(settings.ema50)addLine(ema(close,50),settings.ema50Color,0,2);
+ if(settings.ema100)addLine(ema(close,100),settings.ema100Color,0,2);
  if(settings.bb){addLine(bbv.up,settings.bbUpperColor,0,1);addLine(bbv.mid,settings.bbMidColor,0,1);addLine(bbv.lo,settings.bbLowerColor,0,1);}
  let pane=1;
  if(settings.volume){const p=pane++;const vs=chart.addSeries(L.HistogramSeries,{priceFormat:{type:"volume"},priceLineVisible:false,lastValueVisible:true},p);vs.setData(rows.flatMap(r=>Number.isFinite(r.sampleCount)?[{time:chartTime(r.date),value:r.sampleCount,color:r.close>=r.open?settings.volumeUpColor:settings.volumeDownColor}]:[]));}
@@ -417,7 +425,7 @@ function renderPrice(series){
  }
  const panes=chart.panes(),subCount=Math.max(0,panes.length-1),total=el.clientHeight||620;
  if(subCount){const mainRatio=Math.max(.35,Math.min(.70,settings.mainPaneRatio||.46));panes[0].setHeight(Math.max(180,Math.floor(total*mainRatio)));const subH=Math.max(70,Math.floor(total*(1-mainRatio)/subCount));for(let i=1;i<panes.length;i++)panes[i].setHeight(subH);}
- const labelBase=[series.label];if(settings.sma)labelBase.push("SMA("+settings.smaLen+")");if(settings.ema)labelBase.push("EMA("+settings.emaLen+")");if(settings.bb)labelBase.push("BB("+settings.bbLen+",2)");if(settings.volume)labelBase.push("Volume=listing samples");
+ const labelBase=[series.label];if(settings.sma20)labelBase.push("SMA20");if(settings.sma50)labelBase.push("SMA50");if(settings.sma100)labelBase.push("SMA100");if(settings.ema20)labelBase.push("EMA20");if(settings.ema50)labelBase.push("EMA50");if(settings.ema100)labelBase.push("EMA100");if(settings.bb)labelBase.push("BB("+settings.bbLen+",2)");if(settings.volume)labelBase.push("Volume=listing samples");
  const resetHead=()=>{$("chartHead").textContent=labelBase.join(" · ")};
  resetHead();
  chart.subscribeCrosshairMove(param=>{
@@ -461,8 +469,8 @@ function buildUI(){
  $("symbolMenu").innerHTML=DATA.symbols.map(s=>'<button class="symItem" data-s="'+s.symbol+'"><strong>'+s.symbol+'</strong><small>'+s.name+'</small></button>').join("");
  document.querySelectorAll(".symItem").forEach(b=>b.onclick=()=>{current=b.dataset.s;$("symbolMenu").classList.remove("open");render()});
  $("symbolBtn").onclick=e=>{e.stopPropagation();$("symbolMenu").classList.toggle("open")};$("indBtn").onclick=e=>{e.stopPropagation();$("indPanel").classList.toggle("open")};document.addEventListener("click",()=>{$("symbolMenu").classList.remove("open");$("indPanel").classList.remove("open")});$("indPanel").onclick=e=>e.stopPropagation();
- [["smaOn","sma"],["emaOn","ema"],["bbOn","bb"],["volumeOn","volume"],["rsiOn","rsi"],["macdOn","macd"]].forEach(([id,k])=>{$(id).checked=settings[k];$(id).onchange=()=>{settings[k]=$(id).checked;render()}});$("paneRatio").value=Math.round(settings.mainPaneRatio*100);$("paneRatioValue").textContent=Math.round(settings.mainPaneRatio*100)+"%";$("paneRatio").oninput=()=>{settings.mainPaneRatio=Number($("paneRatio").value)/100;$("paneRatioValue").textContent=$("paneRatio").value+"%";render()};
- [["smaLen","smaLen"],["emaLen","emaLen"],["bbLen","bbLen"],["rsiLen","rsiLen"]].forEach(([id,k])=>{$(id).value=settings[k];$(id).onchange=()=>{settings[k]=Math.max(2,parseInt($(id).value)||settings[k]);render()}});[["smaColor","smaColor"],["emaColor","emaColor"],["bbUpperColor","bbUpperColor"],["bbMidColor","bbMidColor"],["bbLowerColor","bbLowerColor"],["volumeUpColor","volumeUpColor"],["volumeDownColor","volumeDownColor"],["rsiColor","rsiColor"],["rsiOverColor","rsiOverColor"],["rsiUnderColor","rsiUnderColor"],["macdColor","macdColor"],["signalColor","signalColor"],["histUpColor","histUpColor"],["histDownColor","histDownColor"]].forEach(([id,k])=>{$(id).value=settings[k];$(id).oninput=()=>{settings[k]=$(id).value;render()}});$("resetColorsBtn").onclick=()=>{Object.assign(settings,{smaColor:"#5da6ff",emaColor:"#f0b865",bbUpperColor:"#b18cff",bbMidColor:"#9274d8",bbLowerColor:"#d0b4ff",volumeUpColor:"#2dc7a4",volumeDownColor:"#ef6875",rsiColor:"#b18cff",rsiOverColor:"#bd6972",rsiUnderColor:"#48ae94",macdColor:"#5da6ff",signalColor:"#f0b865",histUpColor:"#2dc7a4",histDownColor:"#ef6875",mainPaneRatio:.46});$("paneRatio").value=46;$("paneRatioValue").textContent="46%";[["smaColor","smaColor"],["emaColor","emaColor"],["bbUpperColor","bbUpperColor"],["bbMidColor","bbMidColor"],["bbLowerColor","bbLowerColor"],["volumeUpColor","volumeUpColor"],["volumeDownColor","volumeDownColor"],["rsiColor","rsiColor"],["rsiOverColor","rsiOverColor"],["rsiUnderColor","rsiUnderColor"],["macdColor","macdColor"],["signalColor","signalColor"],["histUpColor","histUpColor"],["histDownColor","histDownColor"]].forEach(([id,k])=>$(id).value=settings[k]);render()};
+ [["sma20On","sma20"],["sma50On","sma50"],["sma100On","sma100"],["ema20On","ema20"],["ema50On","ema50"],["ema100On","ema100"],["bbOn","bb"],["volumeOn","volume"],["rsiOn","rsi"],["macdOn","macd"]].forEach(([id,k])=>{$(id).checked=settings[k];$(id).onchange=()=>{settings[k]=$(id).checked;render()}});$("paneRatio").value=Math.round(settings.mainPaneRatio*100);$("paneRatioValue").textContent=Math.round(settings.mainPaneRatio*100)+"%";$("paneRatio").oninput=()=>{settings.mainPaneRatio=Number($("paneRatio").value)/100;$("paneRatioValue").textContent=$("paneRatio").value+"%";render()};
+ [["bbLen","bbLen"],["rsiLen","rsiLen"]].forEach(([id,k])=>{$(id).value=settings[k];$(id).onchange=()=>{settings[k]=Math.max(2,parseInt($(id).value)||settings[k]);render()}});[["sma20Color","sma20Color"],["sma50Color","sma50Color"],["sma100Color","sma100Color"],["ema20Color","ema20Color"],["ema50Color","ema50Color"],["ema100Color","ema100Color"],["bbUpperColor","bbUpperColor"],["bbMidColor","bbMidColor"],["bbLowerColor","bbLowerColor"],["volumeUpColor","volumeUpColor"],["volumeDownColor","volumeDownColor"],["rsiColor","rsiColor"],["rsiOverColor","rsiOverColor"],["rsiUnderColor","rsiUnderColor"],["macdColor","macdColor"],["signalColor","signalColor"],["histUpColor","histUpColor"],["histDownColor","histDownColor"]].forEach(([id,k])=>{$(id).value=settings[k];$(id).oninput=()=>{settings[k]=$(id).value;render()}});$("resetColorsBtn").onclick=()=>{Object.assign(settings,{sma20Color:"#5da6ff",sma50Color:"#36c6d3",sma100Color:"#7f8cff",ema20Color:"#f0b865",ema50Color:"#f08c65",ema100Color:"#e56aa6",bbUpperColor:"#b18cff",bbMidColor:"#9274d8",bbLowerColor:"#d0b4ff",volumeUpColor:"#2dc7a4",volumeDownColor:"#ef6875",rsiColor:"#b18cff",rsiOverColor:"#bd6972",rsiUnderColor:"#48ae94",macdColor:"#5da6ff",signalColor:"#f0b865",histUpColor:"#2dc7a4",histDownColor:"#ef6875",mainPaneRatio:.46});$("paneRatio").value=46;$("paneRatioValue").textContent="46%";[["sma20Color","sma20Color"],["sma50Color","sma50Color"],["sma100Color","sma100Color"],["ema20Color","ema20Color"],["ema50Color","ema50Color"],["ema100Color","ema100Color"],["bbUpperColor","bbUpperColor"],["bbMidColor","bbMidColor"],["bbLowerColor","bbLowerColor"],["volumeUpColor","volumeUpColor"],["volumeDownColor","volumeDownColor"],["rsiColor","rsiColor"],["rsiOverColor","rsiOverColor"],["rsiUnderColor","rsiUnderColor"],["macdColor","macdColor"],["signalColor","signalColor"],["histUpColor","histUpColor"],["histDownColor","histDownColor"]].forEach(([id,k])=>$(id).value=settings[k]);render()};
 }
 async function fetchJsonNoCache(path){
  const r=await fetch(path+"?v="+Date.now(),{cache:"no-store",headers:{"Cache-Control":"no-cache"}});
