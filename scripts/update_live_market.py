@@ -182,7 +182,9 @@ def main():
       "sourceLastListingUpdate": last_update,
       "pagesParsed": pages_ok,
       "sourceUrl": ALL_BASE,
-      "historyType":"LIVE_LISTING_NOWCAST"
+      "historyType":"LIVE_LISTING_NOWCAST",
+      "anchorCompatible": True,
+      "trendDirection":"SOFT"
     })
     out["symbols"]["HN-APT-PRI"]=keep_or("HN-APT-PRI",{
       "price": pri_stats["median"] if pri_stats else None,
@@ -192,7 +194,9 @@ def main():
       "listingCount": sum((r.get("listingCount") or 0) for r in pri_rows),
       "projects":pri_rows,
       "historyType":"LIVE_PRIMARY_PROJECT_BASKET_PROXY",
-      "note":"Current asking-price proxy from a maintained basket of projects still selling / recently launched."
+      "anchorCompatible": False,
+      "trendDirection":"HIGH_STABLE",
+      "note":"Current asking-price proxy from a maintained basket of projects still selling / recently launched. Not directly comparable to CBRE primary benchmark."
     })
     out["symbols"]["HN-APT-SEC"]=keep_or("HN-APT-SEC",{
       "price": sec_stats["median"] if sec_stats else None,
@@ -202,7 +206,9 @@ def main():
       "listingCount": sum((r.get("listingCount") or 0) for r in sec_rows),
       "projects":sec_rows,
       "historyType":"LIVE_SECONDARY_PROJECT_BASKET_PROXY",
-      "note":"Current asking-price proxy from a maintained basket of completed/resale projects."
+      "anchorCompatible": False,
+      "trendDirection":"DOWN",
+      "note":"Current asking-price proxy from a maintained basket of completed/resale projects. Absolute level is not directly comparable to CBRE secondary benchmark."
     })
     os.makedirs(os.path.dirname(OUT),exist_ok=True)
     with open(OUT,"w",encoding="utf-8") as f:json.dump(out,f,ensure_ascii=False,indent=2)
