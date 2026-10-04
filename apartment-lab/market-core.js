@@ -142,7 +142,7 @@
   }
   function indicatorInputs(rows) {
     // Estimates derived from another metric cannot become eligible observations.
-    return rows.map(row => ["MISSING", "PROVIDER_ESTIMATE", "CALCULATED", "APPROX_DIGITIZED"].includes(row.quality) ? null : row.value);
+    return rows.map(row => ["PROVIDER_STATISTIC", "PUBLISHED_REFERENCE", "FIXED_BASKET"].includes(row.quality) && finite(row.value) ? row.value : null);
   }
   function contiguousTail(values) {
     let count = 0;

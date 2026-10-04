@@ -276,11 +276,14 @@
       if (nextLive.meta?.methodVersion !== METHOD || !Array.isArray(nextLive.projects) || !nextLive.symbols || nextReports.meta?.schemaVersion !== 2 || !Array.isArray(nextReports.symbols)) throw new Error("Dữ liệu chưa đúng phiên bản");
       const consistent = nextHistory.meta?.methodVersion === METHOD && nextHistory.meta.lastAttemptAt === nextLive.meta.lastAttemptAt;
       retainedError = consistent ? "" : "Bản giá và lịch sử chưa đồng bộ. Đang hiển thị giá có nguồn; lịch sử sẽ tải lại ở lần cập nhật sau.";
-      live = nextLive; history = consistent ? nextHistory : {projects: {}}; reports = nextReports; render(initial); save();
+      live = nextLive; history = consistent ? nextHistory : {projects: {}}; reports = nextReports; render(initial);
     } catch (error) {
       retainedError = "Không tải được dữ liệu mới. " + (live ? "Đang giữ bản đã tải; xem thời điểm kiểm tra nguồn bên cạnh giá." : "Hãy thử nút Cập nhật hoặc tải lại trang.");
       if (live) render(false); else {$("loadError").hidden = false; $("loadError").textContent = retainedError; $("status").textContent = "Chưa tải được dữ liệu"; $("title").textContent = "Chưa có dữ liệu để hiển thị";}
-    } finally {loading = false; $("refreshBtn").disabled = false; $("refreshBtn").textContent = "Cập nhật";}
+    } finally {
+      loading = false; $("refreshBtn").disabled = false; $("refreshBtn").textContent = "Cập nhật";
+      document.querySelectorAll('[data-view], #instrumentSelect, #fitBtn, #latestBtn, #indBtn').forEach(element => {element.disabled = !live;});
+    }
   }
   document.querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => {if (!live) return; prefs.view = button.dataset.view; prefs.instrument = prefs.view === "projects" ? "smart" : reportSymbol()?.referenceSets?.[0]?.id; render(true); save();}));
   $("instrumentSelect").addEventListener("change", event => {prefs.instrument = event.target.value; render(true); save();});
@@ -294,7 +297,7 @@
   ["paneRatio", "rsiWeight", "macdWeight"].forEach(key => $(key).addEventListener("input", () => {prefs[key] = Number($(key).value); $("paneRatioValue").value = prefs.paneRatio + "%"; applyPaneSizes(); save();}));
   $("priceChart").addEventListener("pointerup", () => {
     if (!chart || panes.length < 2) return;
-    requestAnimationFrame(() => {if (!chart) return; const heights = chart.panes().map(p => p.getHeight()), sum = heights.reduce((a, b) => a + b, 0); prefs.paneRatio = Math.min(85, Math.max(35, Math.round(100 * heights[0] / sum))); const min = Math.min(...heights.slice(1)); panes.forEach((name, i) => {if (name === "rsi" || name === "macd") prefs[name + "Weight"] = Math.min(5, Math.max(1, Math.round(heights[i] / min)));}); save();});
+    requestAnimationFrame(() => {if (!chart) return; const heights = chart.panes().map(p => p.getHeight()), sum = heights.reduce((a, b) => a + b, 0); if (!sum) return; prefs.paneRatio = Math.min(85, Math.max(35, 100 * heights[0] / sum)); const min = Math.min(...heights.slice(1)); if (min > 0) panes.forEach((name, i) => {if (name === "rsi" || name === "macd") prefs[name + "Weight"] = Math.min(5, Math.max(1, heights[i] / min));}); save();});
   }, true);
   new ResizeObserver(() => {if (chart) applyPaneSizes();}).observe($("priceChart"));
   document.addEventListener("visibilitychange", () => {if (!document.hidden) loadData();});

@@ -56,8 +56,8 @@ test('MACD waits for the signal seed and never compacts gaps', () => {
   assert.equal(C.macd([...values, null, ...values.slice(0, 33)]).histogram.at(-1), null);
 });
 test('forecast and calculated points are excluded from indicators', () => {
-  const rows = [point('2026-01', 85), point('2026-02', 86, 'CALCULATED'), point('2026-03', 95, 'PROVIDER_ESTIMATE'), point('2026-04', 97, 'APPROX_DIGITIZED')];
-  assert.deepEqual(C.indicatorInputs(rows), [85, null, null, null]);
+  const rows = [point('2026-01', 85), point('2026-02', 86, 'CALCULATED'), point('2026-03', 95, 'PROVIDER_ESTIMATE'), point('2026-04', 97, 'APPROX_DIGITIZED'), point('2026-05', 100, 'UNKNOWN')];
+  assert.deepEqual(C.indicatorInputs(rows), [85, null, null, null, null]);
   assert.equal(C.contiguousTail(C.indicatorInputs(rows)), 0);
 });
 test('Bollinger uses valid windows, no zero substituted for missing values', () => {
