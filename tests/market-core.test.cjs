@@ -1,6 +1,9 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const C = require('../apartment-lab/market-core.js');
+const loaded = require('../apartment-lab/market-core.js');
+// This shared repo uses type:module. In that mode the UMD browser file exposes
+// GianhaCore globally; outside it the same file exposes module.exports.
+const C = typeof loaded.regularRows === 'function' ? loaded : globalThis.GianhaCore;
 const point = (period, value, quality = 'PROVIDER_STATISTIC') => ({period, value, quality});
 
 test('periods use real dates and no weekly observations are created', () => {
