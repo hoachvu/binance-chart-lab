@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "updatedAt": "2026-10-04T10:40:00+07:00",
+    "cadence": "hourly",
+    "mode": "LIVE_LISTING_NOWCAST",
+    "method": "Public asking-listing proxy; not observed transaction price.",
+    "source": "Batdongsan.com.vn",
+    "note": "Seed file. Automated workflow refreshes this hourly."
+  },
+  "symbols": {
+    "HN-APT-ALL": {
+      "price": null,
+      "listingCount": 15636,
+      "verifiedCount": 501,
+      "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-ha-noi",
+      "historyType": "LIVE_LISTING_NOWCAST"
+    },
+    "HN-APT-SEC": {
+      "price": null,
+      "historyType": "LIVE_SECONDARY_PROJECT_BASKET_PROXY"
+    },
+    "HN-APT-PRI": {
+      "price": null,
+      "historyType": "LIVE_PRIMARY_PROJECT_BASKET_PROXY"
+    }
+  }
+}
