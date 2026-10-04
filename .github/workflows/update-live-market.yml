@@ -1,6 +1,11 @@
 name: Update Live Apartment Market
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/update_live_market.py"
+      - ".github/workflows/update-live-market.yml"
   schedule:
     - cron: "17 * * * *"
   workflow_dispatch:
@@ -30,12 +35,12 @@ jobs:
 
       - name: Commit changed live snapshot
         run: |
-          if git diff --quiet apartment-lab/data/live-market.json; then
+          if git diff --quiet apartment-lab/data/live-market.json apartment-lab/data/live-history.json; then
             echo "No live-market changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add apartment-lab/data/live-market.json
+          git add apartment-lab/data/live-market.json apartment-lab/data/live-history.json
           git commit -m "Update live Hanoi apartment market"
           git push
