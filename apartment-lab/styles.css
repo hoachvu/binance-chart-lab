@@ -13,3 +13,4 @@ dialog{border:1px solid #3c546e;border-radius:14px;background:#111d2c;color:var(
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 @media(max-width:850px){.header{flex-wrap:wrap;gap:5px 10px}.header .brand{flex:1}.header .version{order:2}.header .status{order:3;flex-basis:100%;margin-left:0}}
+@media(max-width:850px){.quote{display:block}.quotePrice{flex-direction:row;text-align:left;align-items:baseline;flex-wrap:wrap;gap:7px 10px;margin-top:10px}}
