@@ -1,27 +1,36 @@
 {
   "meta": {
-    "updatedAt": "2026-10-04T10:40:00+07:00",
+    "updatedAt": "2026-10-04T10:45:00+07:00",
     "cadence": "hourly",
     "mode": "LIVE_LISTING_NOWCAST",
     "method": "Public asking-listing proxy; not observed transaction price.",
     "source": "Batdongsan.com.vn",
-    "note": "Seed file. Automated workflow refreshes this hourly."
+    "note": "Seeded from current public October 2026 listing pages; hourly workflow replaces this snapshot."
   },
   "symbols": {
     "HN-APT-ALL": {
-      "price": null,
-      "listingCount": 15636,
+      "price": 80.5,
+      "referenceRangeLow": 66.2,
+      "referenceRangeHigh": 94.8,
+      "listingCount": 15836,
       "verifiedCount": 501,
       "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-ha-noi",
-      "historyType": "LIVE_LISTING_NOWCAST"
+      "historyType": "LIVE_LISTING_NOWCAST",
+      "note": "Midpoint of current published Hanoi reference range; listing universe count from current page."
     },
     "HN-APT-SEC": {
-      "price": null,
-      "historyType": "LIVE_SECONDARY_PROJECT_BASKET_PROXY"
+      "price": 84.05,
+      "listingCount": 1644,
+      "parsedSampleCount": 1644,
+      "historyType": "LIVE_SECONDARY_PROJECT_BASKET_PROXY",
+      "note": "Weighted median midpoint of a broad completed/resale project basket. Asking-price proxy, not transaction average."
     },
     "HN-APT-PRI": {
-      "price": null,
-      "historyType": "LIVE_PRIMARY_PROJECT_BASKET_PROXY"
+      "price": 86.35,
+      "listingCount": 196,
+      "parsedSampleCount": 196,
+      "historyType": "LIVE_PRIMARY_PROJECT_BASKET_PROXY",
+      "note": "Weighted median midpoint of current primary/recent-launch project asking ranges. Asking-price proxy, not transaction average."
     }
   }
 }
