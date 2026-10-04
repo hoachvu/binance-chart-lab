@@ -183,7 +183,7 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
 </head>
 <body>
 <div class="app">
-<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.9.6</span><div class="right">Pan · zoom · crosshair · modeled + observed weekly</div></header>
+<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.9.7</span><div class="right">Pan · zoom · crosshair · modeled + observed weekly</div></header>
 <div class="body">
 <section class="workspace">
   <div class="toolbar">
@@ -292,8 +292,12 @@ function anchorDate(label){
  if(label.length===7&&label[4]==="-"&&!label.includes("Q"))return label+"-15";
  const qi=label.indexOf("-Q");
  if(qi===4){
-   const y=label.slice(0,4),q=Number(label.slice(6));
-   if(q>=1&&q<=4){const m=q*3;return y+"-"+String(m).padStart(2,"0")+"-15";}
+   const y=Number(label.slice(0,4)),q=Number(label.slice(6));
+   if(q>=1&&q<=4){
+     const m=q*3;
+     const lastDay=new Date(Date.UTC(y,m,0)).getUTCDate();
+     return String(y)+"-"+String(m).padStart(2,"0")+"-"+String(lastDay).padStart(2,"0");
+   }
  }
  if(label.length===10)return label;
  return null;
