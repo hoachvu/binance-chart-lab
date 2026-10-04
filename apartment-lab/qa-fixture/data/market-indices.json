@@ -1,0 +1,499 @@
+{
+  "meta": {
+    "version": "0.13.0",
+    "schemaVersion": 2,
+    "updatedAt": "2026-10-04",
+    "unit": "million_VND_per_m2",
+    "policy": "Chỉ vẽ các kỳ dữ liệu có nguồn. Không tạo nến OHLC hay nội suy thêm kỳ. Các nguồn hoặc phạm vi mẫu khác nhau nằm ở chuỗi riêng.",
+    "coarseView": "Khung lớn hơn hiển thị giá được ghi nhận cuối kỳ, không phải giá bình quân của cả kỳ.",
+    "projectClassification": "Nhóm dự án đã bàn giao/đang mở bán chỉ là rổ tham khảo; không tương đương thống kê giao dịch thứ cấp/sơ cấp."
+  },
+  "symbols": [
+    {
+      "symbol": "HN-APT-ALL",
+      "name": "Chung cư Hà Nội - toàn thị trường",
+      "segment": "ALL",
+      "referenceSets": [
+        {
+          "id": "bds-monthly",
+          "name": "Giá rao Batdongsan.com.vn · mốc tháng",
+          "frequency": "M1",
+          "metric": "HANOI_APARTMENT_ASKING_PRICE",
+          "coverage": "Mẫu tin rao chung cư Hà Nội của Batdongsan.com.vn",
+          "quality": "PUBLISHED_REFERENCE",
+          "note": "Chỉ giữ mốc 34 triệu/m² tháng 1/2022 và 63 triệu/m² tháng 1/2025 được nêu số trực tiếp trong báo cáo. Các tháng giữa hai mốc chưa có số kiểm chứng; không nối đường hoặc bù bằng nội suy.",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf",
+          "points": [
+            {
+              "period": "2022-01",
+              "value": 34,
+              "quality": "PUBLISHED_REFERENCE",
+              "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+            },
+            {
+              "period": "2025-01",
+              "value": 63,
+              "quality": "PUBLISHED_REFERENCE",
+              "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+            }
+          ]
+        },
+        {
+          "id": "bds-quarterly",
+          "name": "Giá rao Batdongsan.com.vn · quý",
+          "frequency": "Q1",
+          "metric": "HANOI_APARTMENT_ASKING_PRICE",
+          "coverage": "Mẫu giá rao chung cư Hà Nội của Batdongsan.com.vn",
+          "quality": "PUBLISHED_REFERENCE",
+          "note": "Mốc Q2/2026 trong bài nguồn là giá dự kiến, được đánh dấu ước tính. Không nối sang giá rổ dự án.",
+          "sourceUrl": "https://wiki.batdongsan.com.vn/tin-tuc/thi-truong-chung-cu-giam-gia-rao-ban-tang-nhu-cau-thue-855446",
+          "points": [
+            {
+              "period": "2025-Q2",
+              "value": 70,
+              "quality": "PUBLISHED_REFERENCE",
+              "sourceUrl": "https://wiki.batdongsan.com.vn/tin-tuc/gia-chunng-cu-Ha-Noi-tang-cao-nha-dau-tu-Ha-Noi-tim-duong-vao-TP.HCM-cd-hn-841537"
+            },
+            {
+              "period": "2026-Q2",
+              "value": 85,
+              "quality": "PROVIDER_ESTIMATE",
+              "sourceUrl": "https://wiki.batdongsan.com.vn/tin-tuc/thi-truong-chung-cu-giam-gia-rao-ban-tang-nhu-cau-thue-855446"
+            }
+          ]
+        }
+      ],
+      "weeklyVolume": [
+        {
+          "date": "2026-09-21",
+          "value": 14760,
+          "verifiedCount": 533,
+          "metric": "HANOI_PUBLIC_APARTMENT_LISTING_UNIVERSE",
+          "historyType": "OBSERVED_MARKET_UNIVERSE",
+          "coverage": "All Hanoi apartment sale listings shown by Batdongsan.com.vn at capture time",
+          "source": "Batdongsan.com.vn",
+          "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-tp-ha-noi",
+          "capturedAt": "2026-09-23",
+          "note": "Listing universe/activity proxy, not transaction volume. Includes listings across the Hanoi apartment market and may contain duplicates or mixed primary/secondary supply."
+        }
+      ]
+    },
+    {
+      "symbol": "HN-APT-SEC",
+      "name": "Chung cư Hà Nội - thứ cấp",
+      "segment": "SECONDARY",
+      "referenceSets": [
+        {
+          "id": "one-mount-quarterly",
+          "name": "One Mount / OneHousing · quý",
+          "frequency": "Q1",
+          "metric": "ONE_MOUNT_REPORTED_APARTMENT_PRICE",
+          "coverage": "Phạm vi mẫu của báo cáo gồm Hà Nội và khu vực Văn Giang (Hưng Yên); đọc ghi chú nguồn trước khi so sánh.",
+          "quality": "PUBLISHED_REFERENCE",
+          "note": "Chỉ giữ mốc Q4/2025 có số trực tiếp trong báo cáo. Các quý lịch sử chưa có số kiểm chứng; không bù bằng nội suy. Đơn giá sơ cấp chưa bao gồm VAT và kinh phí bảo trì theo báo cáo.",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf",
+          "points": [
+            {
+              "period": "2025-Q4",
+              "value": 90,
+              "quality": "PUBLISHED_REFERENCE",
+              "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+            }
+          ]
+        }
+      ],
+      "weeklyVolume": []
+    },
+    {
+      "symbol": "HN-APT-PRI",
+      "name": "Chung cư Hà Nội - sơ cấp",
+      "segment": "PRIMARY",
+      "referenceSets": [
+        {
+          "id": "one-mount-quarterly",
+          "name": "One Mount / OneHousing · quý",
+          "frequency": "Q1",
+          "metric": "ONE_MOUNT_REPORTED_APARTMENT_PRICE",
+          "coverage": "Phạm vi mẫu của báo cáo gồm Hà Nội và khu vực Văn Giang (Hưng Yên); đọc ghi chú nguồn trước khi so sánh.",
+          "quality": "PUBLISHED_REFERENCE",
+          "note": "Chỉ giữ mốc Q4/2025 có số trực tiếp trong báo cáo. Các quý lịch sử chưa có số kiểm chứng; không bù bằng nội suy. Đơn giá sơ cấp chưa bao gồm VAT và kinh phí bảo trì theo báo cáo.",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf",
+          "points": [
+            {
+              "period": "2025-Q4",
+              "value": 86,
+              "quality": "PUBLISHED_REFERENCE",
+              "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+            }
+          ]
+        }
+      ],
+      "weeklyVolume": []
+    }
+  ],
+  "excludedLegacyReferences": [
+    {
+      "symbol": "HN-APT-SEC",
+      "period": "2026-Q2",
+      "value": 60,
+      "reason": "Nguồn CBRE được dẫn qua báo chí; phạm vi và phương pháp khác One Mount. Chưa kiểm chứng nguồn gốc nên không ghép vào biểu đồ."
+    },
+    {
+      "symbol": "HN-APT-PRI",
+      "period": "2026-Q2",
+      "value": 95,
+      "reason": "Nguồn CBRE được dẫn qua báo chí; phạm vi và phương pháp khác One Mount. Chưa kiểm chứng nguồn gốc nên không ghép vào biểu đồ."
+    },
+    {
+      "symbol": "HN-APT-ALL",
+      "period": "2026-09",
+      "value": 80.95,
+      "reason": "Trung điểm khoảng giá 64,2–97,7 không phải giá bình quân hay trung vị quan sát."
+    },
+    {
+      "symbol": "HN-APT-SEC",
+      "period": "2026-08",
+      "value": 56.52,
+      "reason": "Mốc 60 nhân hệ số 0,942 từ nguồn khác, không có quan sát giá tương ứng."
+    },
+    {
+      "symbol": "HN-APT-ALL",
+      "referenceSet": "bds-monthly",
+      "points": [
+        {
+          "period": "2022-02",
+          "value": 34.2,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2022-03",
+          "value": 34.8,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2022-04",
+          "value": 35.5,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2022-05",
+          "value": 36,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2022-06",
+          "value": 36.2,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2022-07",
+          "value": 37.2,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2022-08",
+          "value": 37.6,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2022-09",
+          "value": 38.3,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2022-10",
+          "value": 38.5,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2022-11",
+          "value": 39,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2022-12",
+          "value": 38.5,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2023-01",
+          "value": 38,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2023-02",
+          "value": 37.7,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2023-03",
+          "value": 38.3,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2023-04",
+          "value": 38,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2023-05",
+          "value": 38.3,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2023-06",
+          "value": 38.3,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2023-07",
+          "value": 38.8,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2023-08",
+          "value": 40,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2023-09",
+          "value": 42,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2023-10",
+          "value": 42.2,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2023-11",
+          "value": 43.2,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2023-12",
+          "value": 44.5,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2024-01",
+          "value": 46,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2024-02",
+          "value": 47,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2024-03",
+          "value": 49,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2024-04",
+          "value": 50,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2024-05",
+          "value": 50,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2024-06",
+          "value": 52,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2024-07",
+          "value": 55,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2024-08",
+          "value": 56,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2024-09",
+          "value": 58.5,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2024-10",
+          "value": 60,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2024-11",
+          "value": 61.5,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        },
+        {
+          "period": "2024-12",
+          "value": 62.5,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://research.batdongsan.com.vn/report/bao-cao-thi-truong-bds/%5BFINAL%5D_BIM_Group_x_PGVN_Ha_Noi_satellite_cities_3103_1.pdf"
+        }
+      ],
+      "reason": "Các số ước đọc cũ chưa có kiểm chứng từng mốc; không dùng làm quan sát giá hoặc tính chỉ báo."
+    },
+    {
+      "symbol": "HN-APT-SEC",
+      "referenceSet": "one-mount-quarterly",
+      "points": [
+        {
+          "period": "2024-Q1",
+          "value": 52,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2024-Q2",
+          "value": 55,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2024-Q3",
+          "value": 62,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2024-Q4",
+          "value": 68,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2025-Q1",
+          "value": 70,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2025-Q2",
+          "value": 75,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2025-Q3",
+          "value": 83.8,
+          "quality": "CALCULATED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        }
+      ],
+      "reason": "Số ước đọc hoặc suy ra chưa có xác minh từng mốc trong bảng nguồn gốc; loại khỏi biểu đồ và chỉ báo."
+    },
+    {
+      "symbol": "HN-APT-PRI",
+      "referenceSet": "one-mount-quarterly",
+      "points": [
+        {
+          "period": "2023-Q1",
+          "value": 47,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2023-Q2",
+          "value": 44.5,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2023-Q3",
+          "value": 45,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2023-Q4",
+          "value": 48,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2024-Q1",
+          "value": 51,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2024-Q2",
+          "value": 64,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2024-Q3",
+          "value": 69,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2024-Q4",
+          "value": 76.7,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2025-Q1",
+          "value": 76,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2025-Q2",
+          "value": 80,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        },
+        {
+          "period": "2025-Q3",
+          "value": 85.6,
+          "quality": "APPROX_DIGITIZED",
+          "sourceUrl": "https://cdn.onehousing.vn/HD/Reports/Reports%20on%20MPI/OM_CMI_Bao_cao_thi_truong_bat_dong_san_so_cap_Hanoi_Q4.2025.pdf"
+        }
+      ],
+      "reason": "Số ước đọc hoặc suy ra chưa có xác minh từng mốc trong bảng nguồn gốc; loại khỏi biểu đồ và chỉ báo."
+    }
+  ]
+}

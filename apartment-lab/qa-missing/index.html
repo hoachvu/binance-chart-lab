@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Theo dõi giá chung cư Hà Nội theo từng dự án và báo cáo có nguồn, với kỳ dữ liệu rõ ràng.">
+  <meta name="theme-color" content="#0b121c">
+  <title>gianha · Giá chung cư Hà Nội</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b121c'/%3E%3Cpath d='M6 15 16 6l10 9v11H6Z' fill='none' stroke='%235dd4b6' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../styles.css?v=0.13.0">
+  <script defer src="../vendor/lightweight-charts.standalone.production.js"></script>
+  <script defer src="../market-core.js?v=0.13.0"></script>
+  <script defer src="../app.js?v=0.13.0"></script>
+</head>
+<body><div style="padding:12px;background:#722b39;font-weight:700">DỮ LIỆU GIẢ LẬP – CHỈ KIỂM THỬ, KHÔNG DÙNG ĐỂ ĐÁNH GIÁ GIÁ NHÀ</div>
+<header class="header">
+  <a class="brand" href="./" aria-label="gianha, trang chủ">gianha<span>Giá chung cư Hà Nội</span></a>
+  <span id="status" class="status" role="status">Đang tải dữ liệu</span>
+  <span class="version">v0.13</span>
+</header>
+<main class="layout">
+  <section class="workspace" aria-label="Biểu đồ giá">
+    <div class="toolbar">
+      <div class="viewTabs" role="group" aria-label="Loại dữ liệu">
+        <button data-view="projects" class="active">Theo dự án</button>
+        <button data-view="reports">Báo cáo thị trường</button>
+      </div>
+      <div id="marketTabs" class="marketTabs" role="group" aria-label="Nhóm dự án hoặc thị trường"></div>
+      <div class="instrument">
+        <label for="instrumentSelect" id="instrumentLabel">Dự án</label>
+        <select id="instrumentSelect"></select>
+      </div>
+      <div class="chartTools">
+        <div id="timeframes" class="timeframes" role="group" aria-label="Kỳ hiển thị"></div>
+        <button id="refreshBtn">Cập nhật</button>
+        <button id="fitBtn">Toàn bộ</button>
+        <button id="latestBtn">Gần nhất</button>
+        <button id="indBtn" aria-haspopup="dialog">Chỉ báo</button>
+      </div>
+    </div>
+    <div id="loadError" class="notice error" hidden role="alert"></div>
+    <div class="quote">
+      <div class="quoteText">
+        <h1 id="title">Đang tải giá</h1>
+        <p id="metricLabel" class="muted"></p>
+      </div>
+      <div class="quotePrice">
+        <strong id="last">—</strong>
+        <span id="priceUnit">triệu đồng/m²</span>
+        <span id="periodLabel"></span>
+      </div>
+    </div>
+    <div class="sourceStrip">
+      <span id="qualityTag" class="tag"></span>
+      <span id="sourceInfo"></span>
+      <a id="sourceLink" href="#" target="_blank" rel="noreferrer" hidden>Xem nguồn</a>
+    </div>
+    <p id="dataNote" class="dataNote"></p>
+    <div class="chartCard">
+      <div class="chartLegend"><span id="chartHead"></span><span class="chartHint">Kéo để xem · chụm để phóng</span></div>
+      <div id="priceChart" class="chart"></div>
+      <div id="emptyChart" class="emptyChart" hidden></div>
+    </div>
+    <div class="chartFooter">
+      <span id="historyInfo"></span>
+      <span>Charts by <a href="https://www.tradingview.com/" target="_blank" rel="noreferrer">TradingView Lightweight Charts</a></span>
+    </div>
+    <section class="projectSection" aria-labelledby="projectsHeading">
+      <div class="sectionHeading">
+        <h2 id="projectsHeading">Giá tại các dự án theo dõi</h2>
+        <span id="coverage"></span>
+      </div>
+      <p class="tableHelp">Đơn giá phổ biến theo OneHousing. Kỳ dữ liệu và mức thay đổi được giữ theo nguồn; chọn tên dự án để xem biểu đồ.</p>
+      <div class="projectTableWrap">
+        <table class="projectTable">
+          <thead><tr><th scope="col">Dự án</th><th scope="col">triệu đồng/m²</th><th scope="col">Kỳ nguồn</th><th scope="col">Biến động theo nguồn</th><th scope="col">Nguồn</th></tr></thead>
+          <tbody id="projectRows"></tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+  <aside class="watch">
+    <h2>Nhóm theo dõi</h2>
+    <div id="watchList"></div>
+    <section class="signalsSection"><h2>Chỉ báo của chuỗi đang xem</h2><div id="signals"></div></section>
+    <section class="methodSection">
+      <h2>Cách đọc dữ liệu</h2>
+      <p>Giá theo dự án và giá trong báo cáo nằm ở hai phần riêng vì khác mẫu và cách tính.</p>
+      <p>Rổ theo dõi dùng trung vị của các dự án có cùng kỳ nguồn và cùng danh sách thành viên. Rổ này không đại diện cho giá giao dịch toàn Hà Nội.</p>
+      <p>Nguồn được kiểm tra theo giờ. Giá chỉ thay đổi khi nguồn công bố dữ liệu mới.</p>
+      <p>Nhóm dự án đã bàn giao hoặc đang mở bán là cách phân nhóm tham khảo, không xác minh loại giao dịch của từng căn.</p>
+    </section>
+  </aside>
+</main>
+<dialog id="indDialog" aria-labelledby="indHeading">
+  <div class="dialogHeading"><h2 id="indHeading">Chỉ báo và vùng biểu đồ</h2><button id="closeIndBtn" aria-label="Đóng thiết lập chỉ báo">Đóng</button></div>
+  <p class="dialogHelp">Độ dài tính theo kỳ hiển thị. Các kỳ thiếu dữ liệu làm gián đoạn phép tính; không bù bằng nội suy.</p>
+  <div id="indicatorControls"></div>
+  <div class="paneSettings">
+    <h3>Kích thước vùng</h3>
+    <label for="paneRatio">Vùng giá <output id="paneRatioValue">65%</output></label>
+    <input id="paneRatio" type="range" min="35" max="85" step="5">
+    <label for="rsiWeight">Tỷ lệ vùng RSI</label><input id="rsiWeight" type="range" min="1" max="5" step="1">
+    <label for="macdWeight">Tỷ lệ vùng MACD</label><input id="macdWeight" type="range" min="1" max="5" step="1">
+    <p class="dialogHelp">Có thể kéo đường phân cách giữa các vùng. Kích thước, màu và lựa chọn được nhớ trên thiết bị này.</p>
+  </div>
+  <div class="dialogActions"><button id="resetBtn">Khôi phục thiết lập</button></div>
+</dialog>
+<noscript><p class="notice">Cần bật JavaScript trong trình duyệt để xem biểu đồ. Các file dữ liệu được công bố cùng website.</p></noscript>
+</body>
+</html>

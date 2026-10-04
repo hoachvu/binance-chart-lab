@@ -99,7 +99,7 @@
     const age = C.monthAge(current.period);
     if (prefs.view === "projects" && age >= 2 && !current.stale) tag = "Kỳ nguồn cũ";
     $("qualityTag").textContent = tag; $("qualityTag").classList.toggle("warning", current.stale || current.estimated || age >= 2 || !C.finite(current.value));
-    $("sourceInfo").textContent = prefs.view === "projects" ? `Kiểm tra nguồn: ${dateLabel(current.checkedAt)} (giờ Việt Nam)` : "Kỳ công bố hiển thị cạnh giá · số ước đọc được ghi trong chú thích";
+    $("sourceInfo").textContent = prefs.view === "projects" ? `Kiểm tra nguồn: ${dateLabel(current.checkedAt)} (giờ Việt Nam)` : "Kỳ công bố hiển thị cạnh giá · báo cáo công khai của nguồn";
     const safe = C.safeSourceUrl(current.url); $("sourceLink").hidden = !safe; if (safe) $("sourceLink").href = safe;
     $("dataNote").textContent = current.note + (prefs.timeframe !== current.frequency ? " Khung này dùng giá ghi nhận cuối kỳ, không phải giá bình quân của cả kỳ." : "");
     if (current.stale) $("dataNote").textContent += " Lần kiểm tra mới thất bại; giá và kỳ nguồn giữ nguyên lần thành công trước.";
