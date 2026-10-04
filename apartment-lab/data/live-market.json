@@ -1,11 +1,10 @@
 {
   "meta": {
-    "updatedAt": "2026-10-04T10:45:00+07:00",
+    "updatedAt": "2026-10-04T11:04:14+07:00",
     "cadence": "hourly",
     "mode": "LIVE_LISTING_NOWCAST",
     "method": "Public asking-listing proxy; not observed transaction price.",
-    "source": "Batdongsan.com.vn",
-    "note": "Live proxies are separated from published benchmark price series unless anchorCompatible=true."
+    "source": "Batdongsan.com.vn"
   },
   "symbols": {
     "HN-APT-ALL": {
@@ -20,6 +19,15 @@
       "anchorCompatible": true,
       "trendDirection": "SOFT"
     },
+    "HN-APT-PRI": {
+      "price": 86.35,
+      "listingCount": 196,
+      "parsedSampleCount": 196,
+      "historyType": "LIVE_PRIMARY_PROJECT_BASKET_PROXY",
+      "note": "Primary live basket absolute asking level is composition-sensitive and is not connected directly to CBRE benchmark.",
+      "anchorCompatible": false,
+      "trendDirection": "HIGH_STABLE"
+    },
     "HN-APT-SEC": {
       "price": 84.05,
       "listingCount": 1644,
@@ -33,15 +41,6 @@
         "proplabAug": "65/74 two-bedroom projects lower vs 3 months earlier; typical whole-sample change about -5.8%",
         "note": "Direction evidence only; live basket absolute asking-price level is not comparable to CBRE secondary average."
       }
-    },
-    "HN-APT-PRI": {
-      "price": 86.35,
-      "listingCount": 196,
-      "parsedSampleCount": 196,
-      "historyType": "LIVE_PRIMARY_PROJECT_BASKET_PROXY",
-      "note": "Primary live basket absolute asking level is composition-sensitive and is not connected directly to CBRE benchmark.",
-      "anchorCompatible": false,
-      "trendDirection": "HIGH_STABLE"
     }
   }
 }

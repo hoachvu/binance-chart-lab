@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "version": 1,
+    "updatedAt": "2026-10-04T11:04:14+07:00",
+    "cadence": "daily-upsert from hourly fetch",
+    "note": "Observed listing-nowcast history; not transaction-price history."
+  },
+  "symbols": {
+    "HN-APT-ALL": [
+      {
+        "date": "2026-10-04",
+        "price": 80.5,
+        "listingCount": 15836,
+        "historyType": "LIVE_LISTING_NOWCAST",
+        "anchorCompatible": true
+      }
+    ],
+    "HN-APT-SEC": [],
+    "HN-APT-PRI": [
+      {
+        "date": "2026-10-04",
+        "price": 86.35,
+        "listingCount": 196,
+        "historyType": "LIVE_PRIMARY_PROJECT_BASKET_PROXY",
+        "anchorCompatible": false
+      }
+    ]
+  }
+}
