@@ -2,7 +2,7 @@
   "meta": {
     "version": 2,
     "methodVersion": "PROJECT_UNIT_PRICE_V2",
-    "lastAttemptAt": "2026-10-05T02:38:45+07:00",
+    "lastAttemptAt": "2026-10-05T06:11:49+07:00",
     "cadence": "one record per source month",
     "note": "Repeated collection of the same source month does not create additional time observations."
   },
@@ -11,7 +11,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 73.6,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-biet-thu-lien-ke-du-an-Vinhomes-Ocean-Park.877",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -31,7 +31,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 92.08,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Smart-City.102",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -51,7 +51,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 110.75,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-West-Heights.10",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -71,7 +71,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 110.93,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Times-City.136",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -91,7 +91,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 122.61,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Royal-City.634",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -111,7 +111,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 127.01,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Skylake.939",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -131,7 +131,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 202.33,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Metropolis.1061",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -151,7 +151,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 69.04,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Goldmark-City.68",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -171,7 +171,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 89.0,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Sunshine-City.750",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -191,7 +191,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 109.27,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Mipec-Rubik-360.610",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -211,7 +211,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 99.26,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Gardenia.867",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -231,7 +231,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 91.93,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-The-Zei.1046",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -251,7 +251,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 66.33,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Ha-Noi-Homeland.354",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -271,7 +271,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 104.56,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-Grand-Avenue.1171",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
@@ -291,7 +291,7 @@
       {
         "sourcePeriod": "2026-10",
         "price": 76.65,
-        "checkedAt": "2026-10-05T02:38:45+07:00",
+        "checkedAt": "2026-10-05T06:11:49+07:00",
         "source": "OneHousing",
         "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-The-Senique-Hanoi.1181",
         "metric": "PROJECT_POPULAR_UNIT_PRICE",
