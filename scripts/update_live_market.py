@@ -242,7 +242,7 @@ def ensure_baseline(rows, previous):
         baseline={r["id"]:float(r["price"]) for r in rows if r.get("id") and r.get("price")}
     return baseline
 
-def def all_market():
+def all_market():
     values=[]; listing_count=verified_count=None; last_update=None
     pages=[ALL_BASE] + [ALL_BASE + f"/p{i}" for i in range(2,9)]
     ok=0
@@ -293,7 +293,7 @@ def main():
         "cadence":"hourly",
         "mode":"LIVE_LISTING_NOWCAST",
         "method":"Public asking-listing proxy; not observed transaction price.",
-        "source":"Batdongsan.com.vn",
+        "source":"OneHousing fixed baskets",
       },
       "symbols":{}
     }
