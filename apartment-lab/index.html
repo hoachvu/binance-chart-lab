@@ -183,7 +183,7 @@ svg{width:100%;height:100%;display:block}.gridline{stroke:#1b2a39;stroke-width:1
 </head>
 <body>
 <div class="app">
-<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.10</span><div class="right">Pan · zoom · crosshair · modeled + observed weekly</div></header>
+<header class="header"><div class="logo">HN APARTMENT <b>MARKET</b></div><span class="status">INDEX LAB v0.10.1</span><div class="right">Pan · zoom · crosshair · modeled + observed weekly</div></header>
 <div class="body">
 <section class="workspace">
   <div class="toolbar">
@@ -308,7 +308,7 @@ function collectAnchors(sym){
  (sym.quarterlyReference||[]).forEach(x=>a.push({date:anchorDate(x.date),close:Number(x.close),type:x.historyType||"QUARTERLY_REFERENCE"}));
  (sym.sparseReferences||[]).forEach(x=>a.push({date:anchorDate(x.date),close:Number(x.value),type:x.historyType||"PUBLISHED_REFERENCE"}));
  const live=LIVE?.symbols?.[sym.symbol],liveDate=LIVE?.meta?.updatedAt?.slice(0,10);
- if(liveDate&&Number.isFinite(Number(live?.price)))a.push({date:liveDate,close:Number(live.price),type:live.historyType||"LIVE_LISTING_NOWCAST"});
+ if(liveDate&&live?.anchorCompatible===true&&Number.isFinite(Number(live?.price)))a.push({date:liveDate,close:Number(live.price),type:live.historyType||"LIVE_LISTING_NOWCAST"});
  const by=new Map();a.filter(x=>x.date&&Number.isFinite(x.close)).forEach(x=>by.set(x.date,x));
  return [...by.values()].sort((x,y)=>x.date.localeCompare(y.date));
 }
@@ -347,7 +347,7 @@ function aggregateCandles(rows,keyFn,labelType){
  return groups.map(g=>({date:g.key,open:g.rows[0].open,high:Math.max(...g.rows.map(x=>x.high)),low:Math.min(...g.rows.map(x=>x.low)),close:g.rows.at(-1).close,sampleCount:g.rows.some(x=>Number.isFinite(x.sampleCount))?g.rows.reduce((s,x)=>s+(Number.isFinite(x.sampleCount)?x.sampleCount:0),0):null,historyType:labelType,confidence:"MODELED"}));
 }
 function getSeries(sym){
- const weekly=modeledWeekly(sym),live=LIVE?.symbols?.[sym.symbol],hasLive=Number.isFinite(Number(live?.price));
+ const weekly=modeledWeekly(sym),live=LIVE?.symbols?.[sym.symbol],hasLive=live?.anchorCompatible===true&&Number.isFinite(Number(live?.price));
  const liveTag=hasLive?" · LIVE nowcast":"";
  if(timeframe==="W1") return {mode:"candle",rows:weekly,label:"Weekly candles · modeled interpolation"+liveTag,historyType:hasLive?"MODELED_WITH_LIVE_ANCHOR":"MODELED_WEEKLY_INTERPOLATION"};
  if(timeframe==="M1") return {mode:"candle",rows:aggregateCandles(weekly,monthKey,"MODELED_MONTHLY_FROM_WEEKLY"),label:"Monthly candles from modeled weekly index"+liveTag,historyType:hasLive?"MODELED_WITH_LIVE_ANCHOR":"MODELED_MONTHLY_FROM_WEEKLY"};
@@ -431,7 +431,7 @@ function signalCards(series){
  else{const c=a[last];cards.push(["Bollinger Bands",c<=bbv.lo[last]?"Close đang chạm/ở dưới BB Lower.":c>=bbv.up[last]?"Close đang chạm/ở trên BB Upper.":"Close đang nằm trong dải Bollinger."])}
  if(a.length<settings.rsiLen+1)cards.push(["RSI("+settings.rsiLen+")","Chưa đủ dữ liệu: cần "+(settings.rsiLen+1)+" kỳ."]);else cards.push(["RSI("+settings.rsiLen+")",fmt(rv[last],1)+(rv[last]<30?" · vùng quá bán":rv[last]>70?" · vùng quá mua":" · vùng trung tính")]);
  if(a.length<35)cards.push(["MACD","Chưa đủ dữ liệu: cần khoảng 35 kỳ cho MACD 12/26/9."]);else cards.push(["MACD",mv.macd[last]>mv.signal[last]?"MACD đang trên Signal Line.":"MACD đang dưới Signal Line."]);
- const vol=series.rows.filter(x=>Number.isFinite(x.sampleCount)).at(-1),live=LIVE?.symbols?.[current];if(settings.volume)cards.push(["Volume",vol?"Mẫu tin rao quan sát gần nhất: "+Math.round(vol.sampleCount).toLocaleString("vi-VN")+". Không phải khối lượng giao dịch.":"Chưa có lịch sử số mẫu đủ dày; các kỳ thiếu Volume được để trống."]);if(live&&Number.isFinite(Number(live.price)))cards.push(["LIVE nowcast",fmt(live.price)+" tr/m² · "+(live.listingCount?Number(live.listingCount).toLocaleString("vi-VN")+" listings · ":"")+"proxy giá rao cập nhật theo giờ."]);cards.push(["Data quality",series.historyType.includes("MODELED")?"Nến được nội suy giữa các anchor; anchor cuối có thể là LIVE listing proxy. Không phải giá giao dịch thực tế.":series.historyType.replaceAll("_"," ")]);
+ const vol=series.rows.filter(x=>Number.isFinite(x.sampleCount)).at(-1),live=LIVE?.symbols?.[current];if(settings.volume)cards.push(["Volume",vol?"Mẫu tin rao quan sát gần nhất: "+Math.round(vol.sampleCount).toLocaleString("vi-VN")+". Không phải khối lượng giao dịch.":"Chưa có lịch sử số mẫu đủ dày; các kỳ thiếu Volume được để trống."]);if(live&&Number.isFinite(Number(live.price))){const trend=live.trendDirection==="DOWN"?" · xu hướng GIẢM":live.trendDirection==="UP"?" · xu hướng TĂNG":"";cards.push(["LIVE nowcast",fmt(live.price)+" tr/m² · "+(live.listingCount?Number(live.listingCount).toLocaleString("vi-VN")+" listings · ":"")+"proxy giá rao cập nhật theo giờ"+trend+(live.anchorCompatible===true?".":"; KHÔNG nối trực tiếp vào benchmark giá.")]);}cards.push(["Data quality",series.historyType.includes("MODELED")?"Nến được nội suy giữa các anchor; anchor cuối có thể là LIVE listing proxy. Không phải giá giao dịch thực tế.":series.historyType.replaceAll("_"," ")]);
  $("signals").innerHTML=cards.map((x,i)=>'<div class="signalCard"><b class="'+(i<3?"warn":"good")+'">'+x[0]+'</b><p>'+x[1]+'</p></div>').join("");
 }
 function latestExternal(sym){const s=sym.sparseReferences||[];return s.length?s.at(-1):null}
@@ -440,7 +440,7 @@ function render(){
  $("symbolBtn").textContent=sym.symbol+" ▾";document.querySelectorAll(".marketTab").forEach(b=>b.classList.toggle("active",b.dataset.s===current));$("title").innerHTML='<span class="titleSymbol">'+sym.symbol+'</span><span class="titleName"> · '+sym.name+'</span>';$("desc").textContent=sym.description;
  $("last").textContent=last?fmt(last.close):"—";$("lastMeta").innerHTML=(series.mode==="line"?"Reference close":"Candle close")+"<br>"+(last?.date||"—")+(ext&&timeframe==="M1"?" · Latest published ref "+fmt(ext.value)+" ("+ext.date+")":"");
  $("historyInfo").textContent="Khung "+TF[timeframe].label+" · "+rows.length+" nến · "+series.mode;
- const live=LIVE?.symbols?.[sym.symbol],liveAt=LIVE?.meta?.updatedAt;$("sourceInfo").textContent=live&&Number.isFinite(Number(live.price))?"LIVE "+fmt(live.price)+" tr/m² · "+(live.listingCount?Number(live.listingCount).toLocaleString("vi-VN")+" listings · ":"")+(liveAt?new Date(liveAt).toLocaleString("vi-VN"):""):((sym.sources?.[0]?.name||"—")+(lastLoadedAt?" · loaded "+lastLoadedAt:""));$("confInfo").textContent=series.historyType+(live?.historyType?" · "+live.historyType:"")+(series.rows.some(x=>x.historyType==="OBSERVED_WEEKLY")?" · observed override active":"");
+ const live=LIVE?.symbols?.[sym.symbol],liveAt=LIVE?.meta?.updatedAt;$("sourceInfo").textContent=live&&Number.isFinite(Number(live.price))?(live.anchorCompatible===true?"LIVE anchor ":"LIVE proxy ")+fmt(live.price)+" tr/m² · "+(live.listingCount?Number(live.listingCount).toLocaleString("vi-VN")+" listings · ":"")+(liveAt?new Date(liveAt).toLocaleString("vi-VN"):""):((sym.sources?.[0]?.name||"—")+(lastLoadedAt?" · loaded "+lastLoadedAt:""));$("confInfo").textContent=series.historyType+(live?.historyType?" · "+live.historyType:"")+(series.rows.some(x=>x.historyType==="OBSERVED_WEEKLY")?" · observed override active":"");
  renderPrice(series);renderRSI(series);renderMACD(series);signalCards(series);
  const need=Math.max(settings.bbLen,settings.rsiLen+1,35),msg=[];
  if(!rows.length)msg.push("Chưa có dữ liệu phù hợp cho khung này.");
