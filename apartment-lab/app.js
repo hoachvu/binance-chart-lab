@@ -131,11 +131,10 @@
   }
   function applyPaneSizes() {
     if (!chart || panes.length < 2) return;
-    const available = chart.panes(), total = Math.max(240, $("priceChart").clientHeight - 28);
-    const priceHeight = Math.floor(total * prefs.paneRatio / 100), remaining = total - priceHeight;
+    const available = chart.panes(), ratio = prefs.paneRatio / 100;
     const weights = panes.slice(1).map(name => name === "rsi" ? prefs.rsiWeight : name === "macd" ? prefs.macdWeight : 1);
-    available[0].setHeight(priceHeight);
-    available.slice(1).forEach((pane, i) => pane.setHeight(Math.floor(remaining * weights[i] / weights.reduce((sum, x) => sum + x, 0))));
+    available[0].setStretchFactor(ratio);
+    available.slice(1).forEach((pane, i) => pane.setStretchFactor((1 - ratio) * weights[i] / weights.reduce((sum, x) => sum + x, 0)));
   }
   function renderChart(reset) {
     const range = !reset && chart ? chart.timeScale().getVisibleLogicalRange() : null;
@@ -296,7 +295,7 @@
   $("priceChart").addEventListener("pointerup", () => {
     if (!chart || panes.length < 2) return;
     requestAnimationFrame(() => {if (!chart) return; const heights = chart.panes().map(p => p.getHeight()), sum = heights.reduce((a, b) => a + b, 0); prefs.paneRatio = Math.min(85, Math.max(35, Math.round(100 * heights[0] / sum))); const min = Math.min(...heights.slice(1)); panes.forEach((name, i) => {if (name === "rsi" || name === "macd") prefs[name + "Weight"] = Math.min(5, Math.max(1, Math.round(heights[i] / min)));}); save();});
-  });
+  }, true);
   new ResizeObserver(() => {if (chart) applyPaneSizes();}).observe($("priceChart"));
   document.addEventListener("visibilitychange", () => {if (!document.hidden) loadData();});
   window.addEventListener("online", () => loadData());
