@@ -23,6 +23,9 @@ PRIMARY_PROJECTS = [
 ]
 
 SECONDARY_PROJECTS = [
+  ("Vinhomes Ocean Park Gia Lam","https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-ocean-park-gia-lam"),
+  ("Vinhomes Smart City","https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-smart-city"),
+  ("Masteri West Heights","https://batdongsan.com.vn/ban-can-ho-chung-cu-masteri-west-heights"),
   ("Times City","https://batdongsan.com.vn/ban-can-ho-chung-cu-times-city"),
   ("Royal City","https://batdongsan.com.vn/ban-can-ho-chung-cu-royal-city"),
   ("Vinhomes Skylake","https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-skylake-pham-hung"),
