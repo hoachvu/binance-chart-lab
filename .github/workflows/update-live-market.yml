@@ -1,0 +1,41 @@
+name: Update Live Apartment Market
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "live-apartment-market"
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install parser dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Fetch current Hanoi apartment market
+        run: python scripts/update_live_market.py
+
+      - name: Commit changed live snapshot
+        run: |
+          if git diff --quiet apartment-lab/data/live-market.json; then
+            echo "No live-market changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apartment-lab/data/live-market.json
+          git commit -m "Update live Hanoi apartment market"
+          git push
