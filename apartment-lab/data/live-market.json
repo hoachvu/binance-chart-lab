@@ -5,7 +5,7 @@
     "mode": "LIVE_LISTING_NOWCAST",
     "method": "Public asking-listing proxy; not observed transaction price.",
     "source": "Batdongsan.com.vn",
-    "note": "Seeded from current public October 2026 listing pages; hourly workflow replaces this snapshot."
+    "note": "Live proxies are separated from published benchmark price series unless anchorCompatible=true."
   },
   "symbols": {
     "HN-APT-ALL": {
@@ -16,21 +16,32 @@
       "verifiedCount": 501,
       "sourceUrl": "https://batdongsan.com.vn/ban-can-ho-chung-cu-ha-noi",
       "historyType": "LIVE_LISTING_NOWCAST",
-      "note": "Midpoint of current published Hanoi reference range; listing universe count from current page."
+      "note": "Midpoint of current published Hanoi reference range; listing universe count from current page.",
+      "anchorCompatible": true,
+      "trendDirection": "SOFT"
     },
     "HN-APT-SEC": {
       "price": 84.05,
       "listingCount": 1644,
       "parsedSampleCount": 1644,
       "historyType": "LIVE_SECONDARY_PROJECT_BASKET_PROXY",
-      "note": "Weighted median midpoint of a broad completed/resale project basket. Asking-price proxy, not transaction average."
+      "note": "Weighted median midpoint of a broad completed/resale project basket. Asking-price proxy, not transaction average.",
+      "anchorCompatible": false,
+      "trendDirection": "DOWN",
+      "trendEvidence": {
+        "cbreQ2": "60 million VND/m², down 2.5-3% QoQ",
+        "proplabAug": "65/74 two-bedroom projects lower vs 3 months earlier; typical whole-sample change about -5.8%",
+        "note": "Direction evidence only; live basket absolute asking-price level is not comparable to CBRE secondary average."
+      }
     },
     "HN-APT-PRI": {
       "price": 86.35,
       "listingCount": 196,
       "parsedSampleCount": 196,
       "historyType": "LIVE_PRIMARY_PROJECT_BASKET_PROXY",
-      "note": "Weighted median midpoint of current primary/recent-launch project asking ranges. Asking-price proxy, not transaction average."
+      "note": "Primary live basket absolute asking level is composition-sensitive and is not connected directly to CBRE benchmark.",
+      "anchorCompatible": false,
+      "trendDirection": "HIGH_STABLE"
     }
   }
 }
