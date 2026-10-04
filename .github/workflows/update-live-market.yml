@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - "scripts/update_live_market.py"
+      - "scripts/validate_apartment_data.py"
+      - "apartment-lab/data/project-config.json"
+      - "tests/test_live_market.py"
       - ".github/workflows/update-live-market.yml"
   schedule:
     - cron: "17 * * * *"
@@ -15,26 +18,37 @@ permissions:
 
 concurrency:
   group: "live-apartment-market"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install parser dependencies
-        run: pip install requests beautifulsoup4
+      - name: Validate collector behavior
+        run: python -m unittest discover -s tests -p 'test_*.py'
 
       - name: Fetch current Hanoi apartment market
         run: python scripts/update_live_market.py
 
+      - name: Validate collected data
+        run: python scripts/validate_apartment_data.py
+
       - name: Commit changed live snapshot
         run: |
+          git fetch origin main
+          if ! git diff --quiet HEAD origin/main -- scripts/update_live_market.py apartment-lab/data/project-config.json; then
+            echo "Collector or member list changed during collection; wait for the next run."
+            exit 0
+          fi
           if git diff --quiet apartment-lab/data/live-market.json apartment-lab/data/live-history.json; then
             echo "No live-market changes."
             exit 0
@@ -43,4 +57,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add apartment-lab/data/live-market.json apartment-lab/data/live-history.json
           git commit -m "Update live Hanoi apartment market"
-          git push
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "ocean",
+    "name": "Vinhomes Ocean Park",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-biet-thu-lien-ke-du-an-Vinhomes-Ocean-Park.877",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "smart",
+    "name": "Vinhomes Smart City",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Smart-City.102",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "masteri",
+    "name": "Masteri West Heights",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-West-Heights.10",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "times",
+    "name": "Vinhomes Times City",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Times-City.136",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "royal",
+    "name": "Vinhomes Royal City",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Royal-City.634",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "skylake",
+    "name": "Vinhomes Skylake",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Skylake.939",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "metropolis",
+    "name": "Vinhomes Metropolis",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Metropolis.1061",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "goldmark",
+    "name": "Goldmark City",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Goldmark-City.68",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "sunshine",
+    "name": "Sunshine City",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Sunshine-City.750",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "mipec",
+    "name": "Mipec Rubik 360",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Mipec-Rubik-360.610",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "gardenia",
+    "name": "Vinhomes Gardenia",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Gardenia.867",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "zei",
+    "name": "The Zei",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-The-Zei.1046",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "hanoihomeland",
+    "name": "Ha Noi Homeland",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Ha-Noi-Homeland.354",
+    "segment": "SECONDARY"
+  },
+  {
+    "id": "mga",
+    "name": "Masteri Grand Avenue",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-Grand-Avenue.1171",
+    "segment": "PRIMARY"
+  },
+  {
+    "id": "senique",
+    "name": "The Senique Hanoi",
+    "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-The-Senique-Hanoi.1181",
+    "segment": "PRIMARY"
+  }
+]

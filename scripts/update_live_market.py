@@ -1,379 +1,303 @@
 #!/usr/bin/env python3
-import json, math, os, re, statistics, time
-from datetime import datetime, timezone
+"""Collect public project prices without inventing market prices or observations."""
+import argparse
+import json
+import math
+import os
+import re
+import statistics
+import tempfile
+import time
+from datetime import datetime
+from html.parser import HTMLParser
+from pathlib import Path
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
-import requests
-from bs4 import BeautifulSoup
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, "apartment-lab", "data", "live-market.json")
-HISTORY_OUT = os.path.join(ROOT, "apartment-lab", "data", "live-history.json")
-PROJECTS_FILE = os.path.join(ROOT, "apartment-lab", "data", "projects.json")
-SEC_BENCHMARK_Q2 = 60.0
-SEC_PROP_3M_FACTOR = 0.942  # PropLab: Aug asking P50 typical whole-sample change -5.8% vs May; used only as a low-confidence bridge.
-UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/154 Safari/537.36"
-S = requests.Session()
-S.headers.update({"User-Agent": UA, "Accept-Language": "vi-VN,vi;q=0.9,en;q=0.7"})
+ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = ROOT / "apartment-lab" / "data"
+CONFIG = DATA_DIR / "project-config.json"
+OUT = DATA_DIR / "live-market.json"
+HISTORY_OUT = DATA_DIR / "live-history.json"
+METHOD_VERSION = "PROJECT_UNIT_PRICE_V2"
+TZ = ZoneInfo("Asia/Ho_Chi_Minh")
+# This is a sanity bound, not a rule to silently clamp valid prices.
+MIN_PRICE, MAX_PRICE = 10, 1000
 
-ALL_BASE = "https://batdongsan.com.vn/ban-can-ho-chung-cu-ha-noi"
+class VisibleText(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.parts = []
+        self.skip = 0
 
-PRIMARY_PROJECTS = [
-  ("Masteri Grand Avenue","https://batdongsan.com.vn/ban-can-ho-chung-cu-masteri-grand-avenue"),
-  ("The Senique Hanoi","https://batdongsan.com.vn/ban-can-ho-chung-cu-chung-cu-the-senique-hanoi"),
-  ("Lumi Hanoi","https://batdongsan.com.vn/ban-can-ho-chung-cu-lumi-hanoi"),
-  ("Lumi Elite","https://batdongsan.com.vn/ban-can-ho-chung-cu-lumi-elite"),
-  ("The Matrix One Premium","https://batdongsan.com.vn/ban-can-ho-chung-cu-the-matrix-one-premium"),
-  ("BID Residence","https://batdongsan.com.vn/ban-can-ho-chung-cu-bid-residence"),
-]
+    def handle_starttag(self, tag, attrs):
+        if tag in ("script", "style"):
+            self.skip += 1
 
-SECONDARY_PROJECTS = [
-  ("ocean","Vinhomes Ocean Park Gia Lam","https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-ocean-park-gia-lam"),
-  ("smart","Vinhomes Smart City","https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-smart-city"),
-  ("masteri","Masteri West Heights","https://batdongsan.com.vn/ban-can-ho-chung-cu-masteri-west-heights"),
-  ("times","Times City","https://batdongsan.com.vn/ban-can-ho-chung-cu-times-city"),
-  ("royal","Royal City","https://batdongsan.com.vn/ban-can-ho-chung-cu-royal-city"),
-  ("skylake","Vinhomes Skylake","https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-skylake-pham-hung"),
-  ("metropolis","Vinhomes Metropolis","https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-metropolis-lieu-giai"),
-  ("goldmark","Goldmark City","https://batdongsan.com.vn/ban-can-ho-chung-cu-goldmark-city"),
-  ("sunshine","Sunshine City","https://batdongsan.com.vn/ban-can-ho-chung-cu-sunshine-city"),
-  ("mipec","Mipec Rubik 360","https://batdongsan.com.vn/ban-can-ho-chung-cu-mipec-rubik-360"),
-  ("gardenia","Vinhomes Gardenia","https://batdongsan.com.vn/ban-can-ho-chung-cu-vinhomes-gardenia"),
-  ("hanoihomeland","Ha Noi Homeland","https://batdongsan.com.vn/ban-can-ho-chung-cu-ha-noi-homeland"),
-]
+    def handle_endtag(self, tag):
+        if tag in ("script", "style") and self.skip:
+            self.skip -= 1
 
-ONEHOUSING_SECONDARY = [
-  ("ocean","Vinhomes Ocean Park","https://onehousing.vn/phan-tich/du-an/can-ho-biet-thu-lien-ke-du-an-Vinhomes-Ocean-Park.877"),
-  ("smart","Vinhomes Smart City","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Smart-City.102"),
-  ("masteri","Masteri West Heights","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-West-Heights.10"),
-  ("times","Vinhomes Times City","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Times-City.136"),
-  ("royal","Vinhomes Royal City","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Royal-City.634"),
-  ("skylake","Vinhomes Skylake","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Skylake.939"),
-  ("metropolis","Vinhomes Metropolis","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Metropolis.1061"),
-  ("goldmark","Goldmark City","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Goldmark-City.68"),
-  ("sunshine","Sunshine City","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Sunshine-City.750"),
-  ("mipec","Mipec Rubik 360","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Mipec-Rubik-360.610"),
-  ("gardenia","Vinhomes Gardenia","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Gardenia.867"),
-  ("zei","The Zei","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-The-Zei.1046"),
-  ("hanoihomeland","Ha Noi Homeland","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Ha-Noi-Homeland.354"),
-]
-
-ONEHOUSING_PRIMARY = [
-  ("mga","Masteri Grand Avenue","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-Grand-Avenue.1171"),
-  ("senique","The Senique Hanoi","https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-The-Senique-Hanoi.1181"),
-]
-
-ALL_BASKET_BASE = 80.5
-PRI_BASKET_BASE = 95.0
-
-def num(s):
-    return float(s.replace(".", "").replace(",", "."))
-
-def fetch(url):
-    r = S.get(url, timeout=25)
-    r.raise_for_status()
-    r.encoding = r.apparent_encoding or "utf-8"
-    return r.text
+    def handle_data(self, data):
+        if not self.skip:
+            self.parts.append(data)
 
 def text_of(html):
-    return BeautifulSoup(html, "html.parser").get_text(" ", strip=True)
+    parser = VisibleText()
+    parser.feed(html)
+    return re.sub(r"\s+", " ", " ".join(parser.parts)).strip()
 
-def count_re(pattern, text):
-    m = re.search(pattern, text, re.I)
-    return int(m.group(1).replace(".", "").replace(",", "")) if m else None
+def decimal_number(raw):
+    """Decimal-price fields accept . or ,; they never use grouping separators."""
+    value = str(raw).strip().replace("\u2212", "-").replace("\xa0", "")
+    if not re.fullmatch(r"[+-]?\d+(?:[.,]\d{1,4})?", value):
+        raise ValueError("Định dạng số thập phân không rõ ràng")
+    number = float(value.replace(",", "."))
+    if not math.isfinite(number):
+        raise ValueError("Giá trị không hữu hạn")
+    return number
 
-def listing_values(text):
-    # Limit to the listing section and ignore FAQ/history summaries as much as possible.
-    for marker in ("Lịch sử giá", "Các câu hỏi thường gặp", "Tìm kiếm theo từ khóa"):
-        if marker in text:
-            text = text.split(marker, 1)[0]
-    vals = []
-    for m in re.finditer(r"(\d{1,4}(?:[\.,]\d{1,2})?)\s*(?:tr|triệu)\/m²", text, re.I):
-        try:
-            v = num(m.group(1))
-            if 15 <= v <= 500:
-                vals.append(v)
-        except Exception:
-            pass
-    # Also derive price/m2 from "x tỷ · y m²" when explicit unit-price is absent.
-    for m in re.finditer(r"(\d{1,3}(?:[\.,]\d{1,3})?)\s*tỷ\s*·\s*(\d{1,4}(?:[\.,]\d{1,2})?)\s*m²", text, re.I):
-        try:
-            total_b = num(m.group(1)); area = num(m.group(2))
-            v = total_b * 1000 / area
-            if 15 <= v <= 500:
-                vals.append(v)
-        except Exception:
-            pass
-    return vals
-
-def robust_stats(values):
-    xs = sorted(v for v in values if math.isfinite(v))
-    if not xs:
-        return None
-    if len(xs) >= 20:
-        lo = int(len(xs)*0.05); hi = max(lo+1, int(len(xs)*0.95))
-        xs2 = xs[lo:hi]
-    else:
-        xs2 = xs
+def parse_project_text(config, text, checked_at):
+    text = re.sub(r"\s+", " ", text)
+    match = re.search(
+        r"Đơn giá phổ biến.{0,300}?([+-]?\d+(?:[.,]\d{1,4})?)\s*"
+        r"triệu\s*/\s*m[²2]\s*([+\-\u2212]?\d+(?:[.,]\d{1,4})?)?\s*%?",
+        text, re.I,
+    )
+    if not match:
+        raise ValueError("Không tìm thấy đơn giá phổ biến công khai")
+    value = decimal_number(match.group(1))
+    if not MIN_PRICE <= value <= MAX_PRICE:
+        raise ValueError(f"Đơn giá ngoài khoảng kiểm tra: {value:g} triệu/m²")
+    # The period must come from the price section, not the collection date.
+    prefix = text[max(0, match.start() - 650):match.start()]
+    periods = list(re.finditer(r"tháng\s*(0?[1-9]|1[0-2])\s*/\s*(20\d{2})", prefix, re.I))
+    if not periods:
+        raise ValueError("Không xác định được kỳ dữ liệu của giá")
+    period_match = periods[-1]
+    period = f"{period_match.group(2)}-{int(period_match.group(1)):02d}"
+    checked_month = checked_at[:7]
+    if period > checked_month:
+        raise ValueError("Kỳ dữ liệu nằm trong tương lai")
+    change = decimal_number(match.group(2)) if match.group(2) else None
+    if change is not None and not -100 < change < 100:
+        raise ValueError("Biến động giá ngoài khoảng kiểm tra")
+    comparison = re.search(r"so với\s+(tháng|quý)\s+trước", text[match.end():match.end() + 650], re.I)
     return {
-      "median": round(statistics.median(xs2), 2),
-      "mean": round(statistics.fmean(xs2), 2),
-      "p25": round(xs2[max(0, int(len(xs2)*0.25)-1)], 2),
-      "p75": round(xs2[min(len(xs2)-1, int(len(xs2)*0.75))], 2),
-      "sampleCount": len(xs2),
+        **config, "price": round(value, 4), "sourcePeriod": period,
+        "rawPrice": match.group(1), "changePct": change,
+        "changePeriod": ("month" if comparison.group(1).lower() == "tháng" else "quarter") if comparison else None,
+        "source": "OneHousing", "metric": "PROJECT_POPULAR_UNIT_PRICE",
+        "unit": "million_VND_per_m2", "checkedAt": checked_at,
+        "lastAttemptAt": checked_at, "status": "VERIFIED",
+        "methodVersion": METHOD_VERSION,
     }
 
-def project_snapshot(name, url):
-    html = fetch(url); txt = text_of(html)
-    count = count_re(r"Hiện có\s*([\d\.,]+)\s*bất động sản", txt)
-    # Prefer project summary range. Several page templates use either "Giá bán ... |" or status-line ranges.
-    patterns = [
-      r"Giá bán căn hộ chung cư[^|]{0,120}\|\s*(\d{1,4}(?:[\.,]\d+)?)\s*-\s*(\d{1,4}(?:[\.,]\d+)?)\s*(?:tr|triệu)\/m²",
-      r"(?:Đang mở bán|Đã bàn giao|Dự kiến bàn giao[^·]{0,80})\s*·\s*(\d{1,4}(?:[\.,]\d+)?)\s*-\s*(\d{1,4}(?:[\.,]\d+)?)\s*(?:tr|triệu)\/m²",
-    ]
-    low = high = None
-    for p in patterns:
-        m = re.search(p, txt, re.I)
-        if m:
-            low, high = num(m.group(1)), num(m.group(2)); break
-    vals = listing_values(txt)
-    stats = robust_stats(vals)
-    price = stats["median"] if stats and stats["sampleCount"] >= 3 else ((low+high)/2 if low and high else None)
-    return {"name":name,"url":url,"listingCount":count,"rangeLow":low,"rangeHigh":high,
-            "listingMedian":price,"parsedSampleCount":stats["sampleCount"] if stats else 0}
+def parse_project_html(config, html, checked_at):
+    return parse_project_text(config, text_of(html), checked_at)
 
-def weighted_project_proxy(projects):
-    rows=[]; weighted=[]
-    for item in projects:
-        if len(item)==3:
-            pid,name,url=item
-        else:
-            pid=None; name,url=item
+def fetch_html(url):
+    # Do not retry access denials or human-verification pages.
+    for attempt in range(2):
         try:
-            x=project_snapshot(name,url)
-            if pid is not None:x["id"]=pid
-            rows.append(x)
-            if x["listingMedian"] is not None:
-                w=max(1, min(x["listingCount"] or 1, 500))
-                weighted.extend([x["listingMedian"]]*w)
-        except Exception as e:
-            print(f"[project-fetch-error] {name}: {e}")
-            row={"name":name,"url":url,"error":str(e)[:180]}
-            if pid is not None:row["id"]=pid
-            rows.append(row)
-        time.sleep(0.6)
-    stats=robust_stats(weighted)
-    return rows,stats
+            request = Request(url, headers={
+                "User-Agent": "gianha/0.13 (+public-price-monitor)",
+                "Accept-Language": "vi-VN,vi;q=0.9,en;q=0.7",
+            })
+            with urlopen(request, timeout=20) as response:
+                charset = response.headers.get_content_charset() or "utf-8"
+                html = response.read().decode(charset, errors="replace")
+            if re.search(r"<title[^>]*>\s*(?:Just a moment|Access Denied|Attention Required)", html, re.I):
+                raise ValueError("Nguồn yêu cầu xác minh truy cập")
+            return html
+        except HTTPError as exc:
+            if exc.code in (401, 403, 429) or attempt:
+                raise
+        except (TimeoutError, OSError):
+            if attempt:
+                raise
+        time.sleep(1)
+    raise OSError("Không tải được nguồn")
 
-def load_project_baselines():
+def load_json(path, default):
+    if not path.exists():
+        return default
+    # Corrupt history must not be quietly overwritten with an empty history.
+    return json.loads(path.read_text(encoding="utf-8"))
+
+def valid_previous(row):
+    value = row.get("price")
+    return (
+        row.get("methodVersion") == METHOD_VERSION
+        and isinstance(value, (int, float)) and not isinstance(value, bool)
+        and math.isfinite(value) and MIN_PRICE <= value <= MAX_PRICE
+        and re.fullmatch(r"20\d{2}-(?:0[1-9]|1[0-2])", row.get("sourcePeriod", "")) is not None
+    )
+
+def retain_on_error(config, previous, checked_at, error):
+    message = str(error).replace("\n", " ")[:200]
+    if previous and valid_previous(previous):
+        return {
+            **previous, **config, "status": "STALE_FETCH_ERROR",
+            "lastAttemptAt": checked_at, "error": message,
+            # checkedAt and sourcePeriod intentionally remain the last success.
+        }
+    return {
+        **config, "price": None, "sourcePeriod": None, "checkedAt": None,
+        "lastAttemptAt": checked_at, "status": "UNAVAILABLE",
+        "error": message, "methodVersion": METHOD_VERSION,
+    }
+
+def clean_history(previous):
+    if previous.get("meta", {}).get("methodVersion") == METHOD_VERSION:
+        return previous
+    return {
+        "meta": {"version": 2, "methodVersion": METHOD_VERSION},
+        "projects": {},
+        "migration": {
+            "discardedLegacyNowcast": True,
+            "reason": "V1 used calibrated market anchors and a different number parser; it is incompatible with observed project prices.",
+        },
+    }
+
+def upsert_project_history(history, row):
+    if row.get("status") != "VERIFIED" or not valid_previous(row):
+        return
+    observations = history.setdefault("projects", {}).setdefault(row["id"], [])
+    period = row["sourcePeriod"]
+    observations[:] = [x for x in observations if x.get("sourcePeriod") != period]
+    observations.append({
+        "sourcePeriod": period, "price": row["price"],
+        "checkedAt": row["checkedAt"], "source": row["source"],
+        "url": row["url"], "metric": row["metric"],
+        "methodVersion": METHOD_VERSION,
+    })
+    observations.sort(key=lambda x: x["sourcePeriod"])
+    # One observation per SOURCE month, not one artificial observation per day.
+    if len(observations) > 240:
+        del observations[:-240]
+
+def basket_history(configs, history):
+    """Same fixed member set and same source month are required for every point."""
+    members = [c["id"] for c in configs]
+    if not members:
+        return []
+    mappings = {
+        member: {x["sourcePeriod"]: x for x in history.get("projects", {}).get(member, [])
+                 if valid_previous(x)}
+        for member in members
+    }
+    common = set.intersection(*(set(x) for x in mappings.values()))
+    return [{
+        "sourcePeriod": period,
+        "price": round(statistics.median(mappings[member][period]["price"] for member in members), 4),
+        "projectCount": len(members), "members": members,
+        "metric": "FIXED_PROJECT_BASKET_MEDIAN",
+        "methodVersion": METHOD_VERSION,
+    } for period in sorted(common)]
+
+def summarize(configs, projects, history):
+    valid = [row for row in projects if valid_previous(row)]
+    periods = sorted({r["sourcePeriod"] for r in valid})
+    complete = len(valid) == len(configs) and bool(valid)
+    coherent = complete and len(periods) == 1
+    stale_count = sum(row.get("status") != "VERIFIED" for row in projects)
+    return {
+        "snapshotMedian": round(statistics.median(r["price"] for r in valid), 4) if valid else None,
+        "price": round(statistics.median(r["price"] for r in valid), 4) if coherent else None,
+        "sourcePeriod": periods[0] if coherent else None,
+        "periods": periods, "validProjectCount": len(valid),
+        "expectedProjectCount": len(configs), "staleProjectCount": stale_count,
+        "coherent": coherent, "metric": "FIXED_PROJECT_BASKET_MEDIAN",
+        "methodVersion": METHOD_VERSION, "history": basket_history(configs, history),
+        "note": "Equal-weight median of project popular unit prices; not a Hanoi-wide transaction-price average. Project-stage groups are proxies, not a verified primary/secondary transaction classification.",
+    }
+
+def build_snapshot(configs, rows, history, checked_at):
+    for row in rows:
+        upsert_project_history(history, row)
+    history["meta"] = {
+        "version": 2, "methodVersion": METHOD_VERSION,
+        "lastAttemptAt": checked_at, "cadence": "one record per source month",
+        "note": "Repeated collection of the same source month does not create additional time observations.",
+    }
+    groups = {
+        "HN-APT-ALL": configs,
+        "HN-APT-SEC": [c for c in configs if c["segment"] == "SECONDARY"],
+        "HN-APT-PRI": [c for c in configs if c["segment"] == "PRIMARY"],
+    }
+    symbols = {}
+    for symbol, members in groups.items():
+        ids = {c["id"] for c in members}
+        symbols[symbol] = summarize(members, [r for r in rows if r["id"] in ids], history)
+    success_count = sum(r.get("status") == "VERIFIED" for r in rows)
+    successful_times = [r["checkedAt"] for r in rows if valid_previous(r) and r.get("checkedAt")]
+    return {
+        "meta": {
+            "version": 2, "methodVersion": METHOD_VERSION,
+            "lastAttemptAt": checked_at,
+            "lastSuccessfulCheckAt": max(successful_times) if successful_times else None,
+            "cadence": "hourly source checks; source prices are periodic",
+            "status": "OK" if success_count == len(configs) else "PARTIAL" if success_count else "SOURCE_ERROR",
+            "successfulProjectCount": success_count, "expectedProjectCount": len(configs),
+            "source": "OneHousing public project pages",
+            "unit": "million_VND_per_m2",
+            "method": "Public popular unit prices, stored with their actual source period. No fixed market-price calibration, no interpolated candles.",
+        },
+        "projects": rows, "symbols": symbols,
+    }
+
+def atomic_json(path, data):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    handle, temp_path = tempfile.mkstemp(dir=path.parent, prefix=path.name + ".", suffix=".tmp")
     try:
-        with open(PROJECTS_FILE,"r",encoding="utf-8") as f:data=json.load(f)
-    except Exception:
-        return {}
-    out={}
-    for p in data.get("projects",[]):
-        value=p.get("reference")
-        if value is None and p.get("low") is not None and p.get("high") is not None:
-            value=(float(p["low"])+float(p["high"]))/2
-        if value is not None:
-            out[p.get("id")]={"price":float(value),"name":p.get("name"),"listingCount":p.get("listingCount")}
-    return out
-
-def fixed_basket_ratio(rows, baselines):
-    ratios=[]; detail=[]
-    for r in rows:
-        pid=r.get("id"); cur=r.get("listingMedian"); base=(baselines.get(pid) or {}).get("price")
-        if pid and cur is not None and base and 0.6 <= float(cur)/float(base) <= 1.4:
-            ratio=float(cur)/float(base)
-            ratios.append(ratio)
-            detail.append({"id":pid,"name":r.get("name"),"baseline":round(base,2),"current":round(float(cur),2),"ratio":round(ratio,5)})
-    if len(ratios)<3:
-        return None,detail
-    return statistics.median(ratios),detail
-
-def load_history():
-    try:
-        with open(HISTORY_OUT,"r",encoding="utf-8") as f:return json.load(f)
-    except Exception:
-        return {"meta":{"version":1},"symbols":{"HN-APT-ALL":[],"HN-APT-SEC":[],"HN-APT-PRI":[]}}
-
-def upsert_daily(history,symbol,row):
-    arr=history.setdefault("symbols",{}).setdefault(symbol,[])
-    date=row.get("date")
-    arr[:]=[x for x in arr if x.get("date")!=date]
-    arr.append(row)
-    arr.sort(key=lambda x:x.get("date",""))
-    if len(arr)>740:del arr[:-740]
-
-def onehousing_snapshot(pid, name, url):
-    txt=text_of(fetch(url))
-    m=re.search(r"Đơn giá phổ biến.{0,260}?(\d{1,4}(?:[\.,]\d+)?)\s*triệu\/m²\s*([+-]?\d+(?:[\.,]\d+)?)%",txt,re.I)
-    if not m:
-        m=re.search(r"Đơn giá phổ biến.{0,260}?(\d{1,4}(?:[\.,]\d+)?)\s*triệu\/m²",txt,re.I)
-    if not m:
-        raise ValueError("OneHousing unit-price block not found")
-    price=num(m.group(1))
-    change_pct=num(m.group(2)) if m.lastindex and m.lastindex>=2 and m.group(2) is not None else None
-    pm=re.search(r"tháng\s*(\d{1,2})\/(\d{4})",txt,re.I)
-    period=(pm.group(2)+"-"+pm.group(1).zfill(2)) if pm else None
-    return {"id":pid,"name":name,"url":url,"price":round(price,2),"changePct":change_pct,"period":period}
-
-def fetch_onehousing_basket(items):
-    rows=[]
-    for pid,name,url in items:
-        try:
-            rows.append(onehousing_snapshot(pid,name,url))
-        except Exception as e:
-            print(f"[onehousing-fetch-error] {name}: {e}")
-        time.sleep(0.35)
-    return rows
-
-def basket_ratio(rows, baseline):
-    pairs=[]
-    for r in rows:
-        base=(baseline or {}).get(r.get("id"))
-        cur=r.get("price")
-        if base and cur and 0.65 <= float(cur)/float(base) <= 1.35:
-            pairs.append(float(cur)/float(base))
-    return statistics.median(pairs) if len(pairs)>=2 else None
-
-def ensure_baseline(rows, previous):
-    baseline=dict(previous or {})
-    if not baseline:
-        baseline={r["id"]:float(r["price"]) for r in rows if r.get("id") and r.get("price")}
-    return baseline
-
-def all_market():
-    values=[]; listing_count=verified_count=None; last_update=None
-    pages=[ALL_BASE] + [ALL_BASE + f"/p{i}" for i in range(2,9)]
-    ok=0
-    for idx,url in enumerate(pages):
-        try:
-            txt=text_of(fetch(url))
-            if idx==0:
-                listing_count=count_re(r"Hiện có\s*([\d\.,]+)\s*bất động sản",txt)
-                verified_count=count_re(r"Xem\s*([\d\.,]+)\s*Tin xác thực",txt)
-                m=re.search(r"Cập nhật tin đăng gần đây nhất\s*\|?\s*(\d{2}-\d{2}-\d{4},\s*\d{2}:\d{2})",txt,re.I)
-                if m:last_update=m.group(1)
-            values.extend(listing_values(txt)); ok+=1
-        except Exception as e:
-            print(f"[all-market-fetch-error] {url}: {e}")
-        time.sleep(0.5)
-    return robust_stats(values),listing_count,verified_count,last_update,ok
-
-def load_previous():
-    try:
-        with open(OUT,"r",encoding="utf-8") as f:return json.load(f)
-    except Exception:return {"symbols":{}}
+        with os.fdopen(handle, "w", encoding="utf-8") as stream:
+            json.dump(data, stream, ensure_ascii=False, indent=2, allow_nan=False)
+            stream.write("\n")
+        os.replace(temp_path, path)
+    finally:
+        if os.path.exists(temp_path):
+            os.unlink(temp_path)
 
 def main():
-    prev=load_previous()
-    history=load_history()
-    baselines=load_project_baselines()
-    now_dt=datetime.now(ZoneInfo("Asia/Ho_Chi_Minh"))
-    now=now_dt.isoformat(timespec="seconds")
-    today=now_dt.date().isoformat()
-    # Batdongsan blocks GitHub-hosted runners (HTTP 403), so automated nowcast uses fixed OneHousing baskets.
-    sec_rows=fetch_onehousing_basket(ONEHOUSING_SECONDARY)
-    pri_rows=fetch_onehousing_basket(ONEHOUSING_PRIMARY)
-    all_rows=sec_rows+pri_rows
-    old_symbols=(prev.get("symbols") or {})
-    sec_baseline=ensure_baseline(sec_rows,(old_symbols.get("HN-APT-SEC") or {}).get("sourceBasketBaseline"))
-    pri_baseline=ensure_baseline(pri_rows,(old_symbols.get("HN-APT-PRI") or {}).get("sourceBasketBaseline"))
-    all_baseline=ensure_baseline(all_rows,(old_symbols.get("HN-APT-ALL") or {}).get("sourceBasketBaseline"))
-    sec_ratio=basket_ratio(sec_rows,sec_baseline) or 1.0
-    pri_ratio=basket_ratio(pri_rows,pri_baseline) or 1.0
-    all_ratio=basket_ratio(all_rows,all_baseline) or 1.0
-    sec_bridge_aug=round(SEC_BENCHMARK_Q2*SEC_PROP_3M_FACTOR,2)
-    sec_chart_price=round(sec_bridge_aug*sec_ratio,2)
-    pri_chart_price=round(PRI_BASKET_BASE*pri_ratio,2)
-    all_chart_price=round(ALL_BASKET_BASE*all_ratio,2)
-    out={
-      "meta":{
-        "updatedAt":now,
-        "cadence":"hourly",
-        "mode":"LIVE_LISTING_NOWCAST",
-        "method":"Public asking-listing proxy; not observed transaction price.",
-        "source":"OneHousing fixed baskets",
-      },
-      "symbols":{}
-    }
-    def keep_or(symbol,obj):
-        old=(prev.get("symbols") or {}).get(symbol)
-        if obj.get("price") is None and old:return old
-        return obj
-    out["symbols"]["HN-APT-ALL"]=keep_or("HN-APT-ALL",{
-      "price": all_chart_price,
-      "chartPrice": all_chart_price,
-      "sourceBasketBaseline": all_baseline,
-      "fixedBasketRatio":round(all_ratio,5),
-      "projects":all_rows,
-      "parsedProjectCount":len(all_rows),
-      "listingCount":(old_symbols.get("HN-APT-ALL") or {}).get("listingCount"),
-      "verifiedCount":(old_symbols.get("HN-APT-ALL") or {}).get("verifiedCount"),
-      "historyType":"LIVE_ALL_FIXED_BASKET_NOWCAST",
-      "anchorCompatible": len(all_rows)>=4,
-      "trendDirection":"LIVE",
-      "source":"OneHousing fixed basket",
-      "note":"Calibrated to 80.5 million VND/m² at basket start; subsequent moves use the median relative change of a fixed OneHousing project basket."
-    })
-    out["symbols"]["HN-APT-PRI"]=keep_or("HN-APT-PRI",{
-      "price": pri_chart_price,
-      "chartPrice": pri_chart_price,
-      "sourceBasketBaseline": pri_baseline,
-      "fixedBasketRatio":round(pri_ratio,5),
-      "projects":pri_rows,
-      "parsedProjectCount":len(pri_rows),
-      "historyType":"LIVE_PRIMARY_FIXED_BASKET_NOWCAST",
-      "anchorCompatible": len(pri_rows)>=2,
-      "trendDirection":"LIVE",
-      "confidence":"LOW",
-      "note":"Low-confidence primary nowcast: CBRE Q2 benchmark level calibrated to a small fixed OneHousing primary basket; expands as more projects become parseable."
-    })
-    out["symbols"]["HN-APT-SEC"]=keep_or("HN-APT-SEC",{
-      "price": sec_chart_price,
-      "chartPrice": sec_chart_price,
-      "sourceBasketBaseline": sec_baseline,
-      "fixedBasketRatio":round(sec_ratio,5),
-      "projects":sec_rows,
-      "parsedProjectCount":len(sec_rows),
-      "historyType":"LIVE_SECONDARY_FIXED_BASKET_NOWCAST",
-      "anchorCompatible": len(sec_rows)>=4,
-      "trendDirection":"DOWN" if sec_chart_price < SEC_BENCHMARK_Q2 else "LIVE",
-      "source":"OneHousing fixed basket",
-      "nowcastAnchors":[
-        {"date":"2026-06-30","price":SEC_BENCHMARK_Q2,"historyType":"PUBLISHED_BENCHMARK_CBRE_Q2"},
-        {"date":"2026-08-06","price":sec_bridge_aug,"historyType":"MODELED_BRIDGE_PROPLAB_3M","confidence":"LOW"},
-        {"date":today,"price":sec_chart_price,"historyType":"FIXED_BASKET_NOWCAST","confidence":"MEDIUM" if len(sec_rows)>=6 else "LOW"}
-      ],
-      "note":"CBRE Q2 benchmark is bridged by the observed PropLab decline, then future movement is chained from a fixed OneHousing secondary project basket. No absolute basket price is mixed into the benchmark."
-    })
-
-    # Persist one observation per day so weekly candles gradually become observed nowcast history.
-    all_live=out["symbols"].get("HN-APT-ALL",{})
-    if all_live.get("price") is not None:
-        upsert_daily(history,"HN-APT-ALL",{"date":today,"price":all_live.get("chartPrice",all_live.get("price")),"projectCount":all_live.get("parsedProjectCount"),"fixedBasketRatio":all_live.get("fixedBasketRatio"),"historyType":"LIVE_ALL_FIXED_BASKET_NOWCAST","anchorCompatible":all_live.get("anchorCompatible",False)})
-    sec_live=out["symbols"].get("HN-APT-SEC",{})
-    if sec_live.get("chartPrice") is not None:
-        upsert_daily(history,"HN-APT-SEC",{"date":today,"price":sec_live.get("chartPrice"),"projectCount":sec_live.get("parsedProjectCount"),"fixedBasketRatio":sec_live.get("fixedBasketRatio"),"historyType":"FIXED_BASKET_NOWCAST","anchorCompatible":sec_live.get("anchorCompatible",False)})
-    pri_live=out["symbols"].get("HN-APT-PRI",{})
-    if pri_live.get("price") is not None:
-        upsert_daily(history,"HN-APT-PRI",{"date":today,"price":pri_live.get("chartPrice",pri_live.get("price")),"projectCount":pri_live.get("parsedProjectCount"),"fixedBasketRatio":pri_live.get("fixedBasketRatio"),"historyType":"LIVE_PRIMARY_FIXED_BASKET_NOWCAST","anchorCompatible":pri_live.get("anchorCompatible",False)})
-    history["meta"]={"version":1,"updatedAt":now,"cadence":"daily-upsert from hourly fetch","note":"Observed listing-nowcast history; not transaction-price history."}
-
-    os.makedirs(os.path.dirname(OUT),exist_ok=True)
-    with open(HISTORY_OUT,"w",encoding="utf-8") as f:json.dump(history,f,ensure_ascii=False,indent=2)
-    os.makedirs(os.path.dirname(OUT),exist_ok=True)
-    with open(OUT,"w",encoding="utf-8") as f:json.dump(out,f,ensure_ascii=False,indent=2)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--verified-input", type=Path, help="Seed from already verified public-page captures.")
+    args = parser.parse_args()
+    configs = load_json(CONFIG, [])
+    if not configs or len({c["id"] for c in configs}) != len(configs):
+        raise ValueError("Danh sách dự án thiếu hoặc trùng mã")
+    checked_at = datetime.now(TZ).isoformat(timespec="seconds")
+    previous = load_json(OUT, {})
+    history = clean_history(load_json(HISTORY_OUT, {}))
+    old_rows = {r["id"]: r for r in previous.get("projects", [])}
+    captures = {r["id"]: r for r in load_json(args.verified_input, [])} if args.verified_input else None
+    rows = []
+    for config in configs:
+        try:
+            if captures is not None:
+                capture = captures[config["id"]]
+                period = capture["sourcePeriod"]
+                # Feed the same parser as the HTTP route, so validations stay identical.
+                text = f'Giá căn hộ tháng {int(period[5:])}/{period[:4]} Đơn giá phổ biến {capture["rawPrice"]} triệu/m² {capture.get("changePct", "")}%'
+                text += " so với " + ("quý" if capture.get("changePeriod") == "quarter" else "tháng") + " trước"
+                row = parse_project_text(config, text, checked_at)
+                row["retrieval"] = "public_page_verification"
+            else:
+                row = parse_project_html(config, fetch_html(config["url"]), checked_at)
+            rows.append(row)
+        except Exception as error:
+            rows.append(retain_on_error(config, old_rows.get(config["id"]), checked_at, error))
+            print(f'[source-error] {config["id"]}: {error}', flush=True)
+        if captures is None:
+            time.sleep(0.3)
+    snapshot = build_snapshot(configs, rows, history, checked_at)
+    atomic_json(HISTORY_OUT, history)
+    atomic_json(OUT, snapshot)
     print(json.dumps({
-      "updatedAt":now,
-      "allPrice":out["symbols"]["HN-APT-ALL"].get("chartPrice"),
-      "allProjects":out["symbols"]["HN-APT-ALL"].get("parsedProjectCount"),
-      "priPrice":out["symbols"]["HN-APT-PRI"].get("chartPrice"),
-      "priProjects":out["symbols"]["HN-APT-PRI"].get("parsedProjectCount"),
-      "secPrice":out["symbols"]["HN-APT-SEC"].get("chartPrice"),
-      "secProjects":out["symbols"]["HN-APT-SEC"].get("parsedProjectCount"),
-      "secRatio":out["symbols"]["HN-APT-SEC"].get("fixedBasketRatio")
-    },ensure_ascii=False))
+        "status": snapshot["meta"]["status"], "checked": snapshot["meta"]["successfulProjectCount"],
+        "expected": len(configs), "lastAttemptAt": checked_at,
+    }, ensure_ascii=False))
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()
