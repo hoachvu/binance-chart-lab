@@ -7,6 +7,8 @@ import IndicatorControls from "./IndicatorControls";
 import Watchlist, { type Pair } from "./Watchlist";
 import AccountDialog from "./AccountDialog";
 import { DEFAULT_INDICATOR_SETTINGS, normalizeIndicatorSettings, parsePine, setPinePlotColor, type Bar, type Formula, type IndicatorSettings } from "@/lib/indicators";
+import { evaluatePine, setPineInput, setPineFillColor, type OnchainData } from "@/lib/pine";
+import { COST_OF_PRODUCTION } from "@/lib/pine-example";
 import { DEFAULT_WATCHLISTS, normalizeWatchlists, parseWatchlists, quoteKey, type Market, type WatchGroup, type WatchItem } from "@/lib/watchlist";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -96,6 +98,9 @@ export default function Workspace() {
   const [source, setSource] = useState(SAMPLE);
   const [activeScript, setActiveScript] = useState<string | null>(null);
   const [formula, setFormula] = useState<Formula | null>(null);
+  const [onchain, setOnchain] = useState<OnchainData | null>(null);
+  const [onchainError, setOnchainError] = useState("");
+  const [onchainRetry, setOnchainRetry] = useState(0);
   const [watchlists, setWatchlists] = useState<WatchGroup[]>(DEFAULT_WATCHLISTS);
   const [activeGroupId, setActiveGroupId] = useState(DEFAULT_WATCHLISTS[0].id);
   const [watchReady, setWatchReady] = useState(false);
@@ -107,8 +112,26 @@ export default function Workspace() {
   const selectedBase = useRef("BTC");
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dataKey = `${market}|${symbol}|${interval}`;
-  const visibleBars = barsKey === dataKey ? bars : [];
+  const visibleBars = useMemo(() => barsKey === dataKey ? bars : [], [bars,barsKey,dataKey]);
   const shown = (barsKey === dataKey ? hover : null) || visibleBars[visibleBars.length - 1];
+
+  const needsOnchain = !!formula?.requests.length;
+  useEffect(() => {
+    if (!needsOnchain) return;
+    const controller = new AbortController();
+    const load = async () => {
+      setOnchainError("");
+      try { const response = await fetch("/api/onchain", {signal:controller.signal}); const data = await response.json() as OnchainData & {error?:string}; if(!response.ok) throw Error(data.error || "Chưa tải được dữ liệu on-chain."); if(!controller.signal.aborted) setOnchain(data); }
+      catch (cause) { if(!controller.signal.aborted) setOnchainError(cause instanceof Error ? cause.message : "Chưa tải được dữ liệu on-chain."); }
+    };
+    void load();const timer=window.setInterval(load,3600000);
+    return () => { controller.abort();window.clearInterval(timer); };
+  }, [needsOnchain,onchainRetry]);
+  const customResult = useMemo(() => {
+    if(!formula || !visibleBars.length) return {values:null,error:""};
+    try { return {values:evaluatePine(visibleBars,formula,interval,onchain).plots,error:""}; }
+    catch(cause) {return {values:null,error:cause instanceof Error?cause.message:"Không tính được chỉ báo."};}
+  }, [visibleBars,formula,interval,onchain]);
 
   const flash = useCallback((message: string) => {
     setNotice(message);
@@ -166,6 +189,8 @@ export default function Workspace() {
         try { data.config = JSON.parse(localStorage.getItem(GUEST_SETTINGS) || "null") as WorkspaceResponse["config"]; } catch { data.config = null; }
       }
       if (cancelled) return;
+      const accountMessage = sessionStorage.getItem("chartlab:account-message");
+      if (accountMessage) { flash(accountMessage); sessionStorage.removeItem("chartlab:account-message"); }
       const loadedScripts = data.scripts || [];
       setMe(data.me);
       setScripts(loadedScripts);
@@ -211,7 +236,7 @@ export default function Workspace() {
       setWatchReady(true);
     });
     return () => { cancelled = true; };
-  }, []);
+  }, [flash]);
 
   useEffect(() => {
     if (!ready || !me) return;
@@ -514,7 +539,8 @@ export default function Workspace() {
   };
 
   const active = useMemo(() => scripts.find(script => script.id === activeScript), [scripts, activeScript]);
-  const sourceProgram = useMemo(() => { try { return parsePine(source); } catch { return null; } }, [source]);
+  const sourceParsed = useMemo(() => { try { return {program:parsePine(source),error:""}; } catch(cause) { return {program:null,error:cause instanceof Error?cause.message:"Mã chưa hợp lệ."}; } }, [source]);
+  const sourceProgram = sourceParsed.program;
   const toggle = (key: string) => setEnabled(current => ({ ...current, [key]: !current[key] }));
   const changeIndicator = (key: keyof IndicatorSettings, patch: Record<string, unknown>) => setIndicatorSettings(current => normalizeIndicatorSettings({ ...current, [key]: { ...current[key], ...patch } }));
   const detail = (key: keyof IndicatorSettings) => key === "ma" ? `${indicatorSettings.ma.method.toUpperCase()} · ${indicatorSettings.ma.period}` : key === "bb" ? `${indicatorSettings.bb.period} · ${indicatorSettings.bb.deviation}σ` : key === "rsi" ? `${indicatorSettings.rsi.period} kỳ · ${indicatorSettings.rsi.overbought}/${indicatorSettings.rsi.oversold}` : "Khối lượng";
@@ -575,7 +601,7 @@ export default function Workspace() {
           <button className="icon-btn" onClick={() => openPanel("indicators")} title="Chỉ báo"><Settings2 size={18}/></button>
         </div>
         <div className="chart-heading"><div><div className="title-line"><strong>{symbol}</strong><span>{market === "spot" ? "Spot" : "Futures USDⓈ-M"}</span><span className="muted">·</span><span className="muted">{interval}</span></div><div className="ohlc">{shown ? <><span>O <b>{shown.open.toLocaleString("en-US")}</b></span><span>H <b>{shown.high.toLocaleString("en-US")}</b></span><span>L <b>{shown.low.toLocaleString("en-US")}</b></span><span>C <b className={shown.close >= shown.open ? "up" : "down"}>{shown.close.toLocaleString("en-US")}</b></span><span>V <b>{shown.volume.toLocaleString("en-US", { maximumFractionDigits: 2 })}</b></span></> : "Đang lấy dữ liệu Binance…"}</div></div><span className="source-note">Nguồn: Binance · UTC</span></div>
-        <div className="chart-area">{error && <div className="chart-error"><WifiOff size={17}/>{error}<button onClick={() => window.location.reload()} aria-label="Tải lại"><RefreshCw size={15}/></button></div>}<CandleChart key={dataKey} bars={visibleBars} enabled={enabled} settings={indicatorSettings} formula={formula} onNeedHistory={more} onHover={setHover}/></div>
+        {formula && (onchainError || customResult.error || needsOnchain) && <div className="pine-data-note" role="status">{onchainError || customResult.error || `Dữ liệu BTC hằng ngày: Blockchain.com + Coin Metrics · ${onchain ? new Date(onchain.rows.at(-1)!.time*1000).toLocaleDateString("vi-VN") : "Đang tải"}. Nguồn thay thế; có thể khác Glassnode/INDEX trên TradingView.`}{onchainError && <button onClick={()=>setOnchainRetry(x=>x+1)}>Thử lại</button>}{needsOnchain && !symbol.startsWith("BTC") && <span>Chỉ báo tính cho BTC dù biểu đồ đang là {symbol}.</span>}</div>}<div className="chart-area">{error && <div className="chart-error"><WifiOff size={17}/>{error}<button onClick={() => window.location.reload()} aria-label="Tải lại"><RefreshCw size={15}/></button></div>}<CandleChart key={dataKey} bars={visibleBars} enabled={enabled} settings={indicatorSettings} formula={formula} customValues={customResult.values} onNeedHistory={more} onHover={setHover}/></div>
         <div className="chart-footer"><span>Kéo để xem lịch sử · Chụm hoặc lăn để zoom · Chạm biểu đồ xem OHLCV</span><span>{visibleBars.length} nến · Nến cuối có thể chưa đóng</span></div>
       </section>
       <button type="button" aria-label="Đóng bảng điều khiển" className={`panel-overlay ${panelOpen ? "visible" : ""}`} onClick={() => setPanelOpen(false)}/>
@@ -590,7 +616,7 @@ export default function Workspace() {
         </div>
         {panel === "watchlist" && <div className="panel-content watchlist-content"><Watchlist groups={watchlists} activeGroupId={activeGroupId} currentMarket={market} currentSymbol={symbol} pairs={pairs} onActiveGroup={selectWatchGroup} onSelect={selectWatchItem} onAdd={addWatchItem} onRemove={removeWatchItem} onMove={moveWatchItem} onCreateGroup={createWatchGroup} onRenameGroup={renameWatchGroup} onDeleteGroup={deleteWatchGroup}/></div>}
         {panel === "indicators" && <div className="panel-content"><div className="panel-eyebrow">PHÂN TÍCH</div><h2>Chỉ báo</h2><p className="subtext">Bật chỉ báo hoặc chọn bánh răng để chỉnh tham số.</p><div className="indicator-list">{PALETTE.map(item => <div key={item.key}><div className={`indicator-row ${enabled[item.key] ? "is-on" : ""}`}><span className="indicator-mark" style={{ background: mark(item.key) }}/><button className="indicator-toggle" type="button" onClick={() => toggle(item.key)} aria-label={`${enabled[item.key] ? "Tắt" : "Bật"} ${item.title}`} aria-pressed={!!enabled[item.key]}><span className="indicator-copy"><strong>{item.title}</strong><small>{detail(item.key)}</small></span><span className="switch"><i/></span></button><button className={`indicator-gear ${expanded === item.key ? "active" : ""}`} type="button" aria-label={`Tùy chỉnh ${item.title}`} aria-expanded={expanded === item.key} onClick={() => setExpanded(expanded === item.key ? null : item.key)}><Settings2 size={17}/></button></div>{expanded === item.key && <IndicatorControls kind={item.key} settings={indicatorSettings} change={changeIndicator}/>}</div>)}</div><div className="panel-subhead">CHỈ BÁO CỦA TÔI <button onClick={() => { setScriptId(null); setScriptName("Chỉ báo của tôi"); setSource(SAMPLE); setPanel("editor"); }}>+ Tạo mới</button></div>{scripts.length ? scripts.map(script => <button key={script.id} className={`saved-script ${script.id === activeScript ? "is-active" : ""}`} onClick={() => { setScriptId(script.id); setScriptName(script.name); setSource(script.source); setPanel("editor"); }}><Code2 size={16}/><span>{script.name}</span><ChevronDown size={13}/></button>) : <p className="empty">Chưa có chỉ báo tùy chỉnh.</p>}{formula && <button className="text-action" onClick={() => { setFormula(null); setActiveScript(null); }}>Ẩn chỉ báo tùy chỉnh đang áp dụng</button>}</div>}
-        {panel === "editor" && <div className="panel-content editor"><div className="panel-eyebrow">PINE SCRIPT · TẬP CON</div><h2>{active?.name || "Chỉ báo của tôi"}</h2><p className="subtext">Dán mã Pine đơn giản hoặc dùng tối đa 8 lệnh plot. Mỗi đường có màu riêng và được lưu cùng mã chỉ báo.</p><label className="field-label">Tên chỉ báo</label><Input value={scriptName} onChange={event => setScriptName(event.target.value)} maxLength={80}/><label className="field-label">Mã chỉ báo</label><textarea className="code-area" spellCheck={false} value={source} onChange={event => setSource(event.target.value)} aria-label="Mã Pine Script"/>{sourceProgram && <div className="custom-plot-colors"><span>MÀU TỪNG ĐƯỜNG PLOT</span>{sourceProgram.plots.map((plot,index)=><label className="custom-plot-color" key={plot.id}><input type="color" value={plot.color} aria-label={`Màu ${plot.title}`} onInput={event=>changePlotColor(index,event.currentTarget.value)} onChange={event=>changePlotColor(index,event.target.value)}/><strong>{plot.title}</strong><small>{plot.kind.toUpperCase()}</small></label>)}</div>}<p className="code-tip">Hỗ trợ: Pine v5/v6, indicator(), input.int/float(), tối đa 8 plot() với close/open/high/low/volume hoặc ta.sma, ta.ema, ta.rsi, ta.stdev.</p><div className="editor-actions"><Button onClick={saveScript}>Lưu & áp dụng</Button><Button variant="outline" onClick={applyScript}>Thử trên biểu đồ</Button></div>{scriptId && <button className="delete-action" onClick={removeScript}>Xóa chỉ báo này</button>}</div>}
+        {panel === "editor" && <div className="panel-content editor"><div className="panel-eyebrow">PINE SCRIPT · TẬP CON</div><h2>{active?.name || "Chỉ báo của tôi"}</h2><p className="subtext">Dán mã Pine đơn giản hoặc dùng tối đa 8 lệnh plot. Mỗi đường có màu riêng và được lưu cùng mã chỉ báo.</p><label className="field-label">Tên chỉ báo</label><Input value={scriptName} onChange={event => setScriptName(event.target.value)} maxLength={80}/><label className="field-label">Mã chỉ báo</label><textarea wrap="soft" className="code-area" spellCheck={false} value={source} onChange={event => setSource(event.target.value)} aria-label="Mã Pine Script"/>{sourceProgram && <div className="custom-plot-colors"><span>MÀU TỪNG ĐƯỜNG PLOT</span>{sourceProgram.plots.map((plot,index)=><label className="custom-plot-color" key={plot.id}><input type="color" value={plot.color} aria-label={`Màu ${plot.title}`} onInput={event=>changePlotColor(index,event.currentTarget.value)} onChange={event=>changePlotColor(index,event.target.value)}/><strong>{plot.title}</strong><small>{plot.kind.toUpperCase()}</small></label>)}{sourceProgram.fills.map((fill,index)=><label className="custom-plot-color" key={`fill-${index}`}><input type="color" value={fill.color} aria-label={`Màu vùng fill ${index+1}`} onChange={event=>{const next=setPineFillColor(source,index,event.target.value);setSource(next);setFormula(parsePine(next));}}/><strong>Vùng fill {index+1}</strong></label>)}</div>}{sourceParsed.error && <p className="pine-error" role="alert">{sourceParsed.error}</p>}{sourceProgram && sourceProgram.inputs.length>0 && <div className="pine-inputs">{sourceProgram.inputs.map(input=><label key={input.name}>{input.title}{input.kind==="bool"?<input type="checkbox" checked={!!input.value} onChange={event=>setSource(setPineInput(source,input.name,event.target.checked))}/>:<input type="number" min={input.min} max={input.max} step={input.step ?? (input.kind==="int"?1:"any")} value={Number(input.value)} onChange={event=>{if(event.target.value) setSource(setPineInput(source,input.name,Number(event.target.value)));}}/>}</label>)}</div>}<button className="text-action" onClick={()=>{setSource(COST_OF_PRODUCTION);setScriptName("BTC Cost Of Production");setScriptId(null);}}>Nạp mẫu BTC Cost of Production</button><p className="code-tip">Hỗ trợ một tập con Pine v5/v6: biến, công thức, input, math, ta, nhiều plot và fill. request.security chỉ hỗ trợ 5 chuỗi BTC trong mẫu. Mã khác sẽ báo dòng chưa hỗ trợ.</p><div className="editor-actions"><Button onClick={saveScript}>Lưu & áp dụng</Button><Button variant="outline" onClick={applyScript}>Thử trên biểu đồ</Button></div>{scriptId && <button className="delete-action" onClick={removeScript}>Xóa chỉ báo này</button>}</div>}
         {panel === "help" && <div className="panel-content"><div className="panel-eyebrow">HƯỚNG DẪN</div><h2>Cách sử dụng</h2><p className="subtext">Ai có đường link đều xem được biểu đồ. Watchlist, chỉ báo tự tạo và thiết lập của khách lưu trên trình duyệt này.</p><ul className="help-list"><li>Gõ ETH để chọn ETH/USDT, ETH/USDC hoặc cặp khác đang giao dịch trên Binance.</li><li>Mở Watchlist để thêm, xóa, sắp xếp và chuyển nhanh giữa Spot/Futures.</li><li>Kéo để xem lịch sử; chụm hai ngón hoặc lăn chuột để zoom.</li><li>Bật chỉ báo và dùng bánh răng để chỉnh chu kỳ, nguồn giá, màu và độ dày.</li></ul><div className="limit-box"><strong>Giới hạn hiện tại</strong><p>Hỗ trợ một tập con Pine Script, không chạy được mọi script TradingView. Futures ở đây là USDⓈ-M.</p></div></div>}
         <div className="panel-bottom">CHARTLAB <span>·</span> dữ liệu Binance<br/>TradingView Lightweight Charts™ · Copyright © 2025 <a href="https://www.tradingview.com/" target="_blank" rel="noreferrer">TradingView, Inc.</a></div>
       </aside>

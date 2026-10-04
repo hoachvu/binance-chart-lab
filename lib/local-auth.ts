@@ -51,9 +51,9 @@ export function sameHash(first: string, second: string): boolean {
   return diff === 0;
 }
 
-export function setSessionCookie(response: Response, token: string, request: Request): Response {
+export function setSessionCookie(response: Response, token: string, request: Request, remember = true): Response {
   const secure = new URL(request.url).protocol === "https:" ? "; Secure" : "";
-  response.headers.append("Set-Cookie", `${SESSION_COOKIE}=${token}; Max-Age=${SESSION_AGE}; Path=/; HttpOnly; SameSite=Lax${secure}`);
+  response.headers.append("Set-Cookie", `${SESSION_COOKIE}=${token};${remember ? ` Max-Age=${SESSION_AGE};` : ""} Path=/; HttpOnly; SameSite=Lax${secure}`);
   return response;
 }
 
@@ -69,8 +69,8 @@ export async function localAccount() {
   const db = getDb();
   const session = await db.select().from(loginSessions).where(eq(loginSessions.tokenHash, await sha256(token))).get();
   if (!session || session.expiresAt <= Date.now()) return null;
-  const account = await db.select({ username: localAccounts.username, id: users.id, role: users.role, email: users.email })
+  const account = await db.select({ username: localAccounts.username, id: users.id, role: users.role, email: users.email, recoveryEmail: localAccounts.recoveryEmail })
     .from(localAccounts).innerJoin(users, eq(localAccounts.userId, users.id))
     .where(eq(localAccounts.userId, session.userId)).get();
-  return account ? { id: account.id, email: account.email, role: account.role, displayName: account.username } : null;
+  return account ? { id: account.id, email: account.email, role: account.role, displayName: account.username, recoveryEmail: account.recoveryEmail } : null;
 }

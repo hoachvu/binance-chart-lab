@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   if (origin && origin !== new URL(request.url).origin) return Response.json({ error: "Yêu cầu không hợp lệ." }, { status: 403 });
   let stage = "request";
   try {
-    const body = await request.json() as { action?: string; username?: string; password?: string };
+    const body = await request.json() as { action?: string; username?: string; password?: string; remember?: boolean };
     const db = getDb();
     if (body.action === "logout") {
       const token = request.headers.get("cookie")?.match(/(?:^|;\s*)chartlab_session=([^;]+)/)?.[1];
@@ -72,8 +72,8 @@ export async function POST(request: Request) {
     const token = randomToken();
     stage = "session";
     await db.delete(loginSessions).where(lt(loginSessions.expiresAt, Date.now()));
-    await db.insert(loginSessions).values({ tokenHash: await sha256(token), userId, expiresAt: Date.now() + SESSION_AGE * 1000 });
-    return setSessionCookie(Response.json({ ok: true, username }, { headers: { "Cache-Control": "no-store" } }), token, request);
+    await db.insert(loginSessions).values({ tokenHash: await sha256(token), userId, expiresAt: Date.now() + (body.remember === false ? 12 * 60 * 60 : SESSION_AGE) * 1000 });
+    return setSessionCookie(Response.json({ ok: true, username }, { headers: { "Cache-Control": "no-store" } }), token, request, body.remember !== false);
   } catch (error) {
     console.error("Account operation failed", stage, error instanceof Error ? error.name : typeof error);
     return Response.json({ error: "Chưa thể xử lý tài khoản. Vui lòng thử lại." }, { status: 503 });

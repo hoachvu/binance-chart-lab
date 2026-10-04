@@ -28,6 +28,7 @@ export const settings = sqliteTable("settings", {
 });
 
 export const localAccounts = sqliteTable("local_accounts", {
+  recoveryEmail: text("recovery_email").unique(),
   username: text("username").primaryKey(),
   userId: text("user_id").notNull().unique().references(() => users.id),
   passwordHash: text("password_hash").notNull(),
@@ -46,4 +47,12 @@ export const authAttempts = sqliteTable("auth_attempts", {
   key: text("key").primaryKey(),
   failures: integer("failures").notNull(),
   resetAt: integer("reset_at").notNull(),
+});
+
+export const accountTokens = sqliteTable("account_tokens", {
+  tokenHash: text("token_hash").primaryKey(),
+  userId: text("user_id").notNull().references(() => users.id),
+  email: text("email").notNull(),
+  purpose: text("purpose").notNull(),
+  expiresAt: integer("expires_at").notNull(),
 });

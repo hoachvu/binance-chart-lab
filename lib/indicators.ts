@@ -39,70 +39,8 @@ function fieldValue(b:Bar,field:Field){
   return b[field];
 }
 export type PlotFormula = {id:string;title:string;color:string;width:1|2|3|4;kind:"sma"|"ema"|"rsi"|"stdev"|"field";field:Field;length:number};
-export type Formula = {overlay:boolean;plots:PlotFormula[]};
-
-const PLOT_COLORS=["#e8a0e6","#6edbc4","#ffcc73","#7daaff","#f18f7e","#b589ff","#66b8ff","#d7df72"];
-const NAMED_COLORS:Record<string,string>={red:"#f26972",green:"#28c4a6",blue:"#7daaff",orange:"#ffad66",purple:"#b589ff",yellow:"#ffcc73",aqua:"#55d8d0",fuchsia:"#e8a0e6",white:"#ffffff",gray:"#8c9bac"};
-
-function splitArguments(value:string){
-  const result:string[]=[];let current="";let depth=0;let quote="";
-  for(const char of value){
-    if((char==='"'||char==="'")&&!quote)quote=char;else if(char===quote)quote="";
-    if(!quote){if(char==="(")depth++;else if(char===")")depth--;else if(char===","&&depth===0){result.push(current.trim());current="";continue;}}
-    current+=char;
-  }
-  if(current.trim())result.push(current.trim());return result;
-}
-
-function parsePlotExpression(expression:string,vars:Record<string,number>,meta:{id:string;title:string;color:string;width:1|2|3|4}):PlotFormula{
-  if (/^(open|high|low|close|volume)$/.test(expression)) return {...meta,kind:"field",field:expression as Field,length:1};
-  const fn=expression.match(/^ta\.(sma|ema|rsi|stdev)\(\s*(open|high|low|close|volume)\s*,\s*(\d{1,3}|[a-zA-Z_]\w*)\s*\)$/);
-  if (!fn) throw Error("Chỉ hỗ trợ plot(ta.sma/ema/rsi/stdev(close, độ_dài)) hoặc plot(close).");
-  const length=/^\d+$/.test(fn[3])?Number(fn[3]):vars[fn[3]];
-  if (!Number.isInteger(length)||length<2||length>200) throw Error("Độ dài cần là số nguyên từ 2 đến 200; input.int phải được khai báo.");
-  return {...meta,kind:fn[1] as PlotFormula["kind"],field:fn[2] as Field,length};
-}
-
-export function parsePine(source:string):Formula {
-  if (source.length > 10000) throw Error("Mã dài quá giới hạn 10.000 ký tự.");
-  const lines=source.split(/\r?\n/).map(x=>x.trim()).filter(x=>x && !x.startsWith("//"));
-  const vars:Record<string,number>={};
-  const plots:PlotFormula[]=[];let overlay=true;
-  for (const line of lines) {
-    if (/^indicator\s*\(/.test(line)) {
-      if (/overlay\s*=\s*false/.test(line)) overlay=false;
-      continue;
-    }
-    const variable=line.match(/^([a-zA-Z_]\w*)\s*=\s*input\.(?:int|float)\(\s*(\d{1,3})(?:\s*,[^)]*)?\)$/);
-    if (variable) {vars[variable[1]]=Number(variable[2]);continue;}
-    const plotted=line.match(/^plot\s*\((.*)\)$/);
-    if (plotted) {
-      if(plots.length>=8)throw Error("Mỗi chỉ báo hỗ trợ tối đa 8 lệnh plot().");
-      const args=splitArguments(plotted[1]);const expression=args.shift()?.trim();
-      if(!expression)throw Error("Lệnh plot() đang thiếu biểu thức.");
-      const options=Object.fromEntries(args.flatMap(arg=>{const match=arg.match(/^(title|color|linewidth)\s*=\s*(.+)$/);return match?[[match[1],match[2].trim()]]:[]}));
-      const title=String(options.title||"").replace(/^["']|["']$/g,"")||`Đường ${plots.length+1}`;
-      const rawColor=String(options.color||"").replace(/^["']|["']$/g,"");
-      const named=rawColor.match(/^color\.([a-z]+)$/)?.[1];
-      const color=/^#[0-9a-f]{6}$/i.test(rawColor)?rawColor:NAMED_COLORS[named||""]||PLOT_COLORS[plots.length%PLOT_COLORS.length];
-      const rawWidth=Number(options.linewidth);const width=(Number.isInteger(rawWidth)&&rawWidth>=1&&rawWidth<=4?rawWidth:2) as 1|2|3|4;
-      plots.push(parsePlotExpression(expression,vars,{id:`plot-${plots.length+1}`,title,color,width}));continue;
-    }
-    throw Error(`Chưa hỗ trợ dòng: ${line.slice(0,100)}`);
-  }
-  if (!plots.length) throw Error("Cần ít nhất một lệnh plot(...).");
-  return {plots,overlay:plots.some(plot=>plot.kind==="rsi")?false:overlay};
-}
-
-export function setPinePlotColor(source:string,index:number,color:string){
-  let seen=0;
-  return source.split(/\r?\n/).map(line=>{
-    const match=line.match(/^(\s*)plot\s*\((.*)\)\s*$/);if(!match)return line;
-    if(seen++!==index)return line;
-    const args=splitArguments(match[2]).filter((arg,i)=>i===0||!/^color\s*=/.test(arg));
-    args.push(`color="${color}"`);return `${match[1]}plot(${args.join(", ")})`;
-  }).join("\n");
-}
+export {parsePine,setPinePlotColor} from "./pine";
+export type {Formula} from "./pine";
 
 export function values(bars:Bar[], formula:PlotFormula|Omit<PlotFormula,"id"|"title"|"color"|"width">):Array<number|null> {
   const a=bars.map(b=>fieldValue(b,formula.field)); const n=formula.length;

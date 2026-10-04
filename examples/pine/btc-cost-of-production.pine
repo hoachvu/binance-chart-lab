@@ -1,0 +1,59 @@
+// This Pine Script® code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © jv_indicators
+// Chart Lab: external symbols below use documented public alternatives, not native TradingView feeds.
+//@version=6
+indicator("BTC Cost Of Production", overlay = true)
+showSmoothed = input.bool(true, "Show smoothed Production Cost?", group = "Settings")
+showRaw = input.bool(false, "Show raw Production Cost?", group = "Settings")
+k = 0.45
+alpha = 1.0 / 1800.0
+difficulty = request.security(
+    "GLASSNODE:BTC_DIFFICULTY", "D", close,
+    barmerge.gaps_off, barmerge.lookahead_off
+)
+fees_usd = request.security(
+    "COINMETRICS:BTC_FEEUSD", "D", close,
+    barmerge.gaps_off, barmerge.lookahead_off
+)
+btc_usd = request.security(
+    "INDEX:BTCUSD", "D", close,
+    barmerge.gaps_off, barmerge.lookahead_off
+)
+fees_btc = fees_usd / btc_usd
+btc_blocks = request.security(
+    "GLASSNODE:BTC_BLOCKS", "D", close,
+    barmerge.gaps_off, barmerge.lookahead_off
+)
+n_halvings = int(math.floor(btc_blocks / 210000))
+n_halvings := math.max(n_halvings, 0)
+initial_sats = 50 * 1e8
+subsidy_sats = math.floor(initial_sats / math.pow(2.0, n_halvings))
+subsidy = subsidy_sats / 1e8
+blocks_mined_day = request.security(
+    "GLASSNODE:BTC_BLOCKSMINED", "D", close,
+    barmerge.gaps_off, barmerge.lookahead_off
+)
+reward_daily = subsidy * blocks_mined_day
+issuance_daily = reward_daily + fees_btc
+smoothing_len = int(math.max(1, math.round(90 * 86400 / timeframe.in_seconds(timeframe.period))))
+difficulty_sma = ta.sma(difficulty, smoothing_len)
+issuance_90d = ta.sma(issuance_daily, smoothing_len)
+cost_floor_raw = alpha * math.pow(difficulty, k) / issuance_daily
+cost_floor_smooth = alpha * math.pow(difficulty_sma, k) / issuance_90d
+cost_z1 = cost_floor_smooth * 1.2
+floor_smooth = showSmoothed ? cost_floor_smooth : na
+band_smooth = showSmoothed ? cost_z1 : na
+floor_raw = showRaw ? cost_floor_raw : na
+p_floor = plot(
+    floor_smooth, title = "Cost of Production (smoothed)",
+    color = color.purple, linewidth = 2
+)
+p_floor_raw = plot(
+    floor_raw, title = "Cost of Production (raw)",
+    color = color.yellow, linewidth = 2
+)
+p_z1 = plot(
+    band_smooth, title = "Cost ×1.20",
+    color = color.new(color.purple, 100), linewidth = 1
+)
+fill(p_floor, p_z1, color = color.new(color.purple, 60))
