@@ -132,6 +132,7 @@ def weighted_project_proxy(projects):
                 w=max(1, min(x["listingCount"] or 1, 500))
                 weighted.extend([x["listingMedian"]]*w)
         except Exception as e:
+            print(f"[project-fetch-error] {name}: {e}")
             row={"name":name,"url":url,"error":str(e)[:180]}
             if pid is not None:row["id"]=pid
             rows.append(row)
@@ -192,8 +193,8 @@ def all_market():
                 m=re.search(r"Cập nhật tin đăng gần đây nhất\s*\|?\s*(\d{2}-\d{2}-\d{4},\s*\d{2}:\d{2})",txt,re.I)
                 if m:last_update=m.group(1)
             values.extend(listing_values(txt)); ok+=1
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[all-market-fetch-error] {url}: {e}")
         time.sleep(0.5)
     return robust_stats(values),listing_count,verified_count,last_update,ok
 
