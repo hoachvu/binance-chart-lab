@@ -47,6 +47,8 @@ Trình phân tích hỗ trợ biến, gán lại `:=`, phép tính và điều k
 
 ### BTC Cost Of Production
 
+Chỉ báo có sẵn trong bảng Chỉ báo, bật mặc định cho các cặp BTC ghép USD hoặc stablecoin USD. Có nút bật/tắt, bánh răng chỉnh smoothed/raw, màu đường và vùng nền. Thiết lập được lưu cùng cấu hình của khách hoặc tài khoản. Chỉ báo hoạt động độc lập với chỉ báo Pine tự tạo và tự ẩn khi mở coin/cặp có đơn vị giá khác.
+
 Mẫu `examples/pine/btc-cost-of-production.pine` giữ công thức của jv_indicators, `k=0.45`, `alpha=1/1800`, trợ cấp block theo halving 210.000 block, làm mượt 90 ngày theo khung biểu đồ, đường smoothed/raw và vùng ×1.20. Ghi công và MPL 2.0 được giữ trong nguồn. Có thể nạp mẫu từ trình soạn thảo hoặc dán mã gốc nhiều dòng.
 
 Năm tên nguồn trong mã được ánh xạ rõ ràng sang dữ liệu công khai:

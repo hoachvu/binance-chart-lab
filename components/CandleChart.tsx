@@ -5,7 +5,7 @@ import type { CanvasRenderingTarget2D } from "fancy-canvas";
 import { Scan } from "lucide-react";
 import { bands, values, type Bar, type Formula, type IndicatorSettings } from "@/lib/indicators";
 
-type Props={bars:Bar[];enabled:Record<string,boolean>;settings:IndicatorSettings;formula:Formula|null;customValues:Array<Array<number|null>>|null;onNeedHistory:(endTime:number)=>void;onHover:(bar:Bar|null)=>void};
+type Props={bars:Bar[];enabled:Record<string,boolean>;settings:IndicatorSettings;formula:Formula|null;customValues:Array<Array<number|null>>|null;costProgram:Formula|null;costValues:Array<Array<number|null>>|null;onNeedHistory:(endTime:number)=>void;onHover:(bar:Bar|null)=>void};
 type Extra={name:string;series:Parameters<IChartApi["removeSeries"]>[0]};
 type BandData=CustomData<Time>&{upper:number;lower:number};
 type BandOptions=CustomSeriesOptions&{fillColor:string;fillOpacity:number};
@@ -37,7 +37,7 @@ class BandPaneView implements ICustomSeriesPaneView<Time,BandData,BandOptions>{
   isWhitespace(data:BandData|CustomData):data is CustomData{return!("upper" in data)||!("lower" in data);}
   defaultOptions():BandOptions{return{...customSeriesDefaultOptions,color:"#8f7af8",fillColor:"#8f7af8",fillOpacity:.12};}
 }
-export default function CandleChart({bars,enabled,settings,formula,customValues,onNeedHistory,onHover}:Props){
+export default function CandleChart({bars,enabled,settings,formula,customValues,costProgram,costValues,onNeedHistory,onHover}:Props){
   const host=useRef<HTMLDivElement>(null);const chart=useRef<IChartApi|null>(null);
   const candles=useRef<ISeriesApi<"Candlestick">|null>(null);
   const extra=useRef<Extra[]>([]),layoutKey=useRef("");
@@ -57,7 +57,7 @@ export default function CandleChart({bars,enabled,settings,formula,customValues,
     const precision=price>=100?2:price>=1?4:price>=.01?6:8;
     candles.current.applyOptions({priceFormat:{type:"price",precision,minMove:10**-precision}});
     candles.current.setData(bars.map(b=>({...b,time:b.time as UTCTimestamp})));
-    const key=JSON.stringify([enabled.ma,enabled.bb,enabled.volume,enabled.rsi,settings,formula]);
+    const key=JSON.stringify([enabled.ma,enabled.bb,enabled.volume,enabled.rsi,settings,formula,costProgram]);
     const changed=layoutKey.current!==key||!bars.length;
     if(changed){extra.current.forEach(({series})=>c.removeSeries(series));extra.current=[];layoutKey.current=key;}
     if(!bars.length)return;
@@ -76,8 +76,9 @@ export default function CandleChart({bars,enabled,settings,formula,customValues,
     let pane=1;
     if(enabled.volume){let s=extra.current.find(x=>x.name==="volume")?.series as ISeriesApi<"Histogram">|undefined;if(!s){s=c.addSeries(HistogramSeries,{priceFormat:{type:"volume"},priceLineVisible:false,lastValueVisible:false},pane);extra.current.push({name:"volume",series:s});}s.setData(bars.map(b=>({time:b.time as UTCTimestamp,value:b.volume,color:b.close>=b.open?settings.volume.upColor:settings.volume.downColor})));pane++;}
     if(enabled.rsi){const rsiPane=pane++;fill("rsi-zone",bars.map(()=>settings.rsi.overbought),bars.map(()=>settings.rsi.oversold),settings.rsi.backgroundColor,settings.rsi.backgroundOpacity,rsiPane);line("rsi",values(bars,{kind:"rsi",field:settings.rsi.source,length:settings.rsi.period}),settings.rsi.color,rsiPane,settings.rsi.width);if(changed){const series=extra.current.find(x=>x.name==="rsi")?.series as ISeriesApi<"Line">|undefined;series?.createPriceLine({price:settings.rsi.overbought,color:settings.rsi.overboughtColor,lineWidth:1,lineStyle:2,axisLabelVisible:true,title:"Quá mua"});series?.createPriceLine({price:50,color:settings.rsi.midColor,lineWidth:1,lineStyle:2,axisLabelVisible:true,title:"50"});series?.createPriceLine({price:settings.rsi.oversold,color:settings.rsi.oversoldColor,lineWidth:1,lineStyle:2,axisLabelVisible:true,title:"Quá bán"});}}
+    if(costProgram){costProgram.fills.forEach((band,index)=>fill(`cost-fill-${index}`,costValues?.[band.first]||bars.map(()=>null),costValues?.[band.second]||bars.map(()=>null),band.color,band.opacity*100));costProgram.plots.forEach((plot,index)=>{if(plot.opacity>0)line(`cost-${index}`,costValues?.[index]||bars.map(()=>null),hexRgba(plot.color,plot.opacity),0,plot.width);});}
     if(formula){const formulaPane=formula.overlay?0:pane++;formula.plots.forEach((plot,index)=>{const rgb=parseInt(plot.color.slice(1),16);line(`custom-${index}`,customValues?.[index]||bars.map(()=>null),`rgba(${rgb>>16},${rgb>>8&255},${rgb&255},${plot.opacity})`,formulaPane,plot.width);});formula.fills.forEach((band,index)=>fill(`custom-fill-${index}`,customValues?.[band.first]||bars.map(()=>null),customValues?.[band.second]||bars.map(()=>null),band.color,band.opacity*100,formulaPane));}
     const panes=c.panes();if(panes.length>1&&changed){panes[0].setHeight(Math.max(250,Math.floor((host.current?.clientHeight||600)*.67)));}
-  },[bars,enabled,settings,formula,customValues]);
+  },[bars,enabled,settings,formula,customValues,costProgram,costValues]);
   return <><div className="chart-surface" ref={host} aria-label="Biểu đồ nến Binance; kéo để xem lịch sử, chụm hai ngón hoặc dùng con lăn để phóng to"/><button type="button" className="chart-reset" onClick={()=>chart.current?.timeScale().fitContent()} title="Vừa toàn bộ dữ liệu" aria-label="Vừa toàn bộ dữ liệu biểu đồ"><Scan size={17}/></button></>;
 }
