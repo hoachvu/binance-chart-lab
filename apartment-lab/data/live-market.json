@@ -2,8 +2,8 @@
   "meta": {
     "version": 2,
     "methodVersion": "PROJECT_UNIT_PRICE_V2",
-    "lastAttemptAt": "2026-10-19T22:37:38+07:00",
-    "lastSuccessfulCheckAt": "2026-10-19T22:37:38+07:00",
+    "lastAttemptAt": "2026-10-20T04:04:36+07:00",
+    "lastSuccessfulCheckAt": "2026-10-20T04:04:36+07:00",
     "cadence": "hourly source checks; source prices are periodic",
     "status": "OK",
     "successfulProjectCount": 15,
@@ -26,8 +26,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -44,8 +44,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -62,8 +62,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -80,8 +80,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -98,8 +98,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -116,8 +116,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -134,8 +134,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -152,8 +152,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -170,8 +170,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -188,8 +188,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -198,16 +198,16 @@
       "name": "Vinhomes Gardenia",
       "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Gardenia.867",
       "segment": "SECONDARY",
-      "price": 99.26,
+      "price": 89.0,
       "sourcePeriod": "2026-10",
-      "rawPrice": "99.26",
-      "changePct": 0.0,
+      "rawPrice": "89",
+      "changePct": -10.34,
       "changePeriod": "month",
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -224,8 +224,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -234,16 +234,16 @@
       "name": "Ha Noi Homeland",
       "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Ha-Noi-Homeland.354",
       "segment": "SECONDARY",
-      "price": 66.33,
+      "price": 61.41,
       "sourcePeriod": "2026-10",
-      "rawPrice": "66.33",
-      "changePct": 0.0,
+      "rawPrice": "61.41",
+      "changePct": -7.43,
       "changePeriod": "month",
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -260,8 +260,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -278,16 +278,16 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-19T22:37:38+07:00",
-      "lastAttemptAt": "2026-10-19T22:37:38+07:00",
+      "checkedAt": "2026-10-20T04:04:36+07:00",
+      "lastAttemptAt": "2026-10-20T04:04:36+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     }
   ],
   "symbols": {
     "HN-APT-ALL": {
-      "snapshotMedian": 99.26,
-      "price": 99.26,
+      "snapshotMedian": 92.08,
+      "price": 92.08,
       "sourcePeriod": "2026-10",
       "periods": [
         "2026-10"
@@ -301,7 +301,7 @@
       "history": [
         {
           "sourcePeriod": "2026-10",
-          "price": 99.26,
+          "price": 92.08,
           "projectCount": 15,
           "members": [
             "ocean",
@@ -327,8 +327,8 @@
       "note": "Equal-weight median of project popular unit prices; not a Hanoi-wide transaction-price average. Project-stage groups are proxies, not a verified primary/secondary transaction classification."
     },
     "HN-APT-SEC": {
-      "snapshotMedian": 99.26,
-      "price": 99.26,
+      "snapshotMedian": 92.08,
+      "price": 92.08,
       "sourcePeriod": "2026-10",
       "periods": [
         "2026-10"
@@ -342,7 +342,7 @@
       "history": [
         {
           "sourcePeriod": "2026-10",
-          "price": 99.26,
+          "price": 92.08,
           "projectCount": 13,
           "members": [
             "ocean",
