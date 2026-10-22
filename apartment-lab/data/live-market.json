@@ -2,8 +2,8 @@
   "meta": {
     "version": 2,
     "methodVersion": "PROJECT_UNIT_PRICE_V2",
-    "lastAttemptAt": "2026-10-23T03:08:13+07:00",
-    "lastSuccessfulCheckAt": "2026-10-23T03:08:13+07:00",
+    "lastAttemptAt": "2026-10-23T06:24:02+07:00",
+    "lastSuccessfulCheckAt": "2026-10-23T06:24:02+07:00",
     "cadence": "hourly source checks; source prices are periodic",
     "status": "OK",
     "successfulProjectCount": 15,
@@ -18,16 +18,16 @@
       "name": "Vinhomes Ocean Park",
       "url": "https://onehousing.vn/phan-tich/du-an/can-ho-biet-thu-lien-ke-du-an-Vinhomes-Ocean-Park.877",
       "segment": "SECONDARY",
-      "price": 73.93,
+      "price": 73.92,
       "sourcePeriod": "2026-10",
-      "rawPrice": "73.93",
-      "changePct": -2.04,
+      "rawPrice": "73.92",
+      "changePct": -2.11,
       "changePeriod": "month",
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -36,16 +36,16 @@
       "name": "Vinhomes Smart City",
       "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Vinhomes-Smart-City.102",
       "segment": "SECONDARY",
-      "price": 66.89,
+      "price": 91.29,
       "sourcePeriod": "2026-10",
-      "rawPrice": "66.89",
+      "rawPrice": "91.29",
       "changePct": -3.02,
       "changePeriod": "month",
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -54,16 +54,16 @@
       "name": "Masteri West Heights",
       "url": "https://onehousing.vn/phan-tich/du-an/can-ho-chung-cu-du-an-Masteri-West-Heights.10",
       "segment": "SECONDARY",
-      "price": 80.31,
+      "price": 110.61,
       "sourcePeriod": "2026-10",
-      "rawPrice": "80.31",
+      "rawPrice": "110.61",
       "changePct": -2.16,
       "changePeriod": "month",
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -80,8 +80,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -98,8 +98,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -116,8 +116,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -134,8 +134,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -152,8 +152,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -170,8 +170,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -188,8 +188,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -206,8 +206,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -224,8 +224,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -242,8 +242,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -260,8 +260,8 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     },
@@ -278,16 +278,16 @@
       "source": "OneHousing",
       "metric": "PROJECT_POPULAR_UNIT_PRICE",
       "unit": "million_VND_per_m2",
-      "checkedAt": "2026-10-23T03:08:13+07:00",
-      "lastAttemptAt": "2026-10-23T03:08:13+07:00",
+      "checkedAt": "2026-10-23T06:24:02+07:00",
+      "lastAttemptAt": "2026-10-23T06:24:02+07:00",
       "status": "VERIFIED",
       "methodVersion": "PROJECT_UNIT_PRICE_V2"
     }
   ],
   "symbols": {
     "HN-APT-ALL": {
-      "snapshotMedian": 89.0,
-      "price": 89.0,
+      "snapshotMedian": 91.93,
+      "price": 91.93,
       "sourcePeriod": "2026-10",
       "periods": [
         "2026-10"
@@ -301,7 +301,7 @@
       "history": [
         {
           "sourcePeriod": "2026-10",
-          "price": 89.0,
+          "price": 91.93,
           "projectCount": 15,
           "members": [
             "ocean",
@@ -327,8 +327,8 @@
       "note": "Equal-weight median of project popular unit prices; not a Hanoi-wide transaction-price average. Project-stage groups are proxies, not a verified primary/secondary transaction classification."
     },
     "HN-APT-SEC": {
-      "snapshotMedian": 89.0,
-      "price": 89.0,
+      "snapshotMedian": 91.93,
+      "price": 91.93,
       "sourcePeriod": "2026-10",
       "periods": [
         "2026-10"
@@ -342,7 +342,7 @@
       "history": [
         {
           "sourcePeriod": "2026-10",
-          "price": 89.0,
+          "price": 91.93,
           "projectCount": 13,
           "members": [
             "ocean",
